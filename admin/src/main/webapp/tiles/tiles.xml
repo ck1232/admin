@@ -1,0 +1,1808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC  
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+<tiles-definitions>  
+    <definition name="main_template"  
+        template="/WEB-INF/jsp/template/layout.jsp">  
+        <put-attribute name="title" value="" />  
+        <put-attribute name="header" value="/WEB-INF/jsp/template/header.jsp" />  
+        <put-attribute name="menu" value="/WEB-INF/jsp/template/menu.jsp" />  
+        <put-attribute name="footer" value="/WEB-INF/jsp/template/footer.jsp" />  
+    </definition>  
+  
+  	<definition name="accessDenied" template="/WEB-INF/jsp/common/accessDenied.jsp">
+  	</definition>
+  	
+  	<definition name="login" template="/WEB-INF/jsp/common/login.jsp">
+  	</definition>
+    <!-- Common Module START -->
+    <definition name="dashboard" extends="main_template">  
+        <put-attribute name="title" value="Dashboard" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Welcome to JJ" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/dashboard/dashboard.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>       
+    </definition>
+    
+    <definition name="pageNotFound" extends="main_template">  
+        <put-attribute name="title" value="404" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="404" />
+        		<put-attribute name="heading-description" value="Page cannot be found." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/common/404.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>       
+    </definition> 
+    
+    <definition name="pageError" extends="main_template">  
+        <put-attribute name="title" value="500" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="500" />
+        		<put-attribute name="heading-description" value="An error has occur." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/common/500.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>       
+    </definition> 
+    
+    <definition name="query" extends="main_template">  
+        <put-attribute name="title" value="SQL Query" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="SQL Query" />
+        		<put-attribute name="heading-description" value="To execute SQL statement" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/common/query.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>       
+    </definition> 
+    
+    <definition name="logs" extends="main_template">  
+        <put-attribute name="title" value="Logs" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Logs" />
+        		<put-attribute name="heading-description" value="To see all logs" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/common/logs.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>       
+    </definition>  
+    
+    <definition name="viewLogs" extends="main_template">  
+        <put-attribute name="title" value="View Logs" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Logs" />
+        		<put-attribute name="heading-description" value="View logs" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/common/viewLogs.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>       
+    </definition>  
+    
+    <!-- Common Module END -->
+    
+    <!-- User Management Module START -->
+    <definition name="listUser" extends="main_template">  
+        <put-attribute name="title" value="User Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="User Listing" />
+        		<put-attribute name="heading-description" value="To view all the users." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/usermanagement/listUser.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Users" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/usermanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/usermanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getUserList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/usermanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/usermanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createUser" extends="main_template">
+    	<put-attribute name="title" value="Add New User" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New User" />
+        		<put-attribute name="heading-description" value="To create user." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/usermanagement/createUser.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateUser" extends="main_template">  
+        <put-attribute name="title" value="Update User" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update User" />
+        		<put-attribute name="heading-description" value="To update user." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/usermanagement/updateUser.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewUser" extends="main_template">  
+        <put-attribute name="title" value="View User" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View User" />
+        		<put-attribute name="heading-description" value="To view user." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/usermanagement/viewUser.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <!-- User Management Module END -->  
+    
+  	<!-- Role Management Module START -->
+    <definition name="listRole" extends="main_template">  
+        <put-attribute name="title" value="Role Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Role Listing" />
+        		<put-attribute name="heading-description" value="To view all the roles" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/rolemanagement/listRole.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Roles" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/rolemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/rolemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getRoleList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/rolemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/rolemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createRole" extends="main_template">
+    	<put-attribute name="title" value="Add New Role" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Role" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/rolemanagement/createRole.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateRole" extends="main_template">  
+        <put-attribute name="title" value="Update Role" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Role" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/rolemanagement/updateRole.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+  	<!-- Role Management Module END --> 
+  
+  
+  	<!-- Role Assignment Module START -->
+  	<definition name="assignRole" extends="main_template">  
+        <put-attribute name="title" value="Assign Role To User" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Assign Role To User" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/roleassignment/assignRole.jsp">
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Role Assignment Module END -->
+  	
+  	<!-- Module Management Module START -->
+  	<definition name="listModule" extends="main_template">  
+        <put-attribute name="title" value="Module Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Module Listing" />
+        		<put-attribute name="heading-description" value="To view all the module" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/modulemanagement/listModule.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Module" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/modulemanagement/options.jsp" />
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/modulemanagement/column-header.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/modulemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getModuleList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/modulemanagement/column-mapping.jsp" />
+		        						<put-attribute name="subdatatable" value="/WEB-INF/jsp/modulemanagement/subdatatable/datatable.jsp" />
+		        						<put-attribute name="subdata-list" value="/JJ/admin/getSubmoduleListByModule" />
+		        						<put-attribute name="subdatatable-data" value="/WEB-INF/jsp/modulemanagement/subdatatable/datatable-data.jsp"/>	
+		        						<put-attribute name="subcolumn-mapping" value="/WEB-INF/jsp/modulemanagement/subdatatable/column-mapping.jsp"></put-attribute>
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/modulemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createModule" extends="main_template">
+    	<put-attribute name="title" value="Add New Module" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Module" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/modulemanagement/createModule.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateModule" extends="main_template">  
+        <put-attribute name="title" value="Update Module" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Module" />
+        		<put-attribute name="heading-description" value="To update module" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/modulemanagement/updateModule.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+  	<!-- Module Management Module END -->
+  	
+  	<!-- Submodule Management Module START -->
+  	
+  	<definition name="listSubmodule" extends="main_template">  
+        <put-attribute name="title" value="Update Submodule" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Submodule" />
+        		<put-attribute name="heading-description" value="To update submodule." />
+        		<put-attribute name="content" >
+        			<definition template="/WEB-INF/jsp/submodulemanagement/listSubmodule.jsp" >
+	        			<put-attribute name="datatable">
+		        			<definition template="/WEB-INF/jsp/template/datatable_submodule.jsp">
+		        				<put-attribute name="table-title" value="All Sub Module" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/submodulemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="/WEB-INF/jsp/submodulemanagement/datatable-options.jsp" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/submodulemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getSubmoduleListByModule" />
+		        						<put-attribute name="datatable-data" value="/WEB-INF/jsp/submodulemanagement/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/submodulemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/submodulemanagement/column-header.jsp"></put-attribute>
+				        	</definition>
+		        		</put-attribute>
+		        	</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+  	
+  	<definition name="createSubmodule" extends="main_template">
+    	<put-attribute name="title" value="Add New Submodule" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Submodule" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/submodulemanagement/createSubmodule.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateSubmodule" extends="main_template">  
+        <put-attribute name="title" value="Update Submodule" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Submodule" />
+        		<put-attribute name="heading-description" value="To update submodule" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/submodulemanagement/updateSubmodule.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewSubmodule" extends="main_template">  
+        <put-attribute name="title" value="View Submodule" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Submodule" />
+        		<put-attribute name="heading-description" value="To view submodule." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/submodulemanagement/viewSubmodule.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+  	
+  	
+  	<!-- Submodule Management Module END -->
+  	
+  	<!-- Permission Management Module START -->
+  	
+  	<definition name="listPermission" extends="main_template">  
+        <put-attribute name="title" value="Grant Permission" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Grant Permission" />
+        		<put-attribute name="heading-description" value="To grant permission to module" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/permissionmanagement/module/listPermissionModule.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Submodules" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/permissionmanagement/module/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/permissionmanagement/module/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getSubmoduleListOrderByModule" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/permissionmanagement/module/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/permissionmanagement/module/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateSubmodulePermission" extends="main_template">  
+        <put-attribute name="title" value="Edit Submodule Permission" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Edit Submodule Permission" />
+        		<put-attribute name="heading-description" value="To edit permission for submodule." />
+        		<put-attribute name="content" >
+        			<definition template="/WEB-INF/jsp/permissionmanagement/role/updateSubmodulePermission.jsp" >
+	        			<put-attribute name="datatable">
+		        			<definition template="/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Roles" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/permissionmanagement/role/options.jsp" />
+		        				<put-attribute name="datatable-options" value="/WEB-INF/jsp/permissionmanagement/role/datatable-options.jsp" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/permissionmanagement/role/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getRoleToPermission" />
+		        						<put-attribute name="datatable-data" value="/WEB-INF/jsp/permissionmanagement/role/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/permissionmanagement/role/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/permissionmanagement/role/column-header.jsp"></put-attribute>
+				        	</definition>
+		        		</put-attribute>
+		        	</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updatePermissionType" extends="main_template">  
+        <put-attribute name="title" value="Edit Permission Type" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Edit Permission Type" />
+        		<put-attribute name="heading-description" value="To edit permission type for submodule." />
+        		<put-attribute name="content" >
+        			<definition template="/WEB-INF/jsp/permissionmanagement/permissiontype/updateSubmodulePermissionType.jsp" >
+	        			<put-attribute name="datatable">
+		        			<definition template="/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Permission Type" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/permissionmanagement/permissiontype/options.jsp" />
+		        				<put-attribute name="datatable-options" value="/WEB-INF/jsp/permissionmanagement/permissiontype/datatable-options.jsp" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/permissionmanagement/permissiontype/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/admin/getPermissionTypeList" />
+		        						<put-attribute name="datatable-data" value="/WEB-INF/jsp/permissionmanagement/permissiontype/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/permissionmanagement/permissiontype/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/permissionmanagement/permissiontype/column-header.jsp"></put-attribute>
+				        	</definition>
+		        		</put-attribute>
+		        	</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPermissionType" extends="main_template">
+    	<put-attribute name="title" value="Add New Permission Type" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Permission Type" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/permissionmanagement/permissiontype/createPermissionType.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updatePermissionTypeDetail" extends="main_template">
+    	<put-attribute name="title" value="Update Permission Type" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Permission Type" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/permissionmanagement/permissiontype/updateSubmodulePermissionTypeDetail.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+  	
+  	<!-- Permission Management Module END -->
+  
+  	<!-- Product Category Management Module START -->
+    <definition name="listProductCategory" extends="main_template">  
+        <put-attribute name="title" value="Product Category Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Product Category Listing" />
+        		<put-attribute name="heading-description" value="To view all the product categories." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/productcategorymanagement/listCategory.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Product Categories" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/productcategorymanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/productcategorymanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/category/getProductCategoryList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productcategorymanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productcategorymanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createProductCategory" extends="main_template">
+    	<put-attribute name="title" value="Add New Product Category" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Product Category" />
+        		<put-attribute name="heading-description" value="To create product category." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/productcategorymanagement/createCategory.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateProductCategory" extends="main_template">  
+        <put-attribute name="title" value="Update Product Category" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Product Category" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/productcategorymanagement/updateCategory.jsp">
+        				<put-attribute name="upload" value="/WEB-INF/jsp/productcategorymanagement/uploadfile.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+ 	<!-- Product Category Management Module END -->
+ 	
+ 	<!-- Product SubCategory Management Module START -->
+ 	
+ 	<definition name="listSubCategory" extends="main_template">  
+        <put-attribute name="title" value="Manage SubCategory" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Manage SubCategory" />
+        		<put-attribute name="heading-description" value="To manage subcategories." />
+        		<put-attribute name="content" >
+        			<definition template="/WEB-INF/jsp/productsubcategorymanagement/listSubCategory.jsp" >
+	        			<put-attribute name="datatable">
+		        			<definition template="/WEB-INF/jsp/template/datatable_subcategory.jsp">
+		        				<put-attribute name="table-title" value="All SubCategory" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/productsubcategorymanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="/WEB-INF/jsp/productsubcategorymanagement/datatable-options.jsp" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/productsubcategorymanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/subcategory/getProductSubCategoryListByCategory" />
+		        						<put-attribute name="datatable-data" value="/WEB-INF/jsp/productsubcategorymanagement/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productsubcategorymanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productsubcategorymanagement/column-header.jsp"></put-attribute>
+				        	</definition>
+		        		</put-attribute>
+		        	</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createSubCategory" extends="main_template">
+    	<put-attribute name="title" value="Add New SubCategory" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New SubCategory" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/productsubcategorymanagement/createSubCategory.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+ 	
+ 	<definition name="updateSubCategory" extends="main_template">  
+        <put-attribute name="title" value="Update SubCategory" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update SubCategory" />
+        		<put-attribute name="heading-description" value="To update subcategory." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/productsubcategorymanagement/updateSubCategory.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+ 	
+ 	<!-- Product SubCategory Management Module END -->
+ 	
+ 	
+ 	<!-- Promotion Management Module START -->
+ 	
+ 	<definition name="listPromotion" extends="main_template">  
+        <put-attribute name="title" value="Promotion Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Promotion Listing" />
+        		<put-attribute name="heading-description" value="To view all the promotions" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/promotionmanagement/listPromotion.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Promotions" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/promotionmanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/promotionmanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/promotion/getPromotionList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/promotionmanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/promotionmanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPromotion" extends="main_template">
+    	<put-attribute name="title" value="Add New Promotion" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Promotion" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/promotionmanagement/createPromotion.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updatePromotion" extends="main_template">  
+        <put-attribute name="title" value="Update Promotion" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Promotion" />
+        		<put-attribute name="heading-description" value="To update promotion." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/promotionmanagement/updatePromotion.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewPromotion" extends="main_template">  
+        <put-attribute name="title" value="View Promotion" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Promotion" />
+        		<put-attribute name="heading-description" value="To view promotion." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/promotionmanagement/viewPromotion.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <!-- Promotion Management Module END -->
+    
+    <!-- Discount Management Module START -->
+ 	
+ 	<definition name="listDiscount" extends="main_template">  
+        <put-attribute name="title" value="Discount Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Discount Listing" />
+        		<put-attribute name="heading-description" value="To view all the discounts" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/discountmanagement/listDiscount.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Discounts" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/discountmanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/discountmanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/discount/getDiscountList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/discountmanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/discountmanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createDiscount" extends="main_template">
+    	<put-attribute name="title" value="Add New Discount" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Discount" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/discountmanagement/createDiscount.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateDiscount" extends="main_template">  
+        <put-attribute name="title" value="Update Discount" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Discount" />
+        		<put-attribute name="heading-description" value="To update discount." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/discountmanagement/updateDiscount.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewDiscount" extends="main_template">  
+        <put-attribute name="title" value="View Discount" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Discount" />
+        		<put-attribute name="heading-description" value="To view discount." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/discountmanagement/viewDiscount.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="manageDiscount" extends="main_template">  
+        <put-attribute name="title" value="Manage Discount" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Manage Discount" />
+        		<put-attribute name="heading-description" value="To manage discounts for selected promotion" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/discountmanagement/manageforpromotion/manageDiscount.jsp">
+        				<put-attribute name="datatable1">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="Current Discount" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/options.jsp" />
+		        				<put-attribute name="datatable-options" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/datatable-options.jsp" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/discountmanagement/manageforpromotion/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/discount/getDiscountListInPromotion" />
+		        						<put-attribute name="datatable-data" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        				<put-attribute name="datatable2">
+		        			<definition template = "/WEB-INF/jsp/template/datatable2.jsp">
+		        				<put-attribute name="table-title2" value="Available Discount to be added" />
+		        				<put-attribute name="options2" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/options2.jsp" />
+		        				<put-attribute name="datatable-options2" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/datatable-options.jsp" />
+		        				<put-attribute name="datatable-script2">
+		        					<definition template="/WEB-INF/jsp/discountmanagement/manageforpromotion/datatable-script2.jsp" >
+		        						<put-attribute name="data-list2" value="/JJ/product/discount/getDiscountListNotInPromotion" />
+		        						<put-attribute name="datatable-data2" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping2" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/column-mapping2.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header2" value="/WEB-INF/jsp/discountmanagement/manageforpromotion/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <!-- Discount Management Module END -->
+    
+    <!-- Product Option Management Module START -->
+ 	
+ 	<definition name="listProductOption" extends="main_template">  
+        <put-attribute name="title" value="Product Option Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Product Option Listing" />
+        		<put-attribute name="heading-description" value="To view all the product options" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/productoptionmanagement/listProductOption.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Product Options" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/productoptionmanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/productoptionmanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/option/getProductOptionList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productoptionmanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productoptionmanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createProductOption" extends="main_template">
+    	<put-attribute name="title" value="Add New Product Option" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Product Option" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/productoptionmanagement/createProductOption.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateProductOption" extends="main_template">  
+        <put-attribute name="title" value="Update Product Option" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Product Option" />
+        		<put-attribute name="heading-description" value="To update discount." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/productoptionmanagement/updateProductOption.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Product Option Management Module END -->
+  
+  	<!-- Customer Management Module START -->
+ 	
+ 	<definition name="listCustomer" extends="main_template">  
+        <put-attribute name="title" value="Customer Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Customer Listing" />
+        		<put-attribute name="heading-description" value="To view all the customers" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/customermanagement/listCustomer.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Customers" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/customermanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/customermanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/customer/getCustomerList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/customermanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/customermanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewCustomer" extends="main_template">  
+        <put-attribute name="title" value="View Customer" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Customer" />
+        		<put-attribute name="heading-description" value="To view customer." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/customermanagement/viewCustomer.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createCustomer" extends="main_template">
+    	<put-attribute name="title" value="Add New Customer" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Customer" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/customermanagement/createCustomer.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+     <definition name="updateCustomer" extends="main_template">  
+        <put-attribute name="title" value="Update Customer" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Customer" />
+        		<put-attribute name="heading-description" value="To update customer" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/customermanagement/updateCustomer.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Customer Management Module END -->
+  
+  	<!-- Product Management Module START -->
+  	<definition name="listProduct" extends="main_template">  
+        <put-attribute name="title" value="Product Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        		<put-attribute name="heading" value="Product Listing" />
+        		<put-attribute name="heading-description" value="To view all the products" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/productmanagement/listProduct.jsp">
+		        		<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Product" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/productmanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/productmanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/product/getProductList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productmanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productmanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+	        		</definition>
+       			</put-attribute>
+        	</definition>
+        	
+        </put-attribute>
+        
+    </definition>
+    
+    <definition name="createProduct" extends="main_template">
+    	<put-attribute name="title" value="Create New Product" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Product" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/productmanagement/createProduct.jsp">
+        				<put-attribute name="options">
+        					<definition template="/WEB-INF/jsp/productmanagement/productOptions/productOptions.jsp">
+	        					<put-attribute name="options" value="/WEB-INF/jsp/productmanagement/productOptions/options.jsp" />
+	        					<put-attribute name="datatable-options" value="" />
+	        					<put-attribute name="datatable-script">
+	        					<definition template="/WEB-INF/jsp/productmanagement/productOptions/datatable-script.jsp" >
+	        						<put-attribute name="data-list" value="/JJ/product/product/getProductOptionsList" />
+	        						<put-attribute name="datatable-data" value="" />
+	        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productmanagement/productOptions/column-mapping.jsp" />
+	        					</definition>
+	        					</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productmanagement/productOptions/column-header.jsp"></put-attribute>
+        					</definition>
+        				</put-attribute>
+        				
+        				<put-attribute name="attribute">
+        					<definition template="/WEB-INF/jsp/productmanagement/productAttribute/productAttribute.jsp">
+	        					<put-attribute name="datatable-options" value="" />
+	        					<put-attribute name="datatable-script">
+	        					<definition template="/WEB-INF/jsp/productmanagement/productAttribute/datatable-script.jsp" >
+	        						<put-attribute name="data-list" value="/JJ/product/product/getProductAttributeList" />
+	        						<put-attribute name="datatable-data" value="" />
+	        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productmanagement/productAttribute/column-mapping.jsp" />
+	        					</definition>
+	        					</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productmanagement/productAttribute/column-header.jsp"></put-attribute>
+        					</definition>
+        				</put-attribute>
+        				<put-attribute name="button" value="/WEB-INF/jsp/productmanagement/createProductBtn.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="editProduct" extends="main_template">
+    	<put-attribute name="title" value="Update Product" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Product" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/productmanagement/createProduct.jsp">
+        				<put-attribute name="options">
+        					<definition template="/WEB-INF/jsp/productmanagement/productOptions/productOptions.jsp">
+		        					<put-attribute name="options" value="/WEB-INF/jsp/productmanagement/productOptions/options.jsp" />
+		        					<put-attribute name="datatable-options" value="" />
+		        					<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/productmanagement/productOptions/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/product/product/getProductOptionsList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productmanagement/productOptions/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productmanagement/productOptions/column-header.jsp"></put-attribute>
+        					</definition>
+        				</put-attribute>
+        				
+        				<put-attribute name="attribute">
+        					<definition template="/WEB-INF/jsp/productmanagement/productAttribute/productAttribute.jsp">
+	        					<put-attribute name="datatable-options" value="" />
+	        					<put-attribute name="datatable-script">
+	        					<definition template="/WEB-INF/jsp/productmanagement/productAttribute/datatable-script.jsp" >
+	        						<put-attribute name="data-list" value="/JJ/product/product/getProductAttributeList" />
+	        						<put-attribute name="datatable-data" value="" />
+	        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/productmanagement/productAttribute/column-mapping.jsp" />
+	        					</definition>
+	        					</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/productmanagement/productAttribute/column-header.jsp"></put-attribute>
+        					</definition>
+        				</put-attribute>
+        				<put-attribute name="button" value="/WEB-INF/jsp/productmanagement/editProductBtn.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+  	<!-- Product Management Module END -->
+  	
+  	<!-- Batch Intake Management Module START -->
+ 	
+ 	<definition name="listBatchIntake" extends="main_template">  
+        <put-attribute name="title" value="Batch Intake Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Batch Intake Listing" />
+        		<put-attribute name="heading-description" value="To view all the batch intakes." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/batchintakemanagement/listBatchIntake.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Batch Intake" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/batchintakemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/batchintakemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/batchintake/getBatchIntakeList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/batchintakemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/batchintakemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createBatchIntake" extends="main_template">
+    	<put-attribute name="title" value="Add New Batch Intake" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Create New Batch Intake" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/batchintakemanagement/createBatchIntake.jsp">
+        				<put-attribute name="productList">
+        					<definition template="/WEB-INF/jsp/batchintakemanagement/product/listBatchProduct.jsp">
+	        					<put-attribute name="datatable">
+				        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+				        				<put-attribute name="table-title" value="Product Information" />
+				        				<put-attribute name="options" value="/WEB-INF/jsp/batchintakemanagement/product/options.jsp" />
+				        				<put-attribute name="datatable-options" value="" />
+				        				<put-attribute name="datatable-script">
+				        					<definition template="/WEB-INF/jsp/batchintakemanagement/product/datatable-script.jsp" >
+				        						<put-attribute name="data-list" value="/JJ/batchintake/getBatchProductList" />
+				        						<put-attribute name="datatable-data" value="" />
+				        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/batchintakemanagement/product/column-mapping.jsp" />
+				        					</definition>
+				        				</put-attribute>
+				        				<put-attribute name="column-header" value="/WEB-INF/jsp/batchintakemanagement/product/column-header.jsp"></put-attribute>
+				        			</definition>
+	        					</put-attribute>
+	        				</definition>
+	        			</put-attribute>
+	        			<put-attribute name="action" value="batchintake/createBatchIntake" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateBatchIntake" extends="main_template">
+    	<put-attribute name="title" value="Update Batch Intake" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Batch Intake" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/batchintakemanagement/createBatchIntake.jsp">
+        				<put-attribute name="productList">
+        					<definition template="/WEB-INF/jsp/batchintakemanagement/product/listBatchProduct.jsp">
+	        					<put-attribute name="datatable">
+				        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+				        				<put-attribute name="table-title" value="Product Information" />
+				        				<put-attribute name="options" value="/WEB-INF/jsp/batchintakemanagement/product/options.jsp" />
+				        				<put-attribute name="datatable-options" value="" />
+				        				<put-attribute name="datatable-script">
+				        					<definition template="/WEB-INF/jsp/batchintakemanagement/product/datatable-script.jsp" >
+				        						<put-attribute name="data-list" value="/JJ/batchintake/getBatchProductList" />
+				        						<put-attribute name="datatable-data" value="" />
+				        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/batchintakemanagement/product/column-mapping.jsp" />
+				        					</definition>
+				        				</put-attribute>
+				        				<put-attribute name="column-header" value="/WEB-INF/jsp/batchintakemanagement/product/column-header.jsp"></put-attribute>
+				        			</definition>
+	        					</put-attribute>
+	        				</definition>
+	        			</put-attribute>
+	        			<put-attribute name="action" value="batchintake/editBatchIntake" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+  	<!-- Batch Intake Management Module END -->
+  	
+  	<!-- Storage Location Management Module START -->
+ 	
+ 	<definition name="listStorageLocation" extends="main_template">  
+        <put-attribute name="title" value="Storage Location Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Storage Location Listing" />
+        		<put-attribute name="heading-description" value="To view all the storage locations." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/storagelocationmanagement/listStorageLocation.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Storage Location" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/storagelocationmanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/storagelocationmanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/storagelocation/getStorageLocationList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/storagelocationmanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/storagelocationmanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createStorageLocation" extends="main_template">
+    	<put-attribute name="title" value="Add New Storage Location" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Storage Location" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/storagelocationmanagement/createStorageLocation.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateStorageLocation" extends="main_template">  
+        <put-attribute name="title" value="Update Storage Location" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Storage Location" />
+        		<put-attribute name="heading-description" value="To update storage location." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/storagelocationmanagement/updateStorageLocation.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewStorageLocation" extends="main_template">  
+        <put-attribute name="title" value="View Storage Location" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Storage Location" />
+        		<put-attribute name="heading-description" value="To view storage location." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/storagelocationmanagement/viewStorageLocation.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+  	<!-- Storage Location Management Module END -->
+  	
+  	<!-- Inventory Management Module START -->
+ 	<definition name="listInventoryProduct" extends="main_template">  
+        <put-attribute name="title" value="Inventory Product Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Inventory Product Listing" />
+        		<put-attribute name="heading-description" value="To view all the inventory products." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/inventorymanagement/listInventoryProduct.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Inventory Product" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/inventorymanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/inventorymanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/inventory/getInventoryProductList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/inventorymanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/inventorymanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewInventoryProduct" extends="main_template">  
+        <put-attribute name="title" value="View Inventory Product" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Inventory Product" />
+        		<put-attribute name="heading-description" value="To view inventory product." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/inventorymanagement/viewInventoryProduct.jsp">
+        				<put-attribute name="datatable1">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="Product Quantity" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/inventorymanagement/viewproductlocation/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/inventorymanagement/viewproductlocation/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/inventory/getInventoryProductQuantityList" />
+		        						<put-attribute name="datatable-data" value="/WEB-INF/jsp/inventorymanagement/datatable-data.jsp" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/inventorymanagement/viewproductlocation/column-mapping.jsp" />
+		        						<put-attribute name="subdatatable" value="/WEB-INF/jsp/inventorymanagement/viewproductlocation/subdatatable/datatable.jsp" />
+		        						<put-attribute name="subdata-list" value="/JJ/inventory/getInventoryProductLocationList" />
+		        						<put-attribute name="subdatatable-data" value="/WEB-INF/jsp/inventorymanagement/viewproductlocation/subdatatable/datatable-data.jsp"/>	
+		        						<put-attribute name="subcolumn-mapping" value="/WEB-INF/jsp/inventorymanagement/viewproductlocation/subdatatable/column-mapping.jsp"></put-attribute>
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/inventorymanagement/viewproductlocation/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createInventoryProduct" extends="main_template">
+    	<put-attribute name="title" value="Add New Inventory Product" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Inventory Product" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/inventorymanagement/createInventoryProduct.jsp">
+        				<put-attribute name="productList">
+        					<definition template="/WEB-INF/jsp/inventorymanagement/product/listInventoryProduct.jsp">
+	        					<put-attribute name="datatable">
+				        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+				        				<put-attribute name="table-title" value="Product Information" />
+				        				<put-attribute name="options" value="/WEB-INF/jsp/inventorymanagement/product/options.jsp" />
+				        				<put-attribute name="datatable-options" value="" />
+				        				<put-attribute name="datatable-script">
+				        					<definition template="/WEB-INF/jsp/inventorymanagement/product/datatable-script.jsp" >
+				        						<put-attribute name="data-list" value="/JJ/inventory/getAddInventoryProductList" />
+				        						<put-attribute name="datatable-data" value="" />
+				        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/inventorymanagement/product/column-mapping.jsp" />
+				        					</definition>
+				        				</put-attribute>
+				        				<put-attribute name="column-header" value="/WEB-INF/jsp/inventorymanagement/product/column-header.jsp"></put-attribute>
+				        			</definition>
+	        					</put-attribute>
+	        				</definition>
+	        			</put-attribute>
+	        			<put-attribute name="action" value="inventory/createInventoryProduct" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+  	<!-- Inventory Management Module END -->
+  	
+  	<!-- Inventory History Module START -->
+ 	<definition name="listInventoryHistory" extends="main_template">  
+        <put-attribute name="title" value="Inventory History Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Inventory History Listing" />
+        		<put-attribute name="heading-description" value="To view all the inventory history." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/inventoryhistorymanagement/listInventoryHistory.jsp">
+        				<put-attribute name="filter" value="/WEB-INF/jsp/inventoryhistorymanagement/filter.jsp" />
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Inventory History" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/inventoryhistorymanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/inventoryhistorymanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/inventoryhistory/getInventoryHistoryList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/inventoryhistorymanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/inventoryhistorymanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Inventory History Module END -->
+    
+    <!-- Invoice Module START -->
+ 	<definition name="listInvoice" extends="main_template">  
+        <put-attribute name="title" value="Invoice Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Invoice Listing" />
+        		<put-attribute name="heading-description" value="To view all the invoice." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/invoicemanagement/listInvoice.jsp">
+        				<put-attribute name="upload" value="/WEB-INF/jsp/invoicemanagement/uploadfile.jsp" />
+        				<put-attribute name="export" value="/WEB-INF/jsp/invoicemanagement/export.jsp" />
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Invoice" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/invoicemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/invoicemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/invoice/getInvoiceList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/invoicemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/invoicemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewInvoice" extends="main_template">  
+        <put-attribute name="title" value="View Invoice" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Invoice" />
+        		<put-attribute name="heading-description" value="To view invoice." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/invoicemanagement/viewInvoice.jsp">
+        				<put-attribute name="paymentdetail" value="/WEB-INF/jsp/paymentmanagement/paymenttable.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createGrant" extends="main_template">
+    	<put-attribute name="title" value="Add Grant" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Grant" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/invoicemanagement/createGrant.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateGrant" extends="main_template">
+    	<put-attribute name="title" value="Update Grant" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Grant" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/invoicemanagement/updateGrant.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPayInvoice" extends="main_template">  
+        <put-attribute name="title" value="Invoice Payment" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Invoice Payment" />
+        		<put-attribute name="heading-description" value="To pay selected invoices." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/paymentmanagement/createPayment.jsp">
+        				<put-attribute name="billtable" value="/WEB-INF/jsp/invoicemanagement/invoiceforpayment/listInvoiceToPay.jsp" />
+        				<put-attribute name="paymentoption" value="/WEB-INF/jsp/invoicemanagement/invoiceforpayment/paymentoption.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Inventory History Module END -->
+    
+    <!-- Expense Module START -->
+ 	<definition name="listExpense" extends="main_template">  
+        <put-attribute name="title" value="Expense Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Expense Listing" />
+        		<put-attribute name="heading-description" value="To view all the expense." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/expensemanagement/listExpense.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Expense" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/expensemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/expensemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/expense/getExpenseList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/expensemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/expensemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createExpense" extends="main_template">
+    	<put-attribute name="title" value="Add Expense" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Expense" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/expensemanagement/createExpense.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateExpense" extends="main_template">  
+        <put-attribute name="title" value="Update Expense" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Expense" />
+        		<put-attribute name="heading-description" value="To update expense." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/expensemanagement/updateExpense.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewExpense" extends="main_template">  
+        <put-attribute name="title" value="View Expense" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Expense" />
+        		<put-attribute name="heading-description" value="To view expense." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/expensemanagement/viewExpense.jsp">
+        				<put-attribute name="paymentdetail" value="/WEB-INF/jsp/paymentmanagement/paymenttable.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPayExpense" extends="main_template">  
+        <put-attribute name="title" value="Expense Payment" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Expense Payment" />
+        		<put-attribute name="heading-description" value="To pay selected expenses." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/paymentmanagement/createPayment.jsp">
+        				<put-attribute name="billtable" value="/WEB-INF/jsp/expensemanagement/expenseforpayment/listExpenseToPay.jsp" />
+        				<put-attribute name="paymentoption" value="/WEB-INF/jsp/expensemanagement/expenseforpayment/paymentoption.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Expense Module END -->
+    
+    <!-- Salary Bonus Module START -->
+ 	<definition name="listSalaryBonus" extends="main_template">  
+        <put-attribute name="title" value="Salary / Bonus Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Salary / Bonus Listing" />
+        		<put-attribute name="heading-description" value="To view all the salary and bonus." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/salarybonusmanagement/listSalaryBonus.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Salary and Bonus" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/salarybonusmanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/salarybonusmanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/salarybonus/getSalaryBonusList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/salarybonusmanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/salarybonusmanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewSalaryBonus" extends="main_template">  
+        <put-attribute name="title" value="View Salary / Bonus" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Salary / Bonus" />
+        		<put-attribute name="heading-description" value="To view salary / bonus." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/salarybonusmanagement/viewSalaryBonus.jsp">
+        				<put-attribute name="paymentdetail" value="/WEB-INF/jsp/paymentmanagement/paymenttable.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createSalaryBonus" extends="main_template">
+    	<put-attribute name="title" value="Add Salary / Bonus" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Salary / Bonus" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/salarybonusmanagement/createSalaryBonus.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateSalaryBonus" extends="main_template">  
+        <put-attribute name="title" value="Update Salary/Bonus" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Salary/Bonus" />
+        		<put-attribute name="heading-description" value="To update salary/bonus." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/salarybonusmanagement/updateSalaryBonus.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPaySalaryBonus" extends="main_template">  
+        <put-attribute name="title" value="Salary / Bonus Payment" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Salary / Bonus Payment" />
+        		<put-attribute name="heading-description" value="To pay selected salary/ bonus." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/paymentmanagement/createPayment.jsp">
+        				<put-attribute name="billtable" value="/WEB-INF/jsp/salarybonusmanagement/salarybonusforpayment/listSalaryBonusToPay.jsp" />
+        				<put-attribute name="paymentoption" value="/WEB-INF/jsp/salarybonusmanagement/salarybonusforpayment/paymentoption.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPaySalary" extends="main_template">  
+        <put-attribute name="title" value="Salary Payment" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Salary Payment" />
+        		<put-attribute name="heading-description" value="To pay selected salary." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/paymentmanagement/createPayment.jsp">
+        				<put-attribute name="billtable" value="/WEB-INF/jsp/salarybonusmanagement/salaryforpayment/listSalaryToPay.jsp" />
+        				<put-attribute name="paymentoption" value="/WEB-INF/jsp/salarybonusmanagement/salaryforpayment/paymentoption.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createPayBonus" extends="main_template">  
+        <put-attribute name="title" value="Bonus Payment" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Bonus Payment" />
+        		<put-attribute name="heading-description" value="To pay selected bonus." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/paymentmanagement/createPayment.jsp">
+        				<put-attribute name="billtable" value="/WEB-INF/jsp/salarybonusmanagement/bonusforpayment/listBonusToPay.jsp" />
+        				<put-attribute name="paymentoption" value="/WEB-INF/jsp/salarybonusmanagement/bonusforpayment/paymentoption.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+  	<!-- Salary Bonus Module END -->
+  	
+  	<!-- Employee Module START -->
+ 	<definition name="listEmployee" extends="main_template">  
+        <put-attribute name="title" value="Employee Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Employee Listing" />
+        		<put-attribute name="heading-description" value="To view all the employee." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/employeemanagement/listEmployee.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Employee" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/employeemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/employeemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/employee/getEmployeeList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/employeemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/employeemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="createEmployee" extends="main_template">
+    	<put-attribute name="title" value="Add Employee" />
+    	<put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Add New Employee" />
+        		<put-attribute name="heading-description" value="" />
+        		<put-attribute name="content" value="/WEB-INF/jsp/employeemanagement/createEmployee.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateEmployee" extends="main_template">  
+        <put-attribute name="title" value="Update Employee" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Employee" />
+        		<put-attribute name="heading-description" value="To update employee." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/employeemanagement/updateEmployee.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewEmployee" extends="main_template">  
+        <put-attribute name="title" value="View Employee" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Employee" />
+        		<put-attribute name="heading-description" value="To view employee." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/employeemanagement/viewEmployee.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Employee Module END -->
+    
+    <!-- Cheque Module START -->
+ 	<definition name="listCheque" extends="main_template">  
+        <put-attribute name="title" value="Cheque Listing" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Cheque Listing" />
+        		<put-attribute name="heading-description" value="To view all the cheque." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/chequemanagement/listCheque.jsp">
+        				<put-attribute name="datatable">
+		        			<definition template = "/WEB-INF/jsp/template/datatable.jsp">
+		        				<put-attribute name="table-title" value="All Cheque" />
+		        				<put-attribute name="options" value="/WEB-INF/jsp/chequemanagement/options.jsp" />
+		        				<put-attribute name="datatable-options" value="" />
+		        				<put-attribute name="datatable-script">
+		        					<definition template="/WEB-INF/jsp/chequemanagement/datatable-script.jsp" >
+		        						<put-attribute name="data-list" value="/JJ/cheque/getChequeList" />
+		        						<put-attribute name="datatable-data" value="" />
+		        						<put-attribute name="column-mapping" value="/WEB-INF/jsp/chequemanagement/column-mapping.jsp" />
+		        					</definition>
+		        				</put-attribute>
+		        				<put-attribute name="column-header" value="/WEB-INF/jsp/chequemanagement/column-header.jsp"></put-attribute>
+		        			</definition>
+        				</put-attribute>
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="viewCheque" extends="main_template">  
+        <put-attribute name="title" value="View Cheque" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="View Cheque" />
+        		<put-attribute name="heading-description" value="To view cheque." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/chequemanagement/viewCheque.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+    <definition name="updateCheque" extends="main_template">  
+        <put-attribute name="title" value="Update Cheque" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Update Cheque" />
+        		<put-attribute name="heading-description" value="To update cheque." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/chequemanagement/updateCheque.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    
+     <definition name="createPayBounceCheque" extends="main_template">  
+        <put-attribute name="title" value="Bounce Cheque Payment" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Bounce Cheque Payment" />
+        		<put-attribute name="heading-description" value="To pay bounce cheque." />
+        		<put-attribute name="content">
+        			<definition template="/WEB-INF/jsp/paymentmanagement/createPayment.jsp">
+        				<put-attribute name="billtable" value="/WEB-INF/jsp/chequemanagement/chequeforpayment/listChequeToPay.jsp" />
+        				<put-attribute name="paymentoption" value="/WEB-INF/jsp/chequemanagement/chequeforpayment/paymentoption.jsp" />
+        			</definition>
+        		</put-attribute>
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Cheque Module END -->
+    
+    <!-- Report Module END -->
+    <definition name="viewReportGen" extends="main_template">  
+        <put-attribute name="title" value="Report Generation" /> 
+        <put-attribute name="body">
+        	<definition template="/WEB-INF/jsp/template/body.jsp">
+        		<put-attribute name="heading" value="Report Generation" />
+        		<put-attribute name="heading-description" value="To generate reports." />
+        		<put-attribute name="content" value="/WEB-INF/jsp/reportmanagement/viewReportGen.jsp" />
+        		<put-attribute name="message" value="/WEB-INF/jsp/template/message.jsp" />
+        	</definition>
+        </put-attribute>
+    </definition>
+    <!-- Report Module END -->
+  	
+</tiles-definitions>  
