@@ -82,7 +82,7 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
 		return ds;
 	}
 	
-	@Bean
+	@Bean(name="transactionManager")
     public HibernateTransactionManager txManager() {
             return new HibernateTransactionManager(sessionFactory());
     }

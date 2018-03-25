@@ -36,7 +36,7 @@ public class AdminUserDetailsService implements UserDetailsService {
 			List<GrantedAuthority> authorities = buildUserAuthority(userTO.getUserRoleTOSet());
 			return buildUserForAuthentication(userTO, authorities);
 		}
-		return null;
+		throw new UsernameNotFoundException("Invalid username or password.");
 	}
 
 	private User  buildUserForAuthentication(UserTO userTO, List<GrantedAuthority> authorities) {

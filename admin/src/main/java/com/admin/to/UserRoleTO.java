@@ -1,14 +1,10 @@
 package com.admin.to;
 
-import java.io.Serializable;
-
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -31,33 +27,5 @@ public class UserRoleTO extends BaseTO {
 
 	public void setPk(UserRoleId pk) {
 		this.pk = pk;
-	}
-	
-	@Embeddable
-	public class UserRoleId implements Serializable{
-		
-		private static final long serialVersionUID = 1L;
-
-		@ManyToOne
-		private UserTO user;
-		
-		@ManyToOne
-		private RoleTO role;
-
-		public UserTO getUser() {
-			return user;
-		}
-
-		public void setUser(UserTO user) {
-			this.user = user;
-		}
-
-		public RoleTO getRole() {
-			return role;
-		}
-
-		public void setRole(RoleTO role) {
-			this.role = role;
-		}
 	}
 }
