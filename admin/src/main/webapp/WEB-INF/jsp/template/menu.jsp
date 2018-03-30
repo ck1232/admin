@@ -64,7 +64,7 @@ function setNavigation() {
         			<c:when test="${module.subModuleList.size() == 0}">
         			</c:when>
         			<c:when test="${module.subModuleList.size() == 1}">
-					    <li <c:if test="${menuSubmodule != null and fn:containsIgnoreCase(menuSubmodule.url,module.subModuleList.get(0).url)}">class="active"</c:if>><a href='<c:url context="/JJ" value="/${module.subModuleList.get(0).url}"/>'><i class="fa ${module.subModuleList.get(0).icon}"></i> <span>${module.subModuleList.get(0).name}</span></a></li>
+					    <li <c:if test="${menuSubmodule != null and fn:containsIgnoreCase(menuSubmodule.url,module.subModuleList.get(0).url)}">class="active"</c:if>><a href='<c:url context="${context}" value="/${module.subModuleList.get(0).url}"/>'><i class="fa ${module.subModuleList.get(0).icon}"></i> <span>${module.subModuleList.get(0).name}</span></a></li>
 					</c:when>
 					<c:otherwise>
 						<li class="treeview <c:forEach items="${module.subModuleList}" var="submodule"><c:if test="${menuSubmodule != null and fn:containsIgnoreCase(menuSubmodule.url,submodule.url)}">active</c:if></c:forEach>">
@@ -75,7 +75,7 @@ function setNavigation() {
 	          				</a>
 	          				<ul class="treeview-menu">
 			          			<c:forEach items="${module.subModuleList}" var="submodule">
-			          				 <li <c:if test="${menuSubmodule != null and fn:containsIgnoreCase(menuSubmodule.url,submodule.url)}">class="active"</c:if>><a href='<c:url context="/JJ" value="/${submodule.url}"/>'>${submodule.name}</a></li>
+			          				 <li <c:if test="${menuSubmodule != null and fn:containsIgnoreCase(menuSubmodule.url,submodule.url)}">class="active"</c:if>><a href='<c:url context="${context}" value="/${submodule.url}"/>'>${submodule.name}</a></li>
 			          			</c:forEach>
 	          				</ul>
           				</li>

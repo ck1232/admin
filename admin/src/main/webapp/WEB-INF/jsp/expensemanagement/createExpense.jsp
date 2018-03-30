@@ -6,7 +6,7 @@
 	var supplierList = new Bloodhound({
 		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('supplier'),
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
-		  prefetch: '<c:url context="/JJ" value="/expense/getSupplierList" />'
+		  prefetch: '<c:url context="${context}" value="/expense/getSupplierList" />'
 		}); 
 
 	 $( function() {

@@ -5,7 +5,7 @@
 	var messengerList = new Bloodhound({
 		  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('messenger'),
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
-		  prefetch: '<c:url context="/JJ" value="/invoice/getMessengerList" />'
+		  prefetch: '<c:url context="${context}" value="/invoice/getMessengerList" />'
 		}); 
 
 	 $( function() {

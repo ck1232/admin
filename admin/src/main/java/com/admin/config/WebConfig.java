@@ -18,6 +18,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	
 	@Value("${image.folder}")
     private String imageFolderSource;
+	
 	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/development/**").addResourceLocations("/development/");

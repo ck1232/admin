@@ -14,8 +14,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.admin.common.vo.LoginUser;
 import com.admin.dao.UserDAO;
 import com.admin.helper.GeneralUtils;
+import com.admin.to.RoleTO;
 import com.admin.to.UserRoleTO;
 import com.admin.to.UserTO;
 @Service("userDetailsService")
@@ -33,22 +35,33 @@ public class AdminUserDetailsService implements UserDetailsService {
 		List<UserTO> userTOList = userDAO.findByUserNameAndDeleteInd(username, GeneralUtils.NOT_DELETED);
 		if(userTOList != null && !userTOList.isEmpty()){
 			UserTO userTO = userTOList.get(0);
-			List<GrantedAuthority> authorities = buildUserAuthority(userTO.getUserRoleTOSet());
-			return buildUserForAuthentication(userTO, authorities);
+			List<RoleTO> roleList = getRoleTOList(userTO.getUserRoleTOSet());
+			List<GrantedAuthority> authorities = buildUserAuthority(roleList);
+			return buildUserForAuthentication(userTO, authorities, roleList);
 		}
 		throw new UsernameNotFoundException("Invalid username or password.");
 	}
 
-	private User  buildUserForAuthentication(UserTO userTO, List<GrantedAuthority> authorities) {
-		boolean isEnable = GeneralUtils.YES_IND.equals(userTO.getEnabled()) ? false : true;
-		return new User(userTO.getUserName(), userTO.getPassword(), isEnable , true, true, true, authorities);
+	private User buildUserForAuthentication(UserTO userTO, List<GrantedAuthority> authorities, List<RoleTO> roleList) {
+		boolean isEnable = GeneralUtils.YES_IND.equals(userTO.getEnabled()) ? true : false;
+		return new LoginUser(userTO.getUserName(), userTO.getPassword(), isEnable , true, true, true, authorities, roleList, userTO);
 	}
-
-	private List<GrantedAuthority> buildUserAuthority(Set<UserRoleTO> userRoleTOSet) {
-		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
+	
+	private List<RoleTO> getRoleTOList(Set<UserRoleTO> userRoleTOSet){
+		List<RoleTO> roleTOList = new ArrayList<RoleTO>();
 		if(userRoleTOSet != null && !userRoleTOSet.isEmpty()){
 			for (UserRoleTO userRole : userRoleTOSet) {
-				String roleName = userRole.getPk().getRole().getName();
+				roleTOList.add(userRole.getRoleTO());
+			}
+		}
+		return roleTOList;
+	}
+
+	private List<GrantedAuthority> buildUserAuthority(List<RoleTO> roleList) {
+		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
+		List<String> roleNameList = GeneralUtils.convertListToStringList(roleList, "name", true);
+		if(roleNameList != null && !roleNameList.isEmpty()){
+			for (String roleName : roleNameList) {
 				setAuths.add(new SimpleGrantedAuthority(roleName));
 			}
 		}

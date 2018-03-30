@@ -49,7 +49,7 @@ public class UserTO extends BaseTO  {
 	@Column(name = "enabled", nullable=false)
     private String enabled;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.user", cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userTO", cascade=CascadeType.ALL)
 	private Set<UserRoleTO> userRoleTOSet;
 	
     public Long getUserId() {

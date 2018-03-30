@@ -8,13 +8,13 @@
      var productList = new Bloodhound({
     	  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('productName'),
     	  queryTokenizer: Bloodhound.tokenizers.whitespace,
-    	  prefetch: '<c:url context="/JJ" value="/batchintake/getProductList" />'
+    	  prefetch: '<c:url context="${context}" value="/batchintake/getProductList" />'
     	}); 
 
      var locationList = new Bloodhound({
    	  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
    	  queryTokenizer: Bloodhound.tokenizers.whitespace,
-   	  prefetch: '<c:url context="/JJ" value="/batchintake/getLocationList" />'
+   	  prefetch: '<c:url context="${context}" value="/batchintake/getLocationList" />'
    	}); 
  	
     $( function() {

@@ -331,7 +331,7 @@ public class GeneralUtils {
 		}
 	}
 	
-	public static <T>LinkedList<T> convertArrayToLinkedList(@SuppressWarnings("unchecked") T... array){
+	public static <T>LinkedList<T> convertArrayToLinkedList(T... array){
 		LinkedList<T> list = new LinkedList<T>();
 		if(array != null){
 			for(T obj : array){

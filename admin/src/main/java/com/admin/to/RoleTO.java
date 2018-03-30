@@ -30,8 +30,11 @@ public class RoleTO extends BaseTO  {
 	@Column(name = "name", nullable=false)
 	private String name;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role", cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "roleTO", cascade=CascadeType.ALL)
 	private Set<UserRoleTO> userRoleTOSet;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "roleTO", cascade=CascadeType.ALL)
+	private Set<SubModulePermissionTO> subModulePermissionSet;
 
 	public Long getRoleId() {
         return roleId;
@@ -57,6 +60,14 @@ public class RoleTO extends BaseTO  {
 		this.userRoleTOSet = userRoleTOSet;
 	}
 
+	public Set<SubModulePermissionTO> getSubModulePermissionSet() {
+		return subModulePermissionSet;
+	}
+
+	public void setSubModulePermissionSet(Set<SubModulePermissionTO> subModulePermissionSet) {
+		this.subModulePermissionSet = subModulePermissionSet;
+	}
+
 	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -71,7 +82,4 @@ public class RoleTO extends BaseTO  {
         sb.append(super.toString());
         return sb.toString();
     }
-    
-    
-    
 }

@@ -41,6 +41,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	  	.and()
 	  	.authorizeRequests()
 	  	.accessDecisionManager(accessDecisionManager())
+	  	.antMatchers("/404", "/error").permitAll()
 	  	.antMatchers("/invoice/saveExcelInvoice").anonymous()
 	  	.antMatchers("/").authenticated()
 	  	.antMatchers("/dashboard").fullyAuthenticated()
@@ -51,7 +52,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		.and().formLogin().loginPage("/login").permitAll()
 		.usernameParameter("username").passwordParameter("password")
-		.and().exceptionHandling().accessDeniedPage("/Access_Denied")
+		.and().exceptionHandling().accessDeniedPage("/Access_Denied").accessDeniedHandler(accessDeniedHandler)
 		.and().logout().invalidateHttpSession(true).logoutUrl("/logout").deleteCookies("JSESSIONID").permitAll()
 		.and().sessionManagement().maximumSessions(1).expiredUrl("/login").and().invalidSessionUrl("/login");
 	}
@@ -62,6 +63,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return encoder;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Bean
 	public AccessDecisionManager accessDecisionManager() {
 	    List<AccessDecisionVoter<? extends Object>> decisionVoters 

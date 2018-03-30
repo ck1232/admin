@@ -6,7 +6,7 @@
 	var option = new Bloodhound({
 	  datumTokenizer: Bloodhound.tokenizers.whitespace,
 	  queryTokenizer: Bloodhound.tokenizers.whitespace,
-	  prefetch: '<c:url context="/JJ" value="/product/product/getProductOptionName" />'
+	  prefetch: '<c:url context="${context}" value="/product/product/getProductOptionName" />'
 	});
 	
 	function addOption(){

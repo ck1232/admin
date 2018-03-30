@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
@@ -71,7 +72,7 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
         return prop;
 	}	
 	
-	@Bean(name = "dataSource")
+	@Bean(name = "dataSource", destroyMethod="")
 	public BasicDataSource dataSource() {
 		
 		BasicDataSource ds = new BasicDataSource();
@@ -84,6 +85,6 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
 	
 	@Bean(name="transactionManager")
     public HibernateTransactionManager txManager() {
-            return new HibernateTransactionManager(sessionFactory());
+		return new HibernateTransactionManager(sessionFactory());
     }
 }
