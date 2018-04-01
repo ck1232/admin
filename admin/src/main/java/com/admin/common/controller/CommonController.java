@@ -39,6 +39,7 @@ import com.admin.common.vo.LoginUser;
 import com.admin.common.vo.MenuVO;
 import com.admin.common.vo.ModuleVO;
 import com.admin.common.vo.SubModuleVO;
+import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
 import com.admin.submodule.service.SubModuleService;
 import com.admin.to.RoleTO;
@@ -109,10 +110,14 @@ public class CommonController {
 				subModuleMap.get(subModule.getParentId()).add(subModule);
 			}
 			for(ModuleVO module : moduleList){
-				module.setSubModuleList(subModuleMap.get(module.getModuleId()));
+				List<SubModuleVO> subModuleVOList = subModuleMap.get(module.getModuleId());
+				if(subModuleVOList != null && !subModuleVOList.isEmpty()) {
+					subModuleVOList = GeneralUtils.sortByVariable(subModuleVOList, "name");
+					module.setSubModuleList(subModuleVOList);
+				}
 			}
-			
 		}
+		moduleList = GeneralUtils.sortByVariable(moduleList, "moduleName");
 		menu.setModuleList(moduleList);
 		menu.setDteUpdated(new Date());
 		return menu;

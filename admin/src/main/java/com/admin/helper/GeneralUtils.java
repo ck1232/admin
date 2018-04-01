@@ -363,6 +363,28 @@ public class GeneralUtils {
 		return list;
 	}
 	
+	public static <T>List<T> sortByVariable(List<T> list, final String variableName){
+		Collections.sort(list, new Comparator<T>(){
+
+			@Override
+			public int compare(T o1, T o2) {
+				String value1 = (String) getObjectProprty(o1, variableName);
+				String value2 = (String) getObjectProprty(o2, variableName);
+				if(value1 != null && value2 != null){
+					return value1.compareTo(value2);
+				}else if (value1 != null){
+					return -1;
+				}else if (value2 != null){
+					return 1;
+				}else {
+					return 0;
+				}
+			}
+			
+		});
+		return list;
+	}
+	
 	public static <T>List<T> sortAccordingToSortList(List<T> list, final List<String> sortList, final String name){
 		Collections.sort(list, new Comparator<T>(){
 

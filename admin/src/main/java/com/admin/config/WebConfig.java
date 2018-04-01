@@ -1,9 +1,11 @@
 package com.admin.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -24,4 +26,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/development/**").addResourceLocations("/development/");
         registry.addResourceHandler("/images/**").addResourceLocations("file:"+imageFolderSource);
     }
+	
+	@Bean(name = "filterMultipartResolver")
+	   public CommonsMultipartResolver filterMultipartResolver() {
+	      CommonsMultipartResolver filterMultipartResolver = new CommonsMultipartResolver();
+	      filterMultipartResolver.setDefaultEncoding("utf-8");
+	      filterMultipartResolver.setMaxUploadSize(10485760);
+	      return filterMultipartResolver;
+	}
 }
