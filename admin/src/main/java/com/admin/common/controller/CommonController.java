@@ -165,16 +165,6 @@ public class CommonController {
 		return "query";
 	}
 	
-	@RequestMapping(value={"/404"}, method = RequestMethod.GET)
-	public String errorPage (Model model) {
-		return "404";
-	}
-	/*
-	@RequestMapping(value={"/500",}, method = RequestMethod.GET)
-	public String notFoundPage (Model model) {
-		return "500";
-	}*/
-	
 	@RequestMapping(value={"/viewLogs"}, method = RequestMethod.POST)
 	public String viewLogsPage (HttpServletResponse response, @RequestParam(value="view", required=true) int hashCode, Model model) throws Exception{
 //		String url = System.getProperty("wtp.deploy");

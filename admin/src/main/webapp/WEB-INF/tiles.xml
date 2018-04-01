@@ -14,11 +14,6 @@
   	<definition name="accessDenied" template="/WEB-INF/jsp/common/accessDenied.jsp" />
   	<definition name="login" template="/WEB-INF/jsp/common/login.jsp" />
   	
-  	<definition name="404" extends="main_template">  
-        <put-attribute name="title" value="404" /> 
-        <put-attribute name="body" value="/WEB-INF/jsp/common/404.jsp" />
-    </definition>
-  	
     <!-- Common Module START -->
     <definition name="dashboard" extends="main_template">  
         <put-attribute name="title" value="Dashboard" /> 
