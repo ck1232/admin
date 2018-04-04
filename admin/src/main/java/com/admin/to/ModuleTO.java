@@ -1,6 +1,6 @@
 package com.admin.to;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,7 +37,7 @@ public class ModuleTO extends BaseTO  {
 	@OneToMany(mappedBy="moduleTO", cascade=CascadeType.ALL)
 	@Where(clause="delete_ind='N'")
 	@ForeignKey( name = "none" )
-	private Set<SubModuleTO> subModuleTOSet;
+	private List<SubModuleTO> submoduleTOList;
 	
 	public Long getModuleId() {
         return moduleId;
@@ -63,12 +63,12 @@ public class ModuleTO extends BaseTO  {
         this.icon = icon == null ? null : icon.trim();
     }
     
-    public Set<SubModuleTO> getSubModuleTOSet() {
-		return subModuleTOSet;
+    public List<SubModuleTO> getSubmoduleTOList() {
+		return submoduleTOList;
 	}
 
-	public void setSubModuleTOSet(Set<SubModuleTO> subModuleTOSet) {
-		this.subModuleTOSet = subModuleTOSet;
+	public void setSubmoduleTOList(List<SubModuleTO> submoduleTOList) {
+		this.submoduleTOList = submoduleTOList;
 	}
 
 	@Override

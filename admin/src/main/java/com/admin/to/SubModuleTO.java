@@ -86,20 +86,20 @@ public class SubModuleTO extends BaseTO {
 		this.url = url;
 	}
 
+		public Long getSubModuleId() {
+		return subModuleId;
+	}
+
+	public void setSubModuleId(Long subModuleId) {
+		this.subModuleId = subModuleId;
+	}
+	
 	public Set<SubModulePermissionTO> getSubModulePermissionSet() {
 		return subModulePermissionSet;
 	}
 
 	public void setSubModulePermissionSet(Set<SubModulePermissionTO> subModulePermissionSet) {
 		this.subModulePermissionSet = subModulePermissionSet;
-	}
-
-	public Long getSubModuleId() {
-		return subModuleId;
-	}
-
-	public void setSubModuleId(Long subModuleId) {
-		this.subModuleId = subModuleId;
 	}
 
 	public Set<PermissionTypeTO> getPermissionTypeTOSet() {
