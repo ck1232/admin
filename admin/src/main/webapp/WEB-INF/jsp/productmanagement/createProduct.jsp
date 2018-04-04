@@ -220,7 +220,7 @@
 								                				</c:forEach>
 								                			</optgroup>
 								                		</c:if>
-								                		<c:if test="${category.isParentBoolean == false}">
+								                		<c:if test="${category.isParentBoolean == false &&  not empty category.subcategoryList}">
 								                			<form:option value="${category.subcategoryList.get(0).subCategoryId}">${category.subcategoryList.get(0).name}</form:option>
 								                		</c:if>
 								                	</c:forEach>

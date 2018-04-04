@@ -4,10 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -32,12 +40,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.admin.common.vo.FileVO;
 import com.admin.common.vo.LoginUser;
 import com.admin.common.vo.MenuVO;
 import com.admin.common.vo.ModuleVO;
 import com.admin.common.vo.SubModuleVO;
+import com.admin.filemgmt.utils.ExcelFileHelper;
+import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
 import com.admin.submodule.service.SubModuleService;
 import com.admin.to.RoleTO;
@@ -57,6 +68,21 @@ public class CommonController {
 	
 	@Value("${log.path}")
 	private String logUrl;
+	
+	@Value("${jdbc.driver}")
+	private String driver;
+	
+	@Value("${jdbc.url}")
+    private String url;
+	
+	@Value("${jdbc.query.user}")
+    private String user;
+	
+	@Value("${jdbc.query.password}")
+    private String password;
+	
+	@Value("${image.folder}")
+    private String imageFolderSource;
 	
 	private ModuleService moduleService;
 	private SubModuleService subModuleService;
@@ -108,10 +134,14 @@ public class CommonController {
 				subModuleMap.get(subModule.getParentId()).add(subModule);
 			}
 			for(ModuleVO module : moduleList){
-				module.setSubModuleList(subModuleMap.get(module.getModuleId()));
+				List<SubModuleVO> subModuleVOList = subModuleMap.get(module.getModuleId());
+				if(subModuleVOList != null && !subModuleVOList.isEmpty()) {
+					subModuleVOList = GeneralUtils.sortByVariable(subModuleVOList, "name");
+					module.setSubModuleList(subModuleVOList);
+				}
 			}
-			
 		}
+		moduleList = GeneralUtils.sortByVariable(moduleList, "moduleName");
 		menu.setModuleList(moduleList);
 		menu.setDteUpdated(new Date());
 		return menu;
@@ -119,6 +149,7 @@ public class CommonController {
 	
 	private List<SubModuleTO> extractSubModuleFromRoleTO(List<RoleTO> roleList) {
 		List<SubModuleTO> toList = new ArrayList<SubModuleTO>();
+		Set<SubModuleTO> toSet = new HashSet<SubModuleTO>();
 		if(roleList != null && !roleList.isEmpty()) {
 			for(RoleTO role: roleList) {
 				Set<SubModulePermissionTO> subModulePermissionSet = role.getSubModulePermissionSet();
@@ -126,12 +157,13 @@ public class CommonController {
 					for(SubModulePermissionTO subModulePermissionTO : subModulePermissionSet) {
 						SubModuleTO subModuleTO = subModulePermissionTO.getSubModuleTO();
 						if(subModuleTO != null) {
-							toList.add(subModuleTO);
+							toSet.add(subModuleTO);
 						}
 					}
 				}
 			}
 		}
+		toList.addAll(toSet);
 		return toList;
 	}
 
@@ -156,16 +188,6 @@ public class CommonController {
 	public String queryPage (Model model) {
 		return "query";
 	}
-	
-	@RequestMapping(value={"/404"}, method = RequestMethod.GET)
-	public String errorPage (Model model) {
-		return "404";
-	}
-	/*
-	@RequestMapping(value={"/500",}, method = RequestMethod.GET)
-	public String notFoundPage (Model model) {
-		return "500";
-	}*/
 	
 	@RequestMapping(value={"/viewLogs"}, method = RequestMethod.POST)
 	public String viewLogsPage (HttpServletResponse response, @RequestParam(value="view", required=true) int hashCode, Model model) throws Exception{
@@ -232,6 +254,130 @@ public class CommonController {
 		List<FileVO> filesList = convertToFileVO(fileList);
 		model.addAttribute("files", filesList);
 		return "logs";
+	}
+	
+	@RequestMapping(value="/query", method = RequestMethod.POST)
+	public String runSqlpage (@RequestParam(value="sqlStatement", required=true) String sqlStatement, final RedirectAttributes redirectAttributes, Model model) {
+		Statement statement = null;
+		String message = null;
+		if(sqlStatement != null && !sqlStatement.trim().isEmpty()){
+			try{
+				sqlStatement = sqlStatement.trim();
+				if(sqlStatement.charAt(sqlStatement.length()-1) != ';'){
+					sqlStatement += ';';
+				}
+				Class.forName(driver);
+				Connection connection = DriverManager.getConnection(url, user, password);
+				statement = connection.createStatement();
+				String sqlType = sqlStatement.substring(0, 6);
+				String sqlType2 = sqlStatement.substring(0, 4);
+				logger.debug("loading sql :"+ sqlStatement);
+				if (sqlType.equalsIgnoreCase("select") || sqlType2.equalsIgnoreCase("desc")){
+			         ResultSet resultSet = statement.executeQuery(sqlStatement);
+			         message =  GeneralUtils.getHtmlRows(resultSet);
+			         statement.close();
+			     }else{
+			    	 int i = statement.executeUpdate(sqlStatement);
+			    	 statement.close();
+			    	 message =  "<tr><td>" +
+		               "The statement executed successfully.<br>" +
+		               i + " row(s) affected." +
+		             "</td></tr>";
+			     }
+			}catch(Exception ex){
+				ex.printStackTrace();
+				logger.debug(ex.getMessage());
+				if(statement != null){
+					try {
+						statement.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				if(ex.getMessage().contains("denied ")){
+					message =  "<tr><td>Error executing the SQL statement: <br>"+
+				               "Access denied!"+
+				             "</td></tr>";
+				}else{
+					message =  "<tr><td>Error executing the SQL statement: <br>"+
+				               ex.getMessage()+
+				             "</td></tr>";
+				}
+			}
+		}
+		model.addAttribute("sqlStatement", sqlStatement);
+		redirectAttributes.addFlashAttribute("sqlStatement", sqlStatement);
+		redirectAttributes.addFlashAttribute("message", message);
+		return "redirect:query";
+	}
+	
+	@RequestMapping(value="/query/export", method = RequestMethod.POST)
+	public String runSqlExportPage (@RequestParam(value="sqlStatement", required=true) String sqlStatement,
+			final RedirectAttributes redirectAttributes, Model model, HttpServletResponse response) {
+		Statement statement = null;
+		String message = null;
+		if(sqlStatement != null && !sqlStatement.trim().isEmpty()){
+			try{
+				sqlStatement = sqlStatement.trim();
+				if(sqlStatement.charAt(sqlStatement.length()-1) != ';'){
+					sqlStatement += ';';
+				}
+				Class.forName(driver);
+				Connection connection = DriverManager.getConnection(url, user, password);
+				statement = connection.createStatement();
+				String sqlType = sqlStatement.substring(0, 6);
+				String sqlType2 = sqlStatement.substring(0, 4);
+				logger.debug("loading sql :"+ sqlStatement);
+				if (sqlType.equalsIgnoreCase("select") || sqlType2.equalsIgnoreCase("desc")){
+			         ResultSet resultSet = statement.executeQuery(sqlStatement);
+			         Workbook wb =  ExcelFileHelper.writeToFile(resultSet);
+			         statement.close();
+			         if(wb != null){
+			         	response.setContentType("application/vnd.ms-excel");
+			         	response.addHeader("Content-Disposition", "attachment; filename=data.xls");
+			             try{
+			             	wb.write(response.getOutputStream());
+			                response.getOutputStream().flush();
+			             } 
+			             catch (IOException ex) {
+			                 ex.printStackTrace();
+			             }
+			         }
+			         return null;
+			     }else{
+			    	 int i = statement.executeUpdate(sqlStatement);
+			    	 statement.close();
+			    	 message =  "<tr><td>" +
+		               "The statement executed successfully.<br>" +
+		               i + " row(s) affected." +
+		             "</td></tr>";
+			     }
+			}catch(Exception ex){
+				ex.printStackTrace();
+				logger.debug(ex.getMessage());
+				if(statement != null){
+					try {
+						statement.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				if(ex.getMessage().contains("denied ")){
+					message =  "<tr><td>Error executing the SQL statement: <br>"+
+				               "Access denied!"+
+				             "</td></tr>";
+				}else{
+					message =  "<tr><td>Error executing the SQL statement: <br>"+
+				               ex.getMessage()+
+				             "</td></tr>";
+				}
+				
+			}
+		}
+		model.addAttribute("sqlStatement", sqlStatement);
+		redirectAttributes.addFlashAttribute("sqlStatement", sqlStatement);
+		redirectAttributes.addFlashAttribute("message", message);
+		return "redirect:query";
 	}
 	
 	private List<FileVO> convertToFileVO(List<File> fileList) {
