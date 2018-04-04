@@ -2,7 +2,8 @@ package com.admin.config;
 
 import java.util.Properties;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import javax.sql.DataSource;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 @SpringBootApplication
 @ComponentScan(basePackages ={ "com.admin.*"})
 @EntityScan("com.admin.to")
@@ -52,7 +55,7 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
 	
 	
 	@Bean
-    public SessionFactory sessionFactory() {
+    public SessionFactory sessionFactory() throws Exception{
             LocalSessionFactoryBuilder builder = 
 		new LocalSessionFactoryBuilder(dataSource());
             builder.scanPackages("com.admin.to")
@@ -72,18 +75,31 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
 	}	
 	
 	@Bean(name = "dataSource", destroyMethod="")
-	public BasicDataSource dataSource() {
+	public DataSource dataSource() throws Exception{
+		ComboPooledDataSource cpds = new ComboPooledDataSource();
+		cpds.setJdbcUrl(url);
+		cpds.setUser(user);
+		cpds.setPassword(password);
+		cpds.setDriverClass(driver);
 		
-		BasicDataSource ds = new BasicDataSource();
-	        ds.setDriverClassName(driver);
+		cpds.setInitialPoolSize(5);
+		cpds.setMinPoolSize(5);
+		cpds.setAcquireIncrement(5);
+		cpds.setMaxPoolSize(5);
+		cpds.setMaxStatements(1000);
+		
+		return cpds;
+		
+		/*BasicDataSource ds = new BasicDataSource();
+	    ds.setDriverClassName(driver);
 		ds.setUrl(url);
 		ds.setUsername(user);
 		ds.setPassword(password);
-		return ds;
+		return ds;*/
 	}
 	
 	@Bean(name="transactionManager")
-    public HibernateTransactionManager txManager() {
+    public HibernateTransactionManager txManager() throws Exception{
 		return new HibernateTransactionManager(sessionFactory());
     }
 }
