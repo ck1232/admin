@@ -157,6 +157,14 @@
 		<artifactId>hibernate-c3p0</artifactId>
 		<version>5.2.16.Final</version>
 	</dependency>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.codehaus.janino</groupId>
+		<artifactId>janino</artifactId>
+	</dependency>
   </dependencies>
   <build>
     <finalName>admin</finalName>
