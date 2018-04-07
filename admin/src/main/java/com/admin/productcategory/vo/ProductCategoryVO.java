@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.admin.filemgmt.vo.FileMetaVO;
-import com.admin.filemgmt.vo.ImageLinkVO;
+import com.admin.file.vo.FileMetaVO;
+import com.admin.file.vo.ImageLinkVO;
 import com.admin.helper.vo.BaseVO;
-import com.admin.productmanagement.vo.ProductSubCategoryVO;
+import com.admin.product.vo.ProductSubCategoryVO;
 
 public class ProductCategoryVO extends BaseVO implements Serializable {
     private Long categoryId;

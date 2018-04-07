@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.admin.permissionmgmt.vo.SubModulePermissionTypeVO;
+import com.admin.permission.vo.SubModulePermissionTypeVO;
 
 @Component
 public class PermissionTypeFormValidator implements Validator {

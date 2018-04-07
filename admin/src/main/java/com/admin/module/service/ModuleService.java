@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.admin.common.vo.ModuleVO;
 import com.admin.dao.ModuleDAO;
 import com.admin.helper.GeneralUtils;
-import com.admin.submodule.service.SubModuleService;
+import com.admin.submodule.service.SubmoduleService;
 import com.admin.to.ModuleTO;
 import com.admin.to.SubModuleTO;
 
@@ -26,13 +26,13 @@ import com.admin.to.SubModuleTO;
 public class ModuleService {
 	
 	private ModuleDAO moduleDAO;
-	private SubModuleService subModuleService;
+	private SubmoduleService submoduleService;
 	
 	@Autowired
 	public ModuleService(ModuleDAO moduleDAO,
-			SubModuleService subModuleService) {
+			SubmoduleService submoduleService) {
 		this.moduleDAO = moduleDAO;
-		this.subModuleService = subModuleService;
+		this.submoduleService = submoduleService;
 	}
 	
 	public ModuleVO findById(Long id) {
@@ -91,7 +91,7 @@ public class ModuleService {
 				vo.setIcon(to.getIcon());
 				vo.setModuleId(to.getModuleId());
 				vo.setModuleName(to.getModuleName());
-				vo.setSubModuleList(subModuleService.convertToSubModuleVOList(to.getSubmoduleTOList()));
+				vo.setSubModuleList(submoduleService.convertToSubModuleVOList(to.getSubmoduleTOList()));
 				voList.add(vo);
 			}
 		}
@@ -117,7 +117,7 @@ public class ModuleService {
 				to.setIcon(vo.getIcon());
 				to.setModuleId(vo.getModuleId());
 				to.setModuleName(vo.getModuleName());
-				to.setSubmoduleTOList(subModuleService.convertToSubModuleTOList(vo.getSubModuleList(), to));
+				to.setSubmoduleTOList(submoduleService.convertToSubModuleTOList(vo.getSubModuleList(), to));
 				toList.add(to);
 			}
 		}

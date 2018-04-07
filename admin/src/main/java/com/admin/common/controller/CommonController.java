@@ -47,10 +47,10 @@ import com.admin.common.vo.LoginUser;
 import com.admin.common.vo.MenuVO;
 import com.admin.common.vo.ModuleVO;
 import com.admin.common.vo.SubModuleVO;
-import com.admin.filemgmt.utils.ExcelFileHelper;
+import com.admin.file.utils.ExcelFileHelper;
 import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
-import com.admin.submodule.service.SubModuleService;
+import com.admin.submodule.service.SubmoduleService;
 import com.admin.to.RoleTO;
 import com.admin.to.SubModulePermissionTO;
 import com.admin.to.SubModuleTO;
@@ -85,12 +85,12 @@ public class CommonController {
     private String imageFolderSource;
 	
 	private ModuleService moduleService;
-	private SubModuleService subModuleService;
+	private SubmoduleService submoduleService;
 	@Autowired
 	public CommonController(ModuleService moduleService,
-			SubModuleService subModuleService) {
+			SubmoduleService submoduleService) {
 		this.moduleService = moduleService;
-		this.subModuleService = subModuleService;
+		this.submoduleService = submoduleService;
 	}
 
 	@RequestMapping(value={"/login"},method = RequestMethod.GET)  
@@ -122,7 +122,7 @@ public class CommonController {
 	public MenuVO populateMenu(List<RoleTO> roleList){
 		MenuVO menu = new MenuVO();
 		List<SubModuleTO> subModuleTOList= extractSubModuleFromRoleTO(roleList);
-		List<SubModuleVO> subModuleList = subModuleService.convertToSubModuleVOList(subModuleTOList);
+		List<SubModuleVO> subModuleList = submoduleService.convertToSubModuleVOList(subModuleTOList);
 		List<ModuleVO> moduleList = moduleService.getAllModules();
 		
 		if(subModuleList != null && subModuleList.size() > 0){

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.admin.helper.vo.BaseVO;
-import com.admin.permissionmgmt.vo.SubModulePermissionTypeVO;
+import com.admin.permission.vo.SubModulePermissionTypeVO;
 
 public class SubModuleVO extends BaseVO implements Serializable {
     private Long submoduleId;
