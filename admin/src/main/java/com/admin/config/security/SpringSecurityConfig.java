@@ -70,7 +70,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	      = Arrays.asList(
 	        new WebExpressionVoter(),
 	    	new RoleVoter(),
-	        new AuthenticatedVoter());
+	        new AuthenticatedVoter(),
+	        new UrlVoter());
 	    return new UnanimousBased(decisionVoters);
 	}
 }

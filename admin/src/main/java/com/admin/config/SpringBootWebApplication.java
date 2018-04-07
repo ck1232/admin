@@ -71,6 +71,7 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
         prop.put("hibernate.dialect", 
             "org.hibernate.dialect.MySQL5Dialect");
         prop.put("hibernate.ddl-auto", "validate");
+        prop.put("hibernate.enable_lazy_load_no_trans", "true");
         return prop;
 	}	
 	
@@ -89,17 +90,19 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
 		cpds.setMaxStatements(1000);
 		
 		return cpds;
-		
-		/*BasicDataSource ds = new BasicDataSource();
-	    ds.setDriverClassName(driver);
-		ds.setUrl(url);
-		ds.setUsername(user);
-		ds.setPassword(password);
-		return ds;*/
 	}
 	
 	@Bean(name="transactionManager")
     public HibernateTransactionManager txManager() throws Exception{
 		return new HibernateTransactionManager(sessionFactory());
     }
+	
+   /*@Bean
+   public FilterRegistrationBean registerOpenEntityManagerInViewFilterBean() {
+       FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+       OpenEntityManagerInViewFilter filter = new OpenEntityManagerInViewFilter();
+       registrationBean.setFilter(filter);
+       registrationBean.setOrder(5);
+       return registrationBean;
+   }*/
 }

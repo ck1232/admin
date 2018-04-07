@@ -12,7 +12,6 @@ import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Where;
 @Entity
 @DynamicUpdate
-@Table(name = "image_link_rs")
 public class CategoryImageLinkRsTO extends ImageLinkRsTO {
 	
 	@Transient
