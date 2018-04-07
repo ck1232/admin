@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,7 @@ import com.admin.file.vo.FileVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
 import com.admin.module.vo.ModuleVO;
+import com.admin.role.service.RoleService;
 import com.admin.submodule.service.SubmoduleService;
 import com.admin.submodule.vo.SubModuleVO;
 import com.admin.to.RoleTO;
@@ -86,11 +88,14 @@ public class CommonController {
 	
 	private ModuleService moduleService;
 	private SubmoduleService submoduleService;
+	private RoleService roleService;
 	@Autowired
 	public CommonController(ModuleService moduleService,
-			SubmoduleService submoduleService) {
+			SubmoduleService submoduleService,
+			RoleService roleService) {
 		this.moduleService = moduleService;
 		this.submoduleService = submoduleService;
+		this.roleService = roleService;
 	}
 
 	@RequestMapping(value={"/login"},method = RequestMethod.GET)  
@@ -110,8 +115,8 @@ public class CommonController {
     		if(session.getAttribute("menu") == null) {
     			session.setAttribute("menu", this.populateMenu(userDetails.getRoleList()));
     		}
-//	    	List<String> urlList = commonService.getAllowedUrlByRoleName(roleList);
-//	    	session.setAttribute("allowedUrl", urlList);
+	    	List<String> urlList = roleService.getAllowedUrlByRoleName(userDetails.getRoleList());
+	    	session.setAttribute("allowedUrl", urlList);
     	}else if(principal instanceof String){
     		logger.error("principal object invalid:"+ principal);
     		logger.debug("principal:"+principal.toString());
@@ -121,25 +126,33 @@ public class CommonController {
 	
 	public MenuVO populateMenu(List<RoleTO> roleList){
 		MenuVO menu = new MenuVO();
-		List<SubModuleTO> subModuleTOList= extractSubModuleFromRoleTO(roleList);
+		List<SubModuleTO> subModuleTOList= extractSubModuleFromRoleTO(roleList); //allowed submodule
 		List<SubModuleVO> subModuleList = submoduleService.convertToSubModuleVOList(subModuleTOList);
 		List<ModuleVO> moduleList = moduleService.getAllModules();
 		
-		if(subModuleList != null && subModuleList.size() > 0){
+		if(subModuleList != null && !subModuleList.isEmpty()){
 			Map<Long, List<SubModuleVO>> subModuleMap = new HashMap<Long, List<SubModuleVO>>();
-			for(SubModuleVO subModule : subModuleList){
+			for(SubModuleVO subModule : subModuleList){ //add to submodulemap
 				if(subModuleMap.get(subModule.getParentId()) == null){
-					subModuleMap.put(subModule.getParentId(), new ArrayList<SubModuleVO>());
+					subModuleMap.put(subModule.getParentId(), new ArrayList<SubModuleVO>()); 
 				}
 				subModuleMap.get(subModule.getParentId()).add(subModule);
 			}
-			for(ModuleVO module : moduleList){
-				List<SubModuleVO> subModuleVOList = subModuleMap.get(module.getModuleId());
+			
+			Iterator<ModuleVO> it = moduleList.iterator();
+			while(it.hasNext()) {
+				ModuleVO module = it.next();
+				List<SubModuleVO> subModuleVOList = subModuleMap.get(module.getModuleId()); // allowed submodule retrieved from db
 				if(subModuleVOList != null && !subModuleVOList.isEmpty()) {
 					subModuleVOList = GeneralUtils.sortByVariable(subModuleVOList, "name");
 					module.setSubModuleList(subModuleVOList);
 				}
+				else {
+					it.remove();
+				}
 			}
+			
+			
 		}
 		moduleList = GeneralUtils.sortByVariable(moduleList, "moduleName");
 		menu.setModuleList(moduleList);

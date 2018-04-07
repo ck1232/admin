@@ -2,7 +2,9 @@ package com.admin.role.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.admin.dao.RoleDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.role.vo.RoleVO;
+import com.admin.to.PermissionTypeTO;
 import com.admin.to.RoleTO;
+import com.admin.to.SubModulePermissionTO;
 
 @Service
 @Scope("prototype")
@@ -103,5 +107,23 @@ public class RoleService {
 			}
 		}
 		return roleTOList;
+	}
+
+	public List<String> getAllowedUrlByRoleName(List<RoleTO> roleList) {
+		Set<String> allowedUrlList = new HashSet<String>();
+		if(roleList != null && !roleList.isEmpty()) {
+			for(RoleTO role : roleList) {
+				Set<SubModulePermissionTO> subModulePermissionSet = role.getSubModulePermissionSet();
+				if(subModulePermissionSet != null && !subModulePermissionSet.isEmpty()) {
+					for(SubModulePermissionTO subModulePermissionTO : subModulePermissionSet) {
+						PermissionTypeTO permissionTO = subModulePermissionTO.getPermissionType();
+						if(permissionTO != null && permissionTO.getUrl() != null) {
+							allowedUrlList.add(permissionTO.getUrl());
+						}
+					}
+				}
+			}
+		}
+		return new ArrayList<String>(allowedUrlList);
 	}
 }
