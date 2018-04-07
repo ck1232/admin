@@ -1,8 +1,10 @@
 package com.admin.common.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.admin.helper.vo.BaseVO;
+import com.admin.permissionmgmt.vo.SubModulePermissionTypeVO;
 
 public class SubModuleVO extends BaseVO implements Serializable {
     private Long submoduleId;
@@ -16,6 +18,8 @@ public class SubModuleVO extends BaseVO implements Serializable {
     private String url;
     
     private String parentModuleName;
+    
+    private List<SubModulePermissionTypeVO> permissionTypeList;
 
     private static final long serialVersionUID = 1L;
 
@@ -65,6 +69,14 @@ public class SubModuleVO extends BaseVO implements Serializable {
 
 	public void setParentModuleName(String parentModuleName) {
 		this.parentModuleName = parentModuleName;
+	}
+
+	public List<SubModulePermissionTypeVO> getPermissionTypeList() {
+		return permissionTypeList;
+	}
+
+	public void setPermissionTypeList(List<SubModulePermissionTypeVO> permissionTypeList) {
+		this.permissionTypeList = permissionTypeList;
 	}
 
 	@Override

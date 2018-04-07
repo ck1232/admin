@@ -2,6 +2,7 @@ package com.admin.submodule.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.admin.common.vo.ModuleVO;
 import com.admin.common.vo.SubModuleVO;
 import com.admin.dao.SubModuleDAO;
 import com.admin.helper.GeneralUtils;
+import com.admin.permissionmgmt.service.PermissionService;
 import com.admin.to.ModuleTO;
+import com.admin.to.PermissionTypeTO;
 import com.admin.to.SubModuleTO;
 
 @Service
@@ -23,10 +27,13 @@ import com.admin.to.SubModuleTO;
 public class SubModuleService {
 	
 	private SubModuleDAO submoduleDAO;
+	private PermissionService permissionService;
 	
 	@Autowired
-	public SubModuleService(SubModuleDAO submoduleDAO) {
+	public SubModuleService(SubModuleDAO submoduleDAO,
+			PermissionService permissionService) {
 		this.submoduleDAO = submoduleDAO;
+		this.permissionService = permissionService;
 	}
 
 	public SubModuleVO findById(Long id) {
@@ -47,6 +54,11 @@ public class SubModuleService {
 		List<SubModuleTO> submoduleTOList = submoduleDAO.findBySubModuleIdIn(subModuleList);
 		return convertToSubModuleVOList(submoduleTOList);
 	}
+	
+	/*public void saveSubModule(SubModuleVO subModuleVO) {
+		List<SubModuleTO> moduleTOList = convertToSubModuleTOList(Arrays.asList(subModuleVO));
+		moduleDAO.save(moduleTOList);
+	}*/
 	
 	public void deleteSubmodule(Long id) {
 		deleteSubmodule(Arrays.asList(id));
@@ -75,6 +87,7 @@ public class SubModuleService {
 				vo.setUrl(to.getUrl());
 				vo.setParentId(to.getModuleTO().getModuleId());
 				vo.setParentModuleName(to.getModuleTO().getModuleName());
+				vo.setPermissionTypeList(permissionService.convertToSubModulePermissionTypeVOList(new ArrayList<PermissionTypeTO>(to.getPermissionTypeTOSet())));
 				voList.add(vo);
 			}
 		}
@@ -83,7 +96,7 @@ public class SubModuleService {
 	
 	public List<SubModuleTO> convertToSubModuleTOList(List<SubModuleVO> voList, ModuleTO moduleTO) {
 		List<SubModuleTO> toList = new ArrayList<SubModuleTO>();
-		if(voList != null && voList.size() > 0){
+		if(voList != null && !voList.isEmpty()){
 			Map<Long, SubModuleTO> submoduleTOMap = GeneralUtils.convertListToLongMap(moduleTO.getSubmoduleTOList(), "subModuleId");
 			for(SubModuleVO vo : voList){
 				SubModuleTO to = new SubModuleTO();
@@ -96,6 +109,7 @@ public class SubModuleService {
 				to.setModuleTO(moduleTO);
 				to.setSubModuleId(vo.getSubmoduleId());
 				to.setUrl(vo.getUrl());
+				to.setPermissionTypeTOSet(new HashSet<PermissionTypeTO>(permissionService.convertToPermissionTypeTOList(vo.getPermissionTypeList(), to)));
 				toList.add(to);
 			}
 		}

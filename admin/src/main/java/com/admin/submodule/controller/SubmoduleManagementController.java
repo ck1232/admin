@@ -197,18 +197,20 @@ public class SubmoduleManagementController {
 		boolean pass = true;
 		ModuleVO moduleVO = moduleService.findById(submodule.getParentId());
 		List<SubModuleVO> submoduleList = moduleVO.getSubModuleList();
-		for(SubModuleVO sm: submoduleList){
-			if(!submodule.getSubmoduleId().equals(sm.getSubmoduleId()) && submodule.getName().equals(sm.getName())) { //if exist name
-				result.rejectValue("name", "error.exist.submoduleform.name");;
-				pass = false;
-				break;
+		if(submoduleList != null && !submoduleList.isEmpty()) {
+			for(SubModuleVO sm: submoduleList){
+				if(!submodule.getSubmoduleId().equals(sm.getSubmoduleId()) && submodule.getName().equals(sm.getName())) { //if exist name
+					result.rejectValue("name", "error.exist.submoduleform.name");;
+					pass = false;
+					break;
+				}
 			}
-		}
-		for(SubModuleVO sm: submoduleList){
-			if(!submodule.getSubmoduleId().equals(sm.getSubmoduleId()) && submodule.getUrl().equals(sm.getUrl())) { //if exist url
-				result.rejectValue("url", "error.exist.submoduleform.url");;
-				pass = false;
-				break;
+			for(SubModuleVO sm: submoduleList){
+				if(!submodule.getSubmoduleId().equals(sm.getSubmoduleId()) && submodule.getUrl().equals(sm.getUrl())) { //if exist url
+					result.rejectValue("url", "error.exist.submoduleform.url");;
+					pass = false;
+					break;
+				}
 			}
 		}
 		if(!pass){
@@ -217,6 +219,7 @@ public class SubmoduleManagementController {
 		
 		redirectAttributes.addFlashAttribute("css", "success");
 		redirectAttributes.addFlashAttribute("msg", "Submodule updated successfully!");
+		
 		
 		moduleVO.getSubModuleList().add(submodule);
 		moduleService.saveModule(moduleVO);

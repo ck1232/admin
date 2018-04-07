@@ -36,7 +36,7 @@ public class PermissionTypeTO extends BaseTO {
 	private String permissionType;
 	
 	@Column(name = "seq_num", nullable=false)
-	private Integer seqNum;
+	private Long seqNum;
 	
 	@Column(name = "url", nullable=false)
 	private String url;
@@ -65,11 +65,11 @@ public class PermissionTypeTO extends BaseTO {
 		this.permissionType = permissionType;
 	}
 
-	public Integer getSeqNum() {
+	public Long getSeqNum() {
 		return seqNum;
 	}
 
-	public void setSeqNum(Integer seqNum) {
+	public void setSeqNum(Long seqNum) {
 		this.seqNum = seqNum;
 	}
 
