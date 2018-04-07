@@ -42,18 +42,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.admin.common.vo.FileVO;
-import com.admin.common.vo.LoginUser;
 import com.admin.common.vo.MenuVO;
-import com.admin.common.vo.ModuleVO;
-import com.admin.common.vo.SubModuleVO;
 import com.admin.file.utils.ExcelFileHelper;
+import com.admin.file.vo.FileVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
+import com.admin.module.vo.ModuleVO;
 import com.admin.submodule.service.SubmoduleService;
+import com.admin.submodule.vo.SubModuleVO;
 import com.admin.to.RoleTO;
 import com.admin.to.SubModulePermissionTO;
 import com.admin.to.SubModuleTO;
+import com.admin.user.vo.LoginUserVO;
 
 @Controller
 @Scope("session")
@@ -102,8 +102,8 @@ public class CommonController {
     public String loadDashboard(HttpSession session) {  
     	logger.debug("dashboard is executed!");
     	Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	if(principal instanceof LoginUser){
-    		LoginUser userDetails = (LoginUser)principal;
+    	if(principal instanceof LoginUserVO){
+    		LoginUserVO userDetails = (LoginUserVO)principal;
     		if(session.getAttribute("userAccount") == null) {
     			session.setAttribute("userAccount", principal);
     		}

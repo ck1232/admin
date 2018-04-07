@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.admin.common.vo.ModuleVO;
 import com.admin.dao.ModuleDAO;
 import com.admin.helper.GeneralUtils;
+import com.admin.module.vo.ModuleVO;
 import com.admin.submodule.service.SubmoduleService;
 import com.admin.to.ModuleTO;
 import com.admin.to.SubModuleTO;

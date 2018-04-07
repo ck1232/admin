@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.admin.module.vo.ModuleVO;
+
 public class MenuVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

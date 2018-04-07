@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.admin.common.vo.ModuleVO;
-import com.admin.common.vo.SubModuleVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
+import com.admin.module.vo.ModuleVO;
 import com.admin.submodule.service.SubmoduleService;
+import com.admin.submodule.vo.SubModuleVO;
 import com.admin.validator.SubmoduleFormValidator;
 
 @Controller  

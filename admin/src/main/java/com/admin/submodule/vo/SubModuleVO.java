@@ -1,4 +1,4 @@
-package com.admin.common.vo;
+package com.admin.submodule.vo;
 
 import java.io.Serializable;
 import java.util.List;

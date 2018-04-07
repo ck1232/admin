@@ -1,9 +1,10 @@
-package com.admin.common.vo;
+package com.admin.module.vo;
 
 import java.io.Serializable;
 import java.util.List;
 
 import com.admin.helper.vo.BaseVO;
+import com.admin.submodule.vo.SubModuleVO;
 
 public class ModuleVO extends BaseVO implements Serializable {
     private Long moduleId;

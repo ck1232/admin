@@ -1,4 +1,4 @@
-package com.admin.users.service;
+package com.admin.user.service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,19 +14,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.admin.common.vo.LoginUser;
 import com.admin.dao.UserDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.to.RoleTO;
 import com.admin.to.UserRoleTO;
 import com.admin.to.UserTO;
+import com.admin.user.vo.LoginUserVO;
 @Service("userDetailsService")
-public class AdminUserDetailsService implements UserDetailsService {
+public class AdminUserDetailService implements UserDetailsService {
 	
 	private UserDAO userDAO;
 	
 	@Autowired
-	public AdminUserDetailsService(UserDAO userDAO) {
+	public AdminUserDetailService(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
 
@@ -44,7 +44,7 @@ public class AdminUserDetailsService implements UserDetailsService {
 
 	private User buildUserForAuthentication(UserTO userTO, List<GrantedAuthority> authorities, List<RoleTO> roleList) {
 		boolean isEnable = GeneralUtils.YES_IND.equals(userTO.getEnabled()) ? true : false;
-		return new LoginUser(userTO.getUserName(), userTO.getPassword(), isEnable , true, true, true, authorities, roleList, userTO);
+		return new LoginUserVO(userTO.getUserName(), userTO.getPassword(), isEnable , true, true, true, authorities, roleList, userTO);
 	}
 	
 	private List<RoleTO> getRoleTOList(Set<UserRoleTO> userRoleTOSet){

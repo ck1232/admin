@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.admin.common.vo.SubModuleVO;
 import com.admin.dao.SubModuleDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.permission.service.PermissionService;
+import com.admin.submodule.vo.SubModuleVO;
 import com.admin.to.ModuleTO;
 import com.admin.to.PermissionTypeTO;
 import com.admin.to.SubModuleTO;

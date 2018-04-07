@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.admin.common.vo.SubModuleVO;
+import com.admin.submodule.vo.SubModuleVO;
 
 @Component
 public class SubmoduleFormValidator implements Validator {

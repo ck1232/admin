@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.admin.common.vo.ModuleVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
+import com.admin.module.vo.ModuleVO;
 import com.admin.validator.ModuleFormValidator;
 
 @Controller  
@@ -34,13 +34,13 @@ import com.admin.validator.ModuleFormValidator;
 public class ModuleController {
 	private static final Logger logger = Logger.getLogger(ModuleController.class);
 	
-	private ModuleService moduleMgmtService;
+	private ModuleService moduleService;
 	private ModuleFormValidator moduleFormValidator;
 
 	@Autowired
-	public ModuleController(ModuleService moduleMgmtService,
+	public ModuleController(ModuleService moduleService,
 			ModuleFormValidator moduleFormValidator){
-		this.moduleMgmtService = moduleMgmtService;
+		this.moduleService = moduleService;
 		this.moduleFormValidator = moduleFormValidator;
 	}
 	
@@ -53,7 +53,7 @@ public class ModuleController {
 	@RequestMapping(value = "/getModuleList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getModuleList() {
 		logger.debug("getting Module list");
-		List<ModuleVO> moduleList = moduleMgmtService.getAllModules();
+		List<ModuleVO> moduleList = moduleService.getAllModules();
 		return GeneralUtils.convertListToJSONString(moduleList);
 	}
 	
@@ -84,7 +84,7 @@ public class ModuleController {
 			redirectAttributes.addFlashAttribute("css", "success");
 			redirectAttributes.addFlashAttribute("msg", "Module added successfully!");
 		}
-		moduleMgmtService.saveModule(moduleVO);
+		moduleService.saveModule(moduleVO);
 		
         return "redirect:listModule";  
     }  
@@ -98,7 +98,7 @@ public class ModuleController {
 			return "redirect:listModule";
 		}
 		for (String id : ids) {
-			moduleMgmtService.deleteModule(Long.parseLong(id));
+			moduleService.deleteModule(Long.parseLong(id));
 			logger.debug("deleted "+ id);
 		}
 		redirectAttributes.addFlashAttribute("css", "success");
@@ -109,7 +109,7 @@ public class ModuleController {
 	@RequestMapping(value = "/updateModule", method = RequestMethod.POST)
 	public String getModuleToUpdate(@RequestParam("editBtn") String id, Model model) {
 		logger.debug("id = " + id);
-		ModuleVO moduleVO = moduleMgmtService.findById(Long.parseLong(id));
+		ModuleVO moduleVO = moduleService.findById(Long.parseLong(id));
 		if (moduleVO == null) {
 			model.addAttribute("css", "danger");
 			model.addAttribute("msg", "Module not found");
@@ -127,7 +127,7 @@ public class ModuleController {
 		if (result.hasErrors()) {
 			return "updateModule";
 		} else {
-			moduleMgmtService.updateModule(moduleVO);
+			moduleService.updateModule(moduleVO);
 			redirectAttributes.addFlashAttribute("css", "success");
 			redirectAttributes.addFlashAttribute("msg", "Module updated successfully!");
 		}
