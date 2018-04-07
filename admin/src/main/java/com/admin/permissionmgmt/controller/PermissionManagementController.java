@@ -267,18 +267,18 @@ public class PermissionManagementController {
 		return "redirect:updatePermissionType/" + submoduleid;
 	}
 	
-//	@RequestMapping(value = "/savePermissionTypeSeqToDb", method = RequestMethod.POST)
-//	public String savePermissionTypeSeqToDb(@RequestParam("permissionTypeid") String id, 
-//			@RequestParam("seqno") String seqno,
-//			final RedirectAttributes redirectAttributes) {
-//		SubModulePermissionTypeVO submodulepermissiontype = permissionService.findById(new Integer(id));
-//		submodulepermissiontype.setSeqNum(Integer.valueOf(seqno));
-//		permissionService.updateSubmodulepermissiontype(submodulepermissiontype);
-//		
-//		redirectAttributes.addFlashAttribute("css","success");
-//		redirectAttributes.addFlashAttribute("msg", "Sequence number saved successfully.");
-//		
-//		return "redirect:updatePermissionType/" + submodulepermissiontype.getSubmoduleId();
-//	}
+	@RequestMapping(value = "/savePermissionTypeSeqToDb", method = RequestMethod.POST)
+	public String savePermissionTypeSeqToDb(@RequestParam("permissionTypeid") String id, 
+			@RequestParam("seqno") String seqno,
+			final RedirectAttributes redirectAttributes) {
+		SubModulePermissionTypeVO submodulepermissiontype = permissionService.findById(Long.parseLong(id));
+		submodulepermissiontype.setSeqNum(Long.parseLong(seqno));
+		permissionService.saveSubmodulepermissiontype(submodulepermissiontype);
+		
+		redirectAttributes.addFlashAttribute("css","success");
+		redirectAttributes.addFlashAttribute("msg", "Sequence number saved successfully.");
+		
+		return "redirect:updatePermissionType/" + submodulepermissiontype.getSubmoduleId();
+	}
 	
 }
