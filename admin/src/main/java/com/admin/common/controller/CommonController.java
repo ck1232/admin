@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -49,11 +47,11 @@ import com.admin.file.vo.FileVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.module.service.ModuleService;
 import com.admin.module.vo.ModuleVO;
+import com.admin.permission.service.PermissionService;
 import com.admin.role.service.RoleService;
 import com.admin.submodule.service.SubmoduleService;
 import com.admin.submodule.vo.SubModuleVO;
 import com.admin.to.RoleTO;
-import com.admin.to.SubModulePermissionTO;
 import com.admin.to.SubModuleTO;
 import com.admin.user.vo.LoginUserVO;
 
@@ -89,13 +87,17 @@ public class CommonController {
 	private ModuleService moduleService;
 	private SubmoduleService submoduleService;
 	private RoleService roleService;
+	private PermissionService permissionService;
+	
 	@Autowired
 	public CommonController(ModuleService moduleService,
 			SubmoduleService submoduleService,
-			RoleService roleService) {
+			RoleService roleService,
+			PermissionService permissionService) {
 		this.moduleService = moduleService;
 		this.submoduleService = submoduleService;
 		this.roleService = roleService;
+		this.permissionService = permissionService;
 	}
 
 	@RequestMapping(value={"/login"},method = RequestMethod.GET)  
@@ -126,7 +128,7 @@ public class CommonController {
 	
 	public MenuVO populateMenu(List<RoleTO> roleList){
 		MenuVO menu = new MenuVO();
-		List<SubModuleTO> subModuleTOList= extractSubModuleFromRoleTO(roleList); //allowed submodule
+		List<SubModuleTO> subModuleTOList= permissionService.getSubmoduleByRoleTOList(roleList); //allowed submodule
 		List<SubModuleVO> subModuleList = submoduleService.convertToSubModuleVOList(subModuleTOList);
 		List<ModuleVO> moduleList = moduleService.getAllModules();
 		
@@ -158,26 +160,6 @@ public class CommonController {
 		menu.setModuleList(moduleList);
 		menu.setDteUpdated(new Date());
 		return menu;
-	}
-	
-	private List<SubModuleTO> extractSubModuleFromRoleTO(List<RoleTO> roleList) {
-		List<SubModuleTO> toList = new ArrayList<SubModuleTO>();
-		Set<SubModuleTO> toSet = new HashSet<SubModuleTO>();
-		if(roleList != null && !roleList.isEmpty()) {
-			for(RoleTO role: roleList) {
-				Set<SubModulePermissionTO> subModulePermissionSet = role.getSubModulePermissionSet();
-				if(subModulePermissionSet != null && !subModulePermissionSet.isEmpty()) {
-					for(SubModulePermissionTO subModulePermissionTO : subModulePermissionSet) {
-						SubModuleTO subModuleTO = subModulePermissionTO.getSubModuleTO();
-						if(subModuleTO != null) {
-							toSet.add(subModuleTO);
-						}
-					}
-				}
-			}
-		}
-		toList.addAll(toSet);
-		return toList;
 	}
 
 	@RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)

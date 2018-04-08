@@ -2,8 +2,10 @@ package com.admin.permission.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +18,8 @@ import com.admin.dao.SubModuleDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.permission.vo.SubModulePermissionTypeVO;
 import com.admin.to.PermissionTypeTO;
+import com.admin.to.RoleTO;
+import com.admin.to.SubModulePermissionTO;
 import com.admin.to.SubModuleTO;
 
 @Service
@@ -102,5 +106,31 @@ public class PermissionService {
 	}
 
 	//Submodulepermissiontype functions END
+	
+	
+	
+	//Submodulepermission functions START
+	public List<SubModuleTO> getSubmoduleByRoleTOList(List<RoleTO> roleList) {
+		List<SubModuleTO> toList = new ArrayList<SubModuleTO>();
+		Set<SubModuleTO> toSet = new HashSet<SubModuleTO>();
+		if(roleList != null && !roleList.isEmpty()) {
+			for(RoleTO role: roleList) {
+				Set<SubModulePermissionTO> subModulePermissionSet = role.getSubModulePermissionSet();
+				if(subModulePermissionSet != null && !subModulePermissionSet.isEmpty()) {
+					for(SubModulePermissionTO subModulePermissionTO : subModulePermissionSet) {
+						SubModuleTO subModuleTO = subModulePermissionTO.getSubModuleTO();
+						if(subModuleTO != null) {
+							toSet.add(subModuleTO);
+						}
+					}
+				}
+			}
+		}
+		toList.addAll(toSet);
+		return toList;
+	}
+	
+	
+	//Submodulepermission functions END
 	
 }
