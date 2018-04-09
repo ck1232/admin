@@ -140,6 +140,11 @@ public class PermissionService {
 		return toList;
 	}
 	
+	public List<SubModulePermissionVO> findSubmodulePermissionByRoleIdList(List<Long> roleIdList) {
+		List<SubModulePermissionTO> toList = submodulePermissionDAO.findByRoleTO_RoleIdInAndDeleteInd(roleIdList, GeneralUtils.NOT_DELETED);
+		return convertToSubModulePermissionVOList(toList);
+	}
+	
 	public void saveNewSubmodulepermission(List<SubModulePermissionVO> voList) {
 		if(voList != null && !voList.isEmpty()) {
 			List<SubModulePermissionTO> submodulePermissionTOList = new ArrayList<SubModulePermissionTO>();
@@ -152,11 +157,10 @@ public class PermissionService {
 			}
 			submodulePermissionDAO.save(submodulePermissionTOList);
 		}
-		
 	}
 	
 	public void deleteSubmodulePermissionByRoleIdAndSubmoduleId(Long roleId, Long submoduleId) {
-		List<SubModulePermissionTO> submodulePermissionTOList = submodulePermissionDAO.findByRoleTO_RoleIdAndSubModuleTO_SubModuleId(roleId, submoduleId);
+		List<SubModulePermissionTO> submodulePermissionTOList = submodulePermissionDAO.findByRoleTO_RoleIdAndSubModuleTO_SubModuleIdAndDeleteInd(roleId, submoduleId, GeneralUtils.NOT_DELETED);
 		if(submodulePermissionTOList != null && !submodulePermissionTOList.isEmpty()) {
 			for(SubModulePermissionTO submodulePermissionTO : submodulePermissionTOList) {
 				submodulePermissionTO.setDeleteInd(GeneralUtils.DELETED);

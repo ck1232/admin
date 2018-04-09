@@ -129,32 +129,6 @@ public class PermissionController {
 			}
 		}
 		
-		/*List<RolesToPermissionCustomDbObject> rolesToPermissionList = permissionService.getRolesToPermission(submoduleid);
-
-		List<RolesToPermissionCustomDbObject> permissionList = new ArrayList<RolesToPermissionCustomDbObject>();
-		Map<Integer, RolesToPermissionCustomDbObject> permissionMap = new HashMap<Integer, RolesToPermissionCustomDbObject>();
-		for(RolesToPermissionCustomDbObject obj : rolesToPermissionList){
-			RolesToPermissionCustomDbObject roleToPermission = permissionMap.get(obj.getRoleId());
-			if(roleToPermission == null){
-				permissionMap.put(obj.getRoleId(), obj);
-			}else{
-				if(roleToPermission.getPermission() != null && !roleToPermission.getPermission().isEmpty()){
-					roleToPermission.setPermission(roleToPermission.getPermission()+","+obj.getPermission());
-				}else{
-					roleToPermission.setPermission(obj.getPermission());
-				}
-				
-				if(roleToPermission.getPermissionId() != null && !roleToPermission.getPermissionId().isEmpty()){
-					roleToPermission.setPermissionId(roleToPermission.getPermissionId()+","+obj.getPermissionId());
-				}else{
-					roleToPermission.setPermissionId(obj.getPermissionId());
-				}
-			}
-		}
-		for(RolesToPermissionCustomDbObject obj : permissionMap.values()){
-			permissionList.add(obj);
-		}*/
-		
 		return GeneralUtils.convertListToJSONString(rolesToPermissionList);
 	}
 	
@@ -178,18 +152,6 @@ public class PermissionController {
 			}
 			permissionService.saveNewSubmodulepermission(submodulePermissionVOList);
 		}
-		
-		/*permissionService.deleteSubmodulepermission(Integer.valueOf(roleid), Integer.valueOf(submoduleid));
-		
-		if(submodulePermissionList != null && submodulePermissionList.size() > 0){
-			for(String submodulePermission: submodulePermissionList){
-				SubModulePermissionVO submodulepermission = new SubModulePermissionVO();
-				submodulepermission.setRoleId(new Integer(roleid));
-				submodulepermission.setSubmoduleId(new Integer(submoduleid));
-				submodulepermission.setPermissionTypeId(Integer.valueOf(submodulePermission));
-				permissionService.saveSubmodulepermission(submodulepermission);
-			}
-		}*/
 		
 		redirectAttributes.addFlashAttribute("css","success");
 		redirectAttributes.addFlashAttribute("msg", "Permission saved to role successfully.");

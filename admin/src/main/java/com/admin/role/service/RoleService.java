@@ -24,19 +24,11 @@ import com.admin.to.SubModulePermissionTO;
 @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRED)
 public class RoleService {
 	
-//	private RoleDbObjectMapper roleDbObjectMapper;
 	private RoleDAO roleDAO;
-//	private RoleAssignmentService roleAssignmentService;
-//	private PermissionManagementService permissionManagementService;
 	
 	@Autowired
-	public RoleService(RoleDAO roleDAO
-//			RoleAssignmentService roleAssignmentService,
-//			PermissionManagementService permissionManagementService
-			) {
+	public RoleService(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
-//		this.roleAssignmentService = roleAssignmentService;
-//		this.permissionManagementService = permissionManagementService;
 	}
 	
 	public RoleVO findById(Long id) {

@@ -34,7 +34,7 @@
 							<c:forEach items="${roleList}" var="role">
 								<div class="row">
 									<div class="col-sm-2"><input type="checkbox" name="userRole" value="${role.roleId}" <c:if test="${role.checked == 'Y'}">checked</c:if>></div>
-									<div class="col-sm-10">${role.name}</div>
+									<div class="col-sm-10">${role.roleName}</div>
 								</div>
 							</c:forEach>
 						</c:if>
@@ -62,8 +62,8 @@
 	             		<c:if test="${submoduleList != null}">
 							<c:forEach items="${submoduleList}" var="submodule">
 								<div class="row">
-									<div class="col-sm-5">${submodule.submodulename}</div>
-									<div class="col-sm-5">${submodule.permissiontype}</div>
+									<div class="col-sm-5">${submodule.submoduleName}</div>
+									<div class="col-sm-5">${submodule.permissionName}</div>
 									<div class="col-sm-5"></div>
 								</div>
 							</c:forEach>

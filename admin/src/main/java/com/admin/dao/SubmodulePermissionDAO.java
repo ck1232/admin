@@ -8,6 +8,7 @@ import com.admin.to.SubModulePermissionTO;
 @Transactional(readOnly = true)
 public interface SubmodulePermissionDAO extends BaseDAO<SubModulePermissionTO> {
 	SubModulePermissionTO findByPermissionId(Long permissionId);
-	List<SubModulePermissionTO> findByRoleTO_RoleIdAndSubModuleTO_SubModuleId(Long roleId, Long submoduleId);
+	List<SubModulePermissionTO> findByRoleTO_RoleIdAndSubModuleTO_SubModuleIdAndDeleteInd(Long roleId, Long submoduleId, String deleteInd);
+	List<SubModulePermissionTO> findByRoleTO_RoleIdInAndDeleteInd(List<Long> roleIdList, String deleteInd);
 	List<SubModulePermissionTO> findByPermissionIdIn(List<Long> permissionIdList);
 }

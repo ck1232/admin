@@ -104,29 +104,23 @@ public class UserService {
 	}
 	
 	private List<UserVO> convertToUserVOList(List<UserTO> toList) {
-		List<UserVO> list = new ArrayList<UserVO>();
+		List<UserVO> volist = new ArrayList<UserVO>();
 		if(toList != null && !toList.isEmpty()){
-			for(UserTO dbObj : toList){
+			for(UserTO to : toList){
 				UserVO vo = new UserVO();
-				vo.setEmailAddress(dbObj.getEmailAddress());
-				vo.setEnabled(dbObj.getEnabled());
-				vo.setEnabledBoolean(dbObj.getEnabled().equals("Y")? Boolean.TRUE : Boolean.FALSE);
-				vo.setLastLogin(dbObj.getLastLogin());
-				vo.setName(dbObj.getName());
-				vo.setPassword(dbObj.getPassword());
-				vo.setStatus(dbObj.getStatus());
-				vo.setUserId(dbObj.getUserId().intValue());
-				vo.setUserName(dbObj.getUserName());
-				vo.setCreatedBy(dbObj.getCreatedBy());
-				vo.setCreatedOn(dbObj.getCreatedOn());
-				vo.setUpdatedBy(dbObj.getUpdatedBy());
-				vo.setUpdatedOn(dbObj.getUpdatedOn());
-				vo.setDeleteInd(dbObj.getDeleteInd());
-				vo.setVersion(dbObj.getVersion());
-				list.add(vo);
+				vo.setUserId(to.getUserId());
+				vo.setUserName(to.getUserName());
+				vo.setPassword(to.getPassword());
+				vo.setStatus(to.getStatus());
+				vo.setName(to.getName());
+				vo.setEmailAddress(to.getEmailAddress());
+				vo.setLastLogin(to.getLastLogin());
+				vo.setEnabled(to.getEnabled());
+				vo.setEnabledBoolean(to.getEnabled().equals("Y")? Boolean.TRUE : Boolean.FALSE);
+				volist.add(vo);
 			}
 		}
-		return list;
+		return volist;
 	}
 	
 	private List<UserTO> convertToUserTOList(List<UserVO> voList) {
