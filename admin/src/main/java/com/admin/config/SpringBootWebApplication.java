@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +19,6 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
-
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 @SpringBootApplication
 @ComponentScan(basePackages ={ "com.admin.*"})
 @EntityScan("com.admin.to")
@@ -72,12 +71,13 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
             "org.hibernate.dialect.MySQL5Dialect");
         prop.put("hibernate.ddl-auto", "validate");
         prop.put("hibernate.enable_lazy_load_no_trans", "true");
+        /*prop.put("connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider");*/
         return prop;
 	}	
 	
 	@Bean(name = "dataSource", destroyMethod="")
 	public DataSource dataSource() throws Exception{
-		ComboPooledDataSource cpds = new ComboPooledDataSource();
+		/*ComboPooledDataSource cpds = new ComboPooledDataSource();
 		cpds.setJdbcUrl(url);
 		cpds.setUser(user);
 		cpds.setPassword(password);
@@ -89,7 +89,13 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
 		cpds.setMaxPoolSize(5);
 		cpds.setMaxStatements(1000);
 		
-		return cpds;
+		return cpds;*/
+		BasicDataSource ds = new BasicDataSource();
+        ds.setDriverClassName(driver);
+		ds.setUrl(url);
+		ds.setUsername(user);
+		ds.setPassword(password);
+		return ds;
 	}
 	
 	@Bean(name="transactionManager")
