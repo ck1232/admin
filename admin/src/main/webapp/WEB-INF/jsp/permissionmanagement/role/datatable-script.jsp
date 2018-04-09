@@ -44,8 +44,10 @@ function editPermission(data) {
 	$('#rolenameDiv').html(data.roleName);
     $('#editModal').modal('show');
     var permissionArr = "";
-    if(data.permissionId != null){
-    	permissionArr = data.permissionId.split(",");
+    console.log(data.permissionTypeIdList);
+    if(data.permissionTypeIdList != null){
+    	permissionArr = data.permissionTypeIdList.split(",");
+    	console.log(permissionArr);
     }
     $('#submodulePermission').selectpicker('val', permissionArr);
 

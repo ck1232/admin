@@ -101,7 +101,7 @@ public class ModuleService {
 	public List<ModuleTO> convertToModuleTOList(List<ModuleVO> voList) {
 		List<ModuleTO> toList = new ArrayList<ModuleTO>();
 		if(voList != null && !voList.isEmpty()){
-			List<Long> idList = GeneralUtils.convertListToLongList(voList, "moduleId");
+			List<Long> idList = GeneralUtils.convertListToLongList(voList, "moduleId", false);
 			Map<Long, ModuleTO> moduleTOMap = new HashMap<Long, ModuleTO>();
 			if(!idList.isEmpty()){
 				List<ModuleTO> moduleTOList = moduleDAO.findByModuleIdIn(idList);

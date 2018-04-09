@@ -45,6 +45,7 @@
 			<form id="updatePermissionToDbForm" method="post" action="<c:url value="/admin/saveSubmodulePermissionToDb"/>">
 			<input type="hidden" id="submoduleid" name="submoduleid" value="${submodule.submoduleId}"/>
 			<input type="hidden" id="roleid" name="roleid"/>
+			<input type="hidden" id="permissionid" name="permissionid"/>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<div class="modal-body">
 				<div class="row">

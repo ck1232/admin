@@ -5,17 +5,17 @@ import java.io.Serializable;
 import com.admin.helper.vo.BaseVO;
 
 public class RoleVO extends BaseVO implements Serializable {
-    private Integer roleId;
+    private Long roleId;
 
     private String name;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 

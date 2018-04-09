@@ -1,6 +1,9 @@
 package com.admin.permission.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -25,6 +28,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.admin.helper.GeneralUtils;
 import com.admin.permission.service.PermissionService;
 import com.admin.permission.vo.SubModulePermissionTypeVO;
+import com.admin.permission.vo.SubModulePermissionVO;
+import com.admin.role.service.RoleService;
+import com.admin.role.vo.RoleVO;
 import com.admin.submodule.service.SubmoduleService;
 import com.admin.submodule.vo.SubModuleVO;
 import com.admin.validator.PermissionTypeFormValidator;
@@ -38,13 +44,16 @@ public class PermissionController {
 	
 	private PermissionService permissionService;
 	private SubmoduleService submoduleService;
+	private RoleService roleService;
 	private PermissionTypeFormValidator permissionTypeFormValidator;
 	
 	@Autowired
 	public PermissionController(PermissionService permissionService, SubmoduleService submoduleService,
+			RoleService roleService,
 			PermissionTypeFormValidator permissionTypeFormValidator){
 		this.permissionService = permissionService;
 		this.submoduleService = submoduleService;
+		this.roleService = roleService;
 		this.permissionTypeFormValidator = permissionTypeFormValidator;
 	}
 	
@@ -74,43 +83,103 @@ public class PermissionController {
 		return "updateSubmodulePermission";
 	}
 	
-//	@RequestMapping(value = "/getRoleToPermission", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public @ResponseBody String getRoleListToPermission(@RequestParam("editBtn") Integer submoduleid) {
-//		logger.debug("getting role list");
-//		List<RolesToPermissionCustomDbObject> rolesToPermissionList = permissionService.getRolesToPermission(submoduleid);
-//
-//		List<RolesToPermissionCustomDbObject> permissionList = new ArrayList<RolesToPermissionCustomDbObject>();
-//		Map<Integer, RolesToPermissionCustomDbObject> permissionMap = new HashMap<Integer, RolesToPermissionCustomDbObject>();
-//		for(RolesToPermissionCustomDbObject obj : rolesToPermissionList){
-//			RolesToPermissionCustomDbObject roleToPermission = permissionMap.get(obj.getRoleId());
-//			if(roleToPermission == null){
-//				permissionMap.put(obj.getRoleId(), obj);
-//			}else{
-//				if(roleToPermission.getPermission() != null && !roleToPermission.getPermission().isEmpty()){
-//					roleToPermission.setPermission(roleToPermission.getPermission()+","+obj.getPermission());
-//				}else{
-//					roleToPermission.setPermission(obj.getPermission());
-//				}
-//				
-//				if(roleToPermission.getPermissionId() != null && !roleToPermission.getPermissionId().isEmpty()){
-//					roleToPermission.setPermissionId(roleToPermission.getPermissionId()+","+obj.getPermissionId());
-//				}else{
-//					roleToPermission.setPermissionId(obj.getPermissionId());
-//				}
-//			}
-//		}
-//		for(RolesToPermissionCustomDbObject obj : permissionMap.values()){
-//			permissionList.add(obj);
-//		}
-//		
-//		return GeneralUtils.convertListToJSONString(permissionList);
-//	}
+	@RequestMapping(value = "/getRoleToPermission", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getRoleListToPermission(@RequestParam("editBtn") Integer submoduleid) {
+		logger.debug("getting role list");
+		SubModuleVO submodule = submoduleService.findById(submoduleid.longValue());
+		List<SubModulePermissionVO> rolesToPermissionList = submodule.getSubmodulePermissionList(); //list of roles with permission
+		//group by roles
+		Map<Long, SubModulePermissionVO> rolesToPermissionMap = new HashMap<Long, SubModulePermissionVO>();
+		for(SubModulePermissionVO vo : rolesToPermissionList) {
+			SubModulePermissionVO mapVO =  rolesToPermissionMap.get(vo.getRoleId());
+			if(mapVO == null) {
+				vo.setPermissionTypeIdList(vo.getPermissionTypeId().toString());
+				rolesToPermissionMap.put(vo.getRoleId(), vo);
+			}else {
+				if(mapVO.getPermissionName() != null && !mapVO.getPermissionName().isEmpty()) {
+					mapVO.setPermissionName(mapVO.getPermissionName()+","+vo.getPermissionName());
+				}else {
+					mapVO.setPermissionName(mapVO.getPermissionName());
+				}
+				if(mapVO.getPermissionTypeId()!=null) {
+					mapVO.setPermissionTypeIdList(mapVO.getPermissionTypeId()+","+vo.getPermissionTypeId());
+				}else {
+					mapVO.setPermissionTypeIdList(mapVO.getPermissionTypeId().toString());
+				}
+			}
+		}
+		rolesToPermissionList.clear();
+		rolesToPermissionList.addAll(rolesToPermissionMap.values());
+
+		
+		//retrieve all roles with no permission and set to none for permission
+		List<RoleVO> roleVOList = roleService.getAllRoles(); //get list of all roles
+		List<Long> rolesToPermissionIdList = GeneralUtils.convertListToLongList(rolesToPermissionList, "roleId", true);
+		List<Long> roleVOIdList = GeneralUtils.convertListToLongList(roleVOList, "roleId", true);
+		roleVOIdList.removeAll(rolesToPermissionIdList); // list of roles with no permission
+		for(RoleVO roleVO : roleVOList) {
+			if(roleVOIdList.contains(roleVO.getRoleId())) { // no permission
+				SubModulePermissionVO submodulePermissionVO = new SubModulePermissionVO();
+				submodulePermissionVO.setRoleId(roleVO.getRoleId());
+				submodulePermissionVO.setRoleName(roleVO.getName());
+				submodulePermissionVO.setSubmoduleId(submoduleid.longValue());
+				submodulePermissionVO.setSubmoduleName(submodule.getName());
+				submodulePermissionVO.setPermissionName(GeneralUtils.NONE);
+				rolesToPermissionList.add(submodulePermissionVO);
+			}
+		}
+		
+		/*List<RolesToPermissionCustomDbObject> rolesToPermissionList = permissionService.getRolesToPermission(submoduleid);
+
+		List<RolesToPermissionCustomDbObject> permissionList = new ArrayList<RolesToPermissionCustomDbObject>();
+		Map<Integer, RolesToPermissionCustomDbObject> permissionMap = new HashMap<Integer, RolesToPermissionCustomDbObject>();
+		for(RolesToPermissionCustomDbObject obj : rolesToPermissionList){
+			RolesToPermissionCustomDbObject roleToPermission = permissionMap.get(obj.getRoleId());
+			if(roleToPermission == null){
+				permissionMap.put(obj.getRoleId(), obj);
+			}else{
+				if(roleToPermission.getPermission() != null && !roleToPermission.getPermission().isEmpty()){
+					roleToPermission.setPermission(roleToPermission.getPermission()+","+obj.getPermission());
+				}else{
+					roleToPermission.setPermission(obj.getPermission());
+				}
+				
+				if(roleToPermission.getPermissionId() != null && !roleToPermission.getPermissionId().isEmpty()){
+					roleToPermission.setPermissionId(roleToPermission.getPermissionId()+","+obj.getPermissionId());
+				}else{
+					roleToPermission.setPermissionId(obj.getPermissionId());
+				}
+			}
+		}
+		for(RolesToPermissionCustomDbObject obj : permissionMap.values()){
+			permissionList.add(obj);
+		}*/
+		
+		return GeneralUtils.convertListToJSONString(rolesToPermissionList);
+	}
 	
 	
 	
-	/*@RequestMapping(value = "/saveSubmodulePermissionToDb", method = RequestMethod.POST)
-	public String savePermissionToDb(@RequestParam("submoduleid") String submoduleid, @RequestParam("roleid") String roleid, @RequestParam(value="submodulePermission", required=false) List<String> submodulePermissionList, final RedirectAttributes redirectAttributes) {
-		permissionService.deleteSubmodulepermission(Integer.valueOf(roleid), Integer.valueOf(submoduleid));
+	@RequestMapping(value = "/saveSubmodulePermissionToDb", method = RequestMethod.POST)
+	public String savePermissionToDb(@RequestParam("submoduleid") String submoduleid, 
+			@RequestParam("roleid") String roleid, 
+			@RequestParam(value="submodulePermission", required=false) List<String> submodulePermissionList, 
+			final RedirectAttributes redirectAttributes) {
+		
+		permissionService.deleteSubmodulePermissionByRoleIdAndSubmoduleId(Long.parseLong(roleid), Long.parseLong(submoduleid));
+		if(submodulePermissionList != null && !submodulePermissionList.isEmpty()){
+			List<SubModulePermissionVO> submodulePermissionVOList = new ArrayList<SubModulePermissionVO>();
+			for(String submodulePermission: submodulePermissionList){
+				SubModulePermissionVO submodulepermission = new SubModulePermissionVO();
+				submodulepermission.setRoleId(Long.parseLong(roleid));
+				submodulepermission.setSubmoduleId(Long.parseLong(submoduleid));
+				submodulepermission.setPermissionTypeId(Long.parseLong(submodulePermission));
+				submodulePermissionVOList.add(submodulepermission);
+			}
+			permissionService.saveNewSubmodulepermission(submodulePermissionVOList);
+		}
+		
+		/*permissionService.deleteSubmodulepermission(Integer.valueOf(roleid), Integer.valueOf(submoduleid));
 		
 		if(submodulePermissionList != null && submodulePermissionList.size() > 0){
 			for(String submodulePermission: submodulePermissionList){
@@ -120,13 +189,13 @@ public class PermissionController {
 				submodulepermission.setPermissionTypeId(Integer.valueOf(submodulePermission));
 				permissionService.saveSubmodulepermission(submodulepermission);
 			}
-		}
+		}*/
 		
 		redirectAttributes.addFlashAttribute("css","success");
 		redirectAttributes.addFlashAttribute("msg", "Permission saved to role successfully.");
 		
 		return "redirect:updateSubmodulePermission/" + submoduleid;
-	}*/
+	}
 	
 	@RequestMapping(value = "/updatePermissionType", method = RequestMethod.POST)
 	public String loadupdatePermissionTypeForm(@RequestParam("loadEditPermissionTypeBtn") String id, Model model) {

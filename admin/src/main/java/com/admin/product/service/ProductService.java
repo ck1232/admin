@@ -211,7 +211,7 @@ public class ProductService {
 	}
 	
 	public List<ProductVO> getProductVOBySubCategory(List<ProductSubCategoryVO> subCategoryList){
-		List<Long> subCategoryIdList = GeneralUtils.convertListToLongList(subCategoryList, "subCategoryId");
+		List<Long> subCategoryIdList = GeneralUtils.convertListToLongList(subCategoryList, "subCategoryId", false);
 		List<ProductTO> toList = productDAO.findBySubCategoryIdInAndDeleteInd(subCategoryIdList,GeneralUtils.NOT_DELETED);
 		return convertToProductVOList(toList);
 	}

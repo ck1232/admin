@@ -281,7 +281,7 @@ public class GeneralUtils {
 		return list;
 	}
 	
-	public static <T> List<Long> convertListToLongList(List<T> objList, String variableName){
+	public static <T> List<Long> convertListToLongList(List<T> objList, String variableName, boolean unique){
 		List<Long> list = new ArrayList<Long>();
 		if(objList != null && objList.size() > 0){
 			for(T obj : objList){
@@ -290,6 +290,15 @@ public class GeneralUtils {
 					Long stringObj = (Long)variableObj;
 					list.add(stringObj);
 				}
+			}
+			
+			if(unique){
+				Set<Long> longSet = new HashSet<Long>();
+				for(Long var:list){
+					longSet.add(var);
+				}
+				list.clear();
+				list.addAll(longSet);
 			}
 		}
 		return list;

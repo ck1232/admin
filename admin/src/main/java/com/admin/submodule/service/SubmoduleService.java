@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.admin.dao.ModuleDAO;
 import com.admin.dao.SubModuleDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.permission.service.PermissionService;
 import com.admin.submodule.vo.SubModuleVO;
 import com.admin.to.ModuleTO;
 import com.admin.to.PermissionTypeTO;
+import com.admin.to.SubModulePermissionTO;
 import com.admin.to.SubModuleTO;
 
 @Service
@@ -26,12 +28,15 @@ import com.admin.to.SubModuleTO;
 public class SubmoduleService {
 	
 	private SubModuleDAO submoduleDAO;
+	private ModuleDAO moduleDAO;
 	private PermissionService permissionService;
 	
 	@Autowired
 	public SubmoduleService(SubModuleDAO submoduleDAO,
+			ModuleDAO moduleDAO,
 			PermissionService permissionService) {
 		this.submoduleDAO = submoduleDAO;
+		this.moduleDAO = moduleDAO;
 		this.permissionService = permissionService;
 	}
 
@@ -54,10 +59,11 @@ public class SubmoduleService {
 		return convertToSubModuleVOList(submoduleTOList);
 	}
 	
-	/*public void saveSubModule(SubModuleVO subModuleVO) {
-		List<SubModuleTO> moduleTOList = convertToSubModuleTOList(Arrays.asList(subModuleVO));
-		moduleDAO.save(moduleTOList);
-	}*/
+	public void saveSubmodule(SubModuleVO subModuleVO) {
+		ModuleTO moduleTO = moduleDAO.findByModuleId(subModuleVO.getParentId());
+		List<SubModuleTO> submoduleTOList = this.convertToSubModuleTOList(Arrays.asList(subModuleVO), moduleTO);
+		submoduleDAO.save(submoduleTOList);
+	}
 	
 	public void deleteSubmodule(Long id) {
 		deleteSubmodule(Arrays.asList(id));
@@ -87,6 +93,7 @@ public class SubmoduleService {
 				vo.setParentId(to.getModuleTO().getModuleId());
 				vo.setParentModuleName(to.getModuleTO().getModuleName());
 				vo.setPermissionTypeList(permissionService.convertToSubModulePermissionTypeVOList(new ArrayList<PermissionTypeTO>(to.getPermissionTypeTOSet())));
+				vo.setSubmodulePermissionList(permissionService.convertToSubModulePermissionVOList(new ArrayList<SubModulePermissionTO>(to.getSubModulePermissionSet())));
 				voList.add(vo);
 			}
 		}

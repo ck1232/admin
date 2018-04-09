@@ -83,20 +83,20 @@ public class RoleService {
 		}
 	}
 	
-	private List<RoleVO> convertToRoleVOList(List<RoleTO> toList) {
+	public List<RoleVO> convertToRoleVOList(List<RoleTO> toList) {
 		List<RoleVO> voList = new ArrayList<RoleVO>();
 		if(toList != null && !toList.isEmpty()){
 			for(RoleTO obj : toList){
 				RoleVO vo = new RoleVO();
 				vo.setName(obj.getName());
-				vo.setRoleId(obj.getRoleId().intValue());
+				vo.setRoleId(obj.getRoleId().longValue());
 				voList.add(vo);
 			}
 		}
 		return voList;
 	}
 	
-	private List<RoleTO> convertToRoleTOList(List<RoleVO> voList) {
+	public List<RoleTO> convertToRoleTOList(List<RoleVO> voList) {
 		List<RoleTO> roleTOList = new ArrayList<RoleTO>();
 		if(voList != null && !voList.isEmpty()) {
 			for(RoleVO vo : voList) {

@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.admin.dao.PermissionDAO;
+import com.admin.dao.PermissionTypeDAO;
+import com.admin.dao.RoleDAO;
 import com.admin.dao.SubModuleDAO;
+import com.admin.dao.SubmodulePermissionDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.permission.vo.SubModulePermissionTypeVO;
+import com.admin.permission.vo.SubModulePermissionVO;
 import com.admin.to.PermissionTypeTO;
 import com.admin.to.RoleTO;
 import com.admin.to.SubModulePermissionTO;
@@ -27,17 +30,24 @@ import com.admin.to.SubModuleTO;
 @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRED)
 public class PermissionService {
 	
-	private PermissionDAO permissionDAO;
+	private PermissionTypeDAO permissionTypeDAO;
 	private SubModuleDAO subModuleDAO;
+	private SubmodulePermissionDAO submodulePermissionDAO;
+	private RoleDAO roleDAO;
 	@Autowired
-	public PermissionService(PermissionDAO permissionDAO, SubModuleDAO subModuleDAO) {
-		this.permissionDAO = permissionDAO;
+	public PermissionService(PermissionTypeDAO permissionTypeDAO, 
+			SubModuleDAO subModuleDAO,
+			SubmodulePermissionDAO submodulePermissionDAO,
+			RoleDAO roleDAO) {
+		this.permissionTypeDAO = permissionTypeDAO;
 		this.subModuleDAO = subModuleDAO;
+		this.submodulePermissionDAO = submodulePermissionDAO;
+		this.roleDAO = roleDAO;
 	}
 
 	//Submodulepermissiontype functions START
 	public SubModulePermissionTypeVO findById(Long id) {
-		PermissionTypeTO permissionTypeTO = permissionDAO.findByTypeId(id);
+		PermissionTypeTO permissionTypeTO = permissionTypeDAO.findByTypeId(id);
 		List<SubModulePermissionTypeVO> permissionTypeVOList = convertToSubModulePermissionTypeVOList(Arrays.asList(permissionTypeTO));
 		if(permissionTypeVOList != null && !permissionTypeVOList.isEmpty()){
 			return permissionTypeVOList.get(0);
@@ -48,7 +58,7 @@ public class PermissionService {
 	public void saveSubmodulepermissiontype(SubModulePermissionTypeVO submodulePermissionTypeVO) {
 		SubModuleTO submoduleTO = subModuleDAO.findBySubModuleId(submodulePermissionTypeVO.getSubmoduleId());
 		List<PermissionTypeTO> permissionTypeTOList = convertToPermissionTypeTOList(Arrays.asList(submodulePermissionTypeVO), submoduleTO);
-		permissionDAO.save(permissionTypeTOList);
+		permissionTypeDAO.save(permissionTypeTOList);
 	}
 	
 	
@@ -57,12 +67,12 @@ public class PermissionService {
 	}
 	
 	public void deleteSubmodulepermissiontype(List<Long> idList) {
-		List<PermissionTypeTO> permissionTypeTOList = permissionDAO.findByTypeIdIn(idList);
+		List<PermissionTypeTO> permissionTypeTOList = permissionTypeDAO.findByTypeIdIn(idList);
 		if(permissionTypeTOList != null && !permissionTypeTOList.isEmpty()){
 			for(PermissionTypeTO permissionTypeTO : permissionTypeTOList){
 				permissionTypeTO.setDeleteInd(GeneralUtils.DELETED);
 			}
-			permissionDAO.save(permissionTypeTOList);
+			permissionTypeDAO.save(permissionTypeTOList);
 		}
 	}
 	
@@ -130,7 +140,70 @@ public class PermissionService {
 		return toList;
 	}
 	
+	public void saveNewSubmodulepermission(List<SubModulePermissionVO> voList) {
+		if(voList != null && !voList.isEmpty()) {
+			List<SubModulePermissionTO> submodulePermissionTOList = new ArrayList<SubModulePermissionTO>();
+			for(SubModulePermissionVO vo : voList) {
+				SubModulePermissionTO to = new SubModulePermissionTO();
+				to.setRoleTO(roleDAO.findByRoleId(voList.get(0).getRoleId()));
+				to.setSubModuleTO(subModuleDAO.findBySubModuleId(voList.get(0).getSubmoduleId()));
+				to.setPermissionType(permissionTypeDAO.findByTypeId(vo.getPermissionTypeId()));
+				submodulePermissionTOList.add(to);
+			}
+			submodulePermissionDAO.save(submodulePermissionTOList);
+		}
+		
+	}
 	
+	public void deleteSubmodulePermissionByRoleIdAndSubmoduleId(Long roleId, Long submoduleId) {
+		List<SubModulePermissionTO> submodulePermissionTOList = submodulePermissionDAO.findByRoleTO_RoleIdAndSubModuleTO_SubModuleId(roleId, submoduleId);
+		if(submodulePermissionTOList != null && !submodulePermissionTOList.isEmpty()) {
+			for(SubModulePermissionTO submodulePermissionTO : submodulePermissionTOList) {
+				submodulePermissionTO.setDeleteInd(GeneralUtils.DELETED);
+			}
+			submodulePermissionDAO.save(submodulePermissionTOList);
+		}
+	}
+	
+	public List<SubModulePermissionVO> convertToSubModulePermissionVOList(List<SubModulePermissionTO> toList) {
+		List<SubModulePermissionVO> voList = new ArrayList<SubModulePermissionVO>();
+		if(toList != null && !toList.isEmpty()){
+			for(SubModulePermissionTO to : toList){
+				SubModulePermissionVO vo = new SubModulePermissionVO();
+				vo.setPermissionId(to.getPermissionId());
+				vo.setRoleId(to.getRoleTO().getRoleId());
+				vo.setRoleName(to.getRoleTO().getName());
+				vo.setSubmoduleId(to.getSubModuleTO().getSubModuleId());
+				vo.setSubmoduleName(to.getSubModuleTO().getName());
+				vo.setPermissionTypeId(to.getPermissionType().getTypeId());
+				vo.setPermissionName(to.getPermissionType().getPermissionType());
+				voList.add(vo);
+			}
+		}
+		return voList;
+	}
+	
+	
+	public List<SubModulePermissionTO> convertToSubmodulePermissionTOList(List<SubModulePermissionVO> voList, SubModuleTO submoduleTO) {
+		List<SubModulePermissionTO> toList = new ArrayList<SubModulePermissionTO>();
+		if(voList != null && !voList.isEmpty()) {
+			Map<Long, SubModulePermissionTO> submodulePermissionTOMap = GeneralUtils.convertListToLongMap(new ArrayList<SubModulePermissionTO>(submoduleTO.getSubModulePermissionSet()), "permissionId");
+			for(SubModulePermissionVO vo : voList) {
+				SubModulePermissionTO to = new SubModulePermissionTO();
+				SubModulePermissionTO dbTO = submodulePermissionTOMap.get(vo.getPermissionId());
+				if(dbTO != null)  //update
+					to = dbTO;
+				to.setPermissionId(vo.getPermissionId());
+				to.setRoleTO(roleDAO.findByRoleId(vo.getRoleId()));
+				to.setPermissionType(permissionTypeDAO.findByTypeId(vo.getPermissionTypeId()));
+				to.setSubModuleTO(submoduleTO);
+				toList.add(to);
+			}
+		}
+		return toList;
+		
+	}
+
 	//Submodulepermission functions END
 	
 }
