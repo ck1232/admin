@@ -1,5 +1,6 @@
 package com.admin.module.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -97,10 +98,22 @@ public class ModuleController {
 			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
 			return "redirect:listModule";
 		}
-		for (String id : ids) {
-			moduleService.deleteModule(Long.parseLong(id));
-			logger.debug("deleted "+ id);
-		}
+		
+		List<Long> idList = new ArrayList<Long>();
+		for(String s : ids) 
+			idList.add(Long.parseLong(s));
+		List<ModuleVO> moduleVOList = moduleService.findByIdList(idList);
+		if(!moduleVOList.isEmpty())
+			for(ModuleVO module : moduleVOList) {
+				if(!module.getSubModuleList().isEmpty()) {
+					redirectAttributes.addFlashAttribute("css", "danger");
+					redirectAttributes.addFlashAttribute("msg", "Unable to delete! Module(s) contain submodule!");
+					return "redirect:listModule";
+				}
+			}
+		
+		moduleService.deleteModule(idList);
+
 		redirectAttributes.addFlashAttribute("css", "success");
 		redirectAttributes.addFlashAttribute("msg", "Module(s) deleted successfully!");
 		return "redirect:listModule";

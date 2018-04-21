@@ -1,5 +1,6 @@
 package com.admin.user.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -99,8 +100,26 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
 			return "redirect:listUser";
 		}
-		for (String id : ids) {
-			userService.deleteUser(Long.parseLong(id));
+
+		List<Long> idList = new ArrayList<Long>();
+		for(String s : ids) 
+			idList.add(Long.parseLong(s));
+		
+		List<UserVO> userList = userService.findByIdList(idList);
+		String errorMsg = "";
+		for(UserVO user: userList) {
+			if(user.getEnabled().equals(GeneralUtils.YES_IND)) {
+				errorMsg += "Please disable active users before delete!\n"+user.getName()+" is still active.";
+			}
+		}
+		if(!errorMsg.isEmpty()) {
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", errorMsg);
+			return "redirect:listUser";
+		}
+		
+		for (Long id : idList) {
+			userService.deleteUser(id);
 			logger.debug("deleted "+ id);
 		}
 		redirectAttributes.addFlashAttribute("css", "success");

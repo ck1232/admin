@@ -164,10 +164,23 @@ public class SubmoduleController {
 			return "redirect:listSubmodule/"+moduleid;
 		}
 		
-		for (String id : ids) {
-			submoduleService.deleteSubmodule(new Long(id));
-			logger.debug("deleted "+ id);
-		}
+		List<Long> idList = new ArrayList<Long>();
+		for(String s : ids) 
+			idList.add(Long.parseLong(s));
+		List<SubModuleVO> submoduleVOList = submoduleService.getSubmodulesById(idList);
+		
+		if(!submoduleVOList.isEmpty())
+			for(SubModuleVO subModuleVO : submoduleVOList) {
+				if(!subModuleVO.getSubmodulePermissionList().isEmpty()) {
+					redirectAttributes.addFlashAttribute("css", "danger");
+					redirectAttributes.addFlashAttribute("msg", "Unable to delete submodule(s)! Submodule's permission is tied to role!");
+					return "redirect:listSubmodule/"+moduleid;
+				}
+			}
+		
+		submoduleService.deleteSubmodule(idList);
+		logger.debug("deleted "+ idList);
+
 		redirectAttributes.addFlashAttribute("css", "success");
 		redirectAttributes.addFlashAttribute("msg", "Submodule(s) deleted successfully!");
 		return "redirect:listSubmodule/"+moduleid;

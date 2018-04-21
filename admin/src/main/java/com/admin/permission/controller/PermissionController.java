@@ -289,10 +289,19 @@ public class PermissionController {
 			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
 			return "redirect:updatePermissionType/" + submoduleid;
 		}
-		for (String id : ids) {
-			permissionService.deleteSubmodulepermissiontype(Long.parseLong(id));
-			logger.debug("deleted "+ id);
+		List<Long> idList = new ArrayList<Long>();
+		for(String s : ids) 
+			idList.add(Long.parseLong(s));
+		List<SubModulePermissionVO> submodulePermissionVOList = permissionService.findSubmodulePermissionBytypeIdList(idList);
+		if(!submodulePermissionVOList.isEmpty()) {
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Unable to delete permission type! Permission type is already assigned to role!");
+			return "redirect:updatePermissionType/" + submoduleid;
 		}
+		
+		permissionService.deleteSubmodulepermissiontype(idList);
+		logger.debug("deleted "+ idList);
+
 		redirectAttributes.addFlashAttribute("css", "success");
 		redirectAttributes.addFlashAttribute("msg", "Permission type(s) deleted successfully!");
 		return "redirect:updatePermissionType/" + submoduleid;

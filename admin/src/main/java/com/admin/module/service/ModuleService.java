@@ -36,12 +36,16 @@ public class ModuleService {
 	}
 	
 	public ModuleVO findById(Long id) {
-		ModuleTO moduleTO = moduleDAO.findByModuleId(id);
-		List<ModuleVO> moduleVOList = convertToModuleVOList(Arrays.asList(moduleTO));
+		List<ModuleVO> moduleVOList = findByIdList(Arrays.asList(id));
 		if(moduleVOList != null && !moduleVOList.isEmpty()){
 			return moduleVOList.get(0);
 		}
 		return new ModuleVO();
+	}
+	
+	public List<ModuleVO> findByIdList(List<Long> idList) {
+		List<ModuleTO> moduleTOList = moduleDAO.findByModuleIdIn(idList);
+		return convertToModuleVOList(moduleTOList);
 	}
 
 	public List<ModuleVO> getAllModules() {

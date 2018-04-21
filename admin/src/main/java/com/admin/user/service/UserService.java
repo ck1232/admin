@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.admin.dao.UserDAO;
 import com.admin.helper.GeneralUtils;
+import com.admin.role.service.RoleAssignService;
 import com.admin.to.UserTO;
 import com.admin.user.vo.UserVO;
 
@@ -21,13 +22,13 @@ import com.admin.user.vo.UserVO;
 @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRED)
 public class UserService {
 	
-//	private RoleAssignmentService roleAssignmentService;
+	private RoleAssignService roleAssignService;
 	private UserDAO userDAO;
 	@Autowired
 	public UserService(
-//			RoleAssignmentService roleAssignmentService,
+			RoleAssignService roleAssignService,
 			UserDAO userDAO) {
-//		this.roleAssignmentService = roleAssignmentService;
+		this.roleAssignService = roleAssignService;
 		this.userDAO = userDAO;
 	}
 	
@@ -49,6 +50,11 @@ public class UserService {
 		}else{
 			return null;
 		}
+	}
+	
+	public List<UserVO> findByIdList(List<Long> idList){
+		List<UserTO> userList = userDAO.findByUserIdIn(idList);
+		return convertToUserVOList(userList);
 	}
 	
 
@@ -79,10 +85,14 @@ public class UserService {
 	
 	public void deleteUser(Long id) {
 		deleteUser(Arrays.asList(id));
-//		roleAssignmentService.deleteRoleListByUserId(id.intValue());
 	}
 	
 	public void deleteUser(List<Long> idList) {
+		deleteUserObj(idList);
+		roleAssignService.deleteRoleByUserIdList(idList);
+	}
+	
+	private void deleteUserObj(List<Long> idList) {
 		List<UserTO> userToList = userDAO.findByUserIdIn(idList);
 		if(userToList != null && !userToList.isEmpty()){
 			for(UserTO userTo : userToList){

@@ -1,6 +1,7 @@
 package com.admin.role.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,11 @@ public class RoleAssignService {
 		return convertToUserRoleVOList(userRoleTO);
 	}
 	
+	public List<UserRoleVO> findByRoleIdList(List<Long> roleIdList) {
+		List<UserRoleTO> userRoleTO = userRoleDAO.findByRoleTO_RoleIdInAndDeleteInd(roleIdList, GeneralUtils.NOT_DELETED); 
+		return convertToUserRoleVOList(userRoleTO);
+	}
+	
 	public void saveNewUserRole(List<UserRoleVO> voList) {
 		if(voList != null && !voList.isEmpty()) {
 			List<UserRoleTO> userRoleTOList = new ArrayList<UserRoleTO>();
@@ -53,7 +59,11 @@ public class RoleAssignService {
 	}
 	
 	public void deleteRoleByUserId(Long userId) {
-		List<UserRoleTO> userRoleTOList = userRoleDAO.findByUserTO_UserIdAndDeleteInd(userId, GeneralUtils.NOT_DELETED); 
+		deleteRoleByUserIdList(Arrays.asList(userId));
+	}
+	
+	public void deleteRoleByUserIdList(List<Long> userIdList) {
+		List<UserRoleTO> userRoleTOList = userRoleDAO.findByUserTO_UserIdInAndDeleteInd(userIdList, GeneralUtils.NOT_DELETED); 
 		if(userRoleTOList != null && !userRoleTOList.isEmpty()){
 			for(UserRoleTO userRoleTO : userRoleTOList){
 				userRoleTO.setDeleteInd(GeneralUtils.DELETED);

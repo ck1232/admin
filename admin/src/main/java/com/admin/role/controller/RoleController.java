@@ -1,5 +1,6 @@
 package com.admin.role.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -21,8 +22,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.admin.helper.GeneralUtils;
+import com.admin.role.service.RoleAssignService;
 import com.admin.role.service.RoleService;
 import com.admin.role.vo.RoleVO;
+import com.admin.role.vo.UserRoleVO;
 import com.admin.validator.RoleFormValidator;
 
 
@@ -34,11 +37,15 @@ public class RoleController {
 	private static final Logger logger = Logger.getLogger(RoleController.class);
 	
 	private RoleService roleService;
+	private RoleAssignService roleAssignService;
 	private RoleFormValidator roleFormValidator;
 	
 	@Autowired
-	public RoleController(RoleService roleService, RoleFormValidator roleFormValidator) {
+	public RoleController(RoleService roleService, 
+			RoleAssignService roleAssignService,
+			RoleFormValidator roleFormValidator) {
 		this.roleService = roleService;
+		this.roleAssignService = roleAssignService;
 		this.roleFormValidator = roleFormValidator;
 	}
 	
@@ -101,11 +108,20 @@ public class RoleController {
 			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
 			return "redirect:listRole";
 		}
-		for (String id : ids) {
-			roleService.deleteRole(Long.parseLong(id));
-			logger.debug("deleted "+ id);
-			
+		
+		List<Long> idList = new ArrayList<Long>();
+		for(String s : ids) 
+			idList.add(Long.parseLong(s));
+		
+		List<UserRoleVO> userRoleList = roleAssignService.findByRoleIdList(idList);
+		if(userRoleList == null || !userRoleList.isEmpty()) {
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please remove users from the role(s) before delete!");
+			return "redirect:listRole";
 		}
+		
+		roleService.deleteRole(idList);
+			
 		redirectAttributes.addFlashAttribute("css", "success");
 		redirectAttributes.addFlashAttribute("msg", "Role(s) deleted successfully!");
 		return "redirect:listRole";

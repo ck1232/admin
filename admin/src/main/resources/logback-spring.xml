@@ -101,9 +101,9 @@
 		<appender-ref ref="FILE-DEBUG" />
 	</logger>
 	
-	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace"
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="debug"
 		additivity="false">
-		<appender-ref ref="STDOUT" />
+		<!-- <appender-ref ref="STDOUT" /> -->
 		<appender-ref ref="FILE-DEBUG" />
 	</logger>
 

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.admin.dao.RoleDAO;
 import com.admin.helper.GeneralUtils;
+import com.admin.permission.service.PermissionService;
 import com.admin.role.vo.RoleVO;
 import com.admin.to.PermissionTypeTO;
 import com.admin.to.RoleTO;
@@ -25,10 +26,12 @@ import com.admin.to.SubModulePermissionTO;
 public class RoleService {
 	
 	private RoleDAO roleDAO;
+	private PermissionService permissionService;
 	
 	@Autowired
-	public RoleService(RoleDAO roleDAO) {
+	public RoleService(RoleDAO roleDAO, PermissionService permissionService) {
 		this.roleDAO = roleDAO;
+		this.permissionService = permissionService;
 	}
 	
 	public RoleVO findById(Long id) {
@@ -56,7 +59,12 @@ public class RoleService {
 //		permissionManagementService.deleteSubmodulepermissionByRoleId(id.intValue());
 	}
 	
-	private void deleteRole(List<Long> idList) {
+	public void deleteRole(List<Long> idList) {
+		deleteRoleObj(idList);
+		permissionService.deleteSubmodulePermissionByRoleIdList(idList);
+	}
+	
+	public void deleteRoleObj(List<Long> idList) {
 		List<RoleTO> roleTOList = roleDAO.findByRoleIdIn(idList);
 		if(roleTOList != null && !roleTOList.isEmpty()){
 			for(RoleTO roleTO : roleTOList){
@@ -94,7 +102,7 @@ public class RoleService {
 			for(RoleVO vo : voList) {
 				RoleTO to = new RoleTO();
 				to.setName(vo.getName());
-				to.setRoleId(vo.getRoleId().longValue());
+				to.setRoleId(vo.getRoleId()==null?null:vo.getRoleId().longValue());
 				roleTOList.add(to);
 			}
 		}
