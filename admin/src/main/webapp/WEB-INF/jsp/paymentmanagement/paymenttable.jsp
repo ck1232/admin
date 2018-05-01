@@ -23,13 +23,13 @@
 												<td style="width: 16%">${payment.paymentDateString}</td>
 							          			<td style="width: 16%">${payment.paymentModeString}</td>
 							          			<td style="width: 16%">${payment.paymentAmtString}</td>
-							          			<td style="width: 16%">${payment.chequeNum}</td>
+							          			<td style="width: 16%">${payment.chequeVO.chequeNum}</td>
 							          			<td style="width: 16%">
-							          				<c:if test="${payment.bounceChequeInd == 'N'}">No</c:if>
-							          				<c:if test="${payment.bounceChequeInd == 'Y'}">Yes</c:if>
+							          				<c:if test="${payment.chequeVO.bounceChequeInd == 'N'}">No</c:if>
+							          				<c:if test="${payment.chequeVO.bounceChequeInd == 'Y'}">Yes</c:if>
 							          			</td>
-							          			<c:if test="${payment.bounceChequeInd == 'Y'}">
-							          				<td style="width: 16%">${payment.bounceDateString}</td>
+							          			<c:if test="${payment.chequeVO.bounceChequeInd == 'Y'}">
+							          				<td style="width: 16%">${payment.chequeVO.bounceDateString}</td>
 												</c:if>
 						          			</tr>
 							        	</c:forEach>

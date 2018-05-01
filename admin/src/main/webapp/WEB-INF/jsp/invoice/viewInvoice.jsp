@@ -55,39 +55,41 @@
 						<!-- /.box-body -->
 		      		</div>
 		      		<!-- /.BOX -->
-		      		<div class="box">
-						<div class="box-header with-border">
-	                  		<h3 class="box-title">Other Related Paid Invoices </h3>
-	                  	</div>
-			      		<div class="box-body no-padding">
-			              	<table class="table table-striped">
-			              		<c:if test="${otherList.size() > 0}">
-				                	<tr>
-				                		<c:if test="${invoice.type == 'invoice'}"><th style="width: 16%">Invoice Id</th></c:if>
-				                		<th style="width: 16%">Messenger</th>
-				                  		<th style="width: 16%">Total Price</th>
-				                  		<th style="width: 16%">Date</th>
-						          		<th style="width: 16%">Status</th>
-				                	</tr>
-				                	<c:forEach items="${otherList}" var="other">
-										<tr>
-											<td style="width: 16%">${other.invoiceId}</td>
-						          			<td style="width: 16%">${other.messenger}</td>
-						          			<td style="width: 16%">${other.totalAmtString}</td>
-						          			<td style="width: 16%">${other.invoicedateString}</td>
-						          			<td style="width: 16%">${other.status}</td>
-					          			</tr>
-						        	</c:forEach>
-					        	</c:if>
-					        	<c:if test="${otherList.size() == 0}">
-				        			<tr>
-				        				<td colspan="6">No records found.</td>
-				        			</tr>
-			        			</c:if>
-						        
-			              	</table>
-					    </div>
-					</div>
+		      		<c:if test="${invoice.type == 'invoice'}">
+			      		<div class="box">
+							<div class="box-header with-border">
+		                  		<h3 class="box-title">Other Related Paid Invoices </h3>
+		                  	</div>
+				      		<div class="box-body no-padding">
+				              	<table class="table table-striped">
+				              		<c:if test="${otherList.size() > 0}">
+					                	<tr>
+					                		<c:if test="${invoice.type == 'invoice'}"><th style="width: 16%">Invoice Id</th></c:if>
+					                		<th style="width: 16%">Messenger</th>
+					                  		<th style="width: 16%">Total Price</th>
+					                  		<th style="width: 16%">Date</th>
+							          		<th style="width: 16%">Status</th>
+					                	</tr>
+					                	<c:forEach items="${otherList}" var="other">
+											<tr>
+												<td style="width: 16%">${other.invoiceId}</td>
+							          			<td style="width: 16%">${other.messenger}</td>
+							          			<td style="width: 16%">${other.totalAmtString}</td>
+							          			<td style="width: 16%">${other.invoicedateString}</td>
+							          			<td style="width: 16%">${other.status}</td>
+						          			</tr>
+							        	</c:forEach>
+						        	</c:if>
+						        	<c:if test="${otherList.size() == 0}">
+					        			<tr>
+					        				<td colspan="6">No records found.</td>
+					        			</tr>
+				        			</c:if>
+							        
+				              	</table>
+						    </div>
+						</div>
+					</c:if>
 		      		<tiles:insertAttribute name="paymentdetail"/>
 		      		
 		      		<div class="row">

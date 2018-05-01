@@ -47,6 +47,7 @@ public class GeneralUtils {
 	public static final String MODE_BATCH = "BATCH";
 	public static final String MODE_ADHOC = "ADHOC";
 	public static final String STATUS_PENDING = "PENDING";
+	public static final String STATUS_BAD_DEBT = "BAD DEBT";
 	public static final String BOUNCED = "Y";
 	public static final String UNBOUNCED = "N";
 	public static final String TYPE_SALARY = "Salary";
@@ -63,6 +64,12 @@ public class GeneralUtils {
 	public static final String MODULE_EXPENSE = "expense";
 	public static final String MODULE_INVOICE = "invoice";
 	public static final String MODULE_GRANT = "grant";
+	
+	public static final String PAYMENT_MODE_CASH = "Cash";
+	public static final String PAYMENT_MODE_CHEQUE = "Cheque";
+	public static final String PAYMENT_MODE_BY_DIRECTOR = "Pay By Director";
+	public static final String PAYMENT_MODE_TO_DIRECTOR = "Pay To Director";
+	public static final String PAYMENT_MODE_GIRO = "GIRO";
 	
 	public static final String TYPE_PRODUCT_CATEGORY = "product_category";
 	public static final String TYPE_PRODUCT = "product";
