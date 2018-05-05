@@ -302,7 +302,7 @@ public class InvoiceController {
 	@RequestMapping(value = "/deleteInvoice", method = RequestMethod.POST)
 	public String deleteInvoice(@RequestParam(value = "checkboxId", required=false) List<String> ids,
 			final RedirectAttributes redirectAttributes) {
-		if(ids == null || ids.size() < 1){
+		if(ids == null || ids.isEmpty()){
 			redirectAttributes.addFlashAttribute("css", "danger");
 			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
 			return "redirect:listInvoice";

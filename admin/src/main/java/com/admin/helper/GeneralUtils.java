@@ -57,6 +57,7 @@ public class GeneralUtils {
 	public static final String NO_IND = "N";
 	public static final String NONE = "NONE";
 	public static final String KEYWORD_STOCK_CHINA = "china";
+	public static final String EXPENSE_TYPE_STOCK_CHINA = "Stock(China)";
 	
 	public static final String MODULE_SALARY_BONUS = "salarybonus";
 	public static final String MODULE_SALARY = "salary";

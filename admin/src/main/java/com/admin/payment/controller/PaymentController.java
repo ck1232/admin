@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.admin.expense.service.ExpenseService;
+import com.admin.expense.vo.ExpenseVO;
 import com.admin.grant.service.GrantService;
 import com.admin.helper.GeneralUtils;
+import com.admin.invoice.lookup.controller.ExpenseTypeLookup;
 import com.admin.invoice.service.InvoiceService;
 import com.admin.invoice.vo.InvoiceVO;
 import com.admin.payment.vo.PaymentVO;
@@ -39,6 +42,8 @@ public class PaymentController {
 	
 	private InvoiceService invoiceService;
 	private GrantService grantService;
+	private ExpenseService expenseService;
+	private ExpenseTypeLookup expenseTypeLookup;
 	private PaymentFormValidator paymentFormValidator;
 	
 	public static final List<String> outMoneyModuleList = Arrays.asList(
@@ -51,9 +56,13 @@ public class PaymentController {
 	@Autowired
 	public PaymentController(InvoiceService invoiceService,
 			GrantService grantService,
+			ExpenseService expenseService,
+			ExpenseTypeLookup expenseTypeLookup,
 			PaymentFormValidator paymentFormValidator){
 		this.invoiceService = invoiceService;
 		this.grantService = grantService;
+		this.expenseService = expenseService;
+		this.expenseTypeLookup = expenseTypeLookup;
 		this.paymentFormValidator = paymentFormValidator;
 	}
 	
@@ -61,8 +70,6 @@ public class PaymentController {
 	protected void initBinder(WebDataBinder binder) {
 		binder.setValidator(paymentFormValidator);
 	}
-	
-	/* Invoice Payment Start */
 	
 	@RequestMapping(value = "/createPayInvoice", method = RequestMethod.POST) //open payment page
 	public String createPayInvoice(@RequestParam(value = "checkboxId", required=false) List<String> ids,
@@ -226,7 +233,91 @@ public class PaymentController {
 		return "createPayInvoice";
     }  
 	
+	@RequestMapping(value = "/createPayExpense", method = RequestMethod.POST)
+	public String createPayExpense(@RequestParam(value = "checkboxId", required=false) List<String> ids,
+			final RedirectAttributes redirectAttributes, Model model) {
+		if(ids == null || ids.isEmpty()){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
+			return "redirect:/expense/listExpense";
+		}
+		
+		List<Long> idList = new ArrayList<Long>();
+		for(String id : ids){
+			idList.add(Long.valueOf(id));
+		}
+		List<ExpenseVO> expenseList = expenseService.findByIdList(idList);
+		BigDecimal totalamount = BigDecimal.ZERO;
+		for(ExpenseVO expense : expenseList) {
+			if(expense.getExpensetype().equals(GeneralUtils.EXPENSE_TYPE_STOCK_CHINA)) {
+				redirectAttributes.addFlashAttribute("css", "danger");
+				redirectAttributes.addFlashAttribute("msg", "Payment is not allowed for Stock(China)!");
+				return "redirect:/expense/listExpense";
+			}
+			totalamount = totalamount.add(expense.getTotalAmt());
+		}
+		
+		PaymentVO paymentvo = new PaymentVO();
+		paymentvo.setType(GeneralUtils.MODULE_EXPENSE);
+		model.addAttribute("paymentForm", paymentvo);
+		model.addAttribute("expenseList", expenseList);
+		model.addAttribute("idList", idList);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", expenseList.get(expenseList.size()-1).getExpensedateString());
+		model.addAttribute("posturl", "/admin/payment/createExpensePayment");
+		return "createPayExpense";
+	}
 	
+	@RequestMapping(value = "/createExpensePayment", method = RequestMethod.POST)
+    public String saveExpensePayment(
+    		@RequestParam(value = "referenceIds", required=false) List<Integer> expenseIdList,
+    		@RequestParam(value = "totalamount", required=false) BigDecimal totalamount,
+    		@RequestParam(value = "lastdate", required=false) String lastdate,
+    		@ModelAttribute("paymentForm") @Validated PaymentVO paymentVo, 
+    		BindingResult result, Model model, final RedirectAttributes redirectAttributes) {
+		logger.debug("saveExpensePayment() : " + paymentVo.toString());
+		GeneralUtils.validate(paymentVo, "paymentForm", result);
+		List<Long> idLongList = new ArrayList<Long>();
+		for(Integer expenseId : expenseIdList) {
+			idLongList.add(expenseId.longValue());
+		}
+		if (!result.hasErrors()) {
+			boolean hasErrors = false;
+			if(!validateInputAmount(totalamount, paymentVo)){
+				hasErrors = true;
+				result.rejectValue("cashamount", "error.notequal.paymentform.expensetotalamount");
+				result.rejectValue("chequeamount", "error.notequal.paymentform.expensetotalamount");
+				result.rejectValue("directoramount", "error.notequal.paymentform.expensetotalamount");
+			}
+			
+			if(!hasErrors){
+				paymentVo.setReferenceType(GeneralUtils.MODULE_EXPENSE);
+				try{ 
+					paymentVo.setPaymentDate(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(paymentVo.getPaymentdateString()));
+					if(paymentVo.getPaymentmodecheque())
+						paymentVo.setChequedate(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(paymentVo.getChequedateString()));
+				}catch(Exception e) {
+					logger.info("Error parsing date string");
+				}
+				expenseService.saveExpensePayment(paymentVo, idLongList);
+				redirectAttributes.addFlashAttribute("css", "success");
+				redirectAttributes.addFlashAttribute("msg", "Payment saved successfully!");
+		        return "redirect:/expense/listExpense";  
+			}
+		}
+		List<ExpenseVO> expenseList = expenseService.findByIdList(idLongList);
+		for(ExpenseVO expense : expenseList) {
+			expense.setExpensedateString(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).format(expense.getExpenseDate()));
+			expense.setExpensetype(expenseTypeLookup.getExpenseTypeById(expense.getExpenseTypeId()));
+		}
+		model.addAttribute("paymentForm", paymentVo);
+		model.addAttribute("expenseList", expenseList);
+		model.addAttribute("idList", expenseIdList);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", expenseList.get(expenseList.size()-1).getExpensedateString());
+		model.addAttribute("posturl", "/admin/payment/createExpensePayment");
+		return "createPayExpense";
+    }  
 	
 	private boolean validateInputAmount(BigDecimal totalamount, PaymentVO paymentVo) {
 		BigDecimal inputAmount = BigDecimal.ZERO;
@@ -251,6 +342,5 @@ public class PaymentController {
 		return false;
 	}
 	
-	/* Invoice Payment End */
 	
 }

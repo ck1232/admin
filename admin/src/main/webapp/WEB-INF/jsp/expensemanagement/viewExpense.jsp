@@ -29,7 +29,7 @@
 							<div class="row">
 						  		<div class="form-group">
 								    <div class="col-sm-2">Expense Type</div>
-								    <div class="col-sm-5">${expense.expenseType}</div>
+								    <div class="col-sm-5">${expense.expensetype}</div>
 								</div>
 							</div>			
 							<div class="row">

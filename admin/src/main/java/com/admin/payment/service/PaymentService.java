@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.admin.cheque.vo.ChequeVO;
 import com.admin.cheque.vo.service.ChequeService;
 import com.admin.dao.ChequeDAO;
+import com.admin.dao.ExpensePaymentRsDAO;
 import com.admin.dao.GrantPaymentRsDAO;
 import com.admin.dao.InvoicePaymentRsDAO;
 import com.admin.dao.PaymentDetailDAO;
@@ -23,6 +24,7 @@ import com.admin.payment.vo.PaymentDetailVO;
 import com.admin.payment.vo.PaymentRsVO;
 import com.admin.payment.vo.PaymentVO;
 import com.admin.to.ChequeTO;
+import com.admin.to.ExpensePaymentRsTO;
 import com.admin.to.GrantPaymentRsTO;
 import com.admin.to.InvoicePaymentRsTO;
 import com.admin.to.PaymentDetailTO;
@@ -36,6 +38,7 @@ public class PaymentService {
 	private PaymentModeLookup paymentModeLookup;
 	private InvoicePaymentRsDAO invoicePaymentRsDAO;
 	private GrantPaymentRsDAO grantPaymentRsDAO;
+	private ExpensePaymentRsDAO expensePaymentRsDAO;
 	private PaymentDetailDAO paymentDetailDAO;
 	private ChequeDAO chequeDAO;
 	private ChequeService chequeService;
@@ -44,12 +47,14 @@ public class PaymentService {
 	public PaymentService(PaymentModeLookup paymentModeLookup,
 			InvoicePaymentRsDAO invoicePaymentRsDAO,
 			GrantPaymentRsDAO grantPaymentRsDAO,
+			ExpensePaymentRsDAO expensePaymentRsDAO,
 			PaymentDetailDAO paymentDetailDAO,
 			ChequeDAO chequeDAO,
 			ChequeService chequeService) {
 		this.paymentModeLookup = paymentModeLookup;
 		this.invoicePaymentRsDAO = invoicePaymentRsDAO;
 		this.grantPaymentRsDAO = grantPaymentRsDAO;
+		this.expensePaymentRsDAO = expensePaymentRsDAO;
 		this.paymentDetailDAO = paymentDetailDAO;
 		this.chequeDAO = chequeDAO;
 		this.chequeService = chequeService;
@@ -63,6 +68,9 @@ public class PaymentService {
 		}else if(type.equals(GeneralUtils.MODULE_GRANT)) {
 			List<GrantPaymentRsTO> grantPaymentRsTOList = grantPaymentRsDAO.findByPaymentRsIdIn(paymentRsIdList);
 			paymentRsVOList = convertToPaymentRsVOList(grantPaymentRsTOList);
+		}else if(type.equals(GeneralUtils.MODULE_EXPENSE)) {
+			List<ExpensePaymentRsTO> expensePaymentRsTOList = expensePaymentRsDAO.findByPaymentRsIdIn(paymentRsIdList);
+			paymentRsVOList = convertToPaymentRsVOList(expensePaymentRsTOList);
 		}
 		return paymentRsVOList; 
 	}
@@ -133,6 +141,10 @@ public class PaymentService {
 					GrantPaymentRsTO grantPaymentRsTO = (GrantPaymentRsTO)to;
 					vo.setReferenceType(GeneralUtils.MODULE_INVOICE);
 					vo.setReferenceId(grantPaymentRsTO.getGrantTO().getGrantId());
+				}else if(to instanceof ExpensePaymentRsTO) {
+					ExpensePaymentRsTO expensePaymentRsTO = (ExpensePaymentRsTO)to;
+					vo.setReferenceType(GeneralUtils.MODULE_EXPENSE);
+					vo.setReferenceId(expensePaymentRsTO.getExpenseTO().getExpenseId());
 				}
 				List<PaymentDetailVO> paymentDetailVOList = convertToPaymentDetailVOList(Arrays.asList(to.getPaymentDetailTO()));
 				if(!paymentDetailVOList.isEmpty())

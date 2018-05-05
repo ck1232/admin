@@ -19,7 +19,7 @@ import com.admin.to.PaymentModeTO;
 @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRED)
 public class PaymentModeService {
 	private PaymentModeDAO paymentModeDAO;
-//	
+
 	@Autowired
 	public PaymentModeService(PaymentModeDAO paymentModeDAO) {
 		super();

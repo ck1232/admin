@@ -24,7 +24,7 @@
     "width":		  "200px",
     "defaultContent": '<div class="outer">'+
     '<div class="inner"><button name="viewBtn" class="btn btn-primary" type="submit" form="viewExpenseForm">View</button></div>'+
-    '<div name="payBtnDiv" class="inner"><button name="editBtn" class="btn btn-primary" type="submit" form="updateExpenseForm"><i class="fa fa-pencil"></i> Edit</button>' +
-    '<button name="payBtn" class="btn btn-primary" type="submit" form="payExpenseForm">Pay</button></div>'+
+    '<div name="editPayBtnDiv" class="inner"><button name="editBtn" class="btn btn-primary" type="submit" form="updateExpenseForm"><i class="fa fa-pencil"></i> Edit</button>' +
+    '<span id="payBtnDiv"><button name="payBtn" class="btn btn-primary" type="submit" form="payExpenseForm">Pay</button></span></div>'+
     '</div>'
 },

@@ -26,7 +26,7 @@
 						<div class="row">
 					  		<div class="form-group">
 							    <div class="col-sm-2">${expense.expensedateString}</div>
-							    <div class="col-sm-2">${expense.expenseType}</div>
+							    <div class="col-sm-2">${expense.expensetype}</div>
 							    <div class="col-sm-2">${expense.description}</div>
 							    <div class="col-sm-2">${expense.totalAmtString}</div>
 							    <div class="col-sm-2">${expense.supplier}</div>
