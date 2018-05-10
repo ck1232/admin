@@ -24,7 +24,7 @@
 						<div class="row">
 					  		<div class="form-group">
 							    <div class="col-sm-2">${salary.dateString}</div>
-							    <div class="col-sm-2">${salary.name}</div>
+							    <div class="col-sm-2">${salary.employeeVO.name}</div>
 							    <div class="col-sm-2">${salary.takehomeAmtString}</div>
 							    <div class="col-sm-2">${salary.status}</div>
 							</div>

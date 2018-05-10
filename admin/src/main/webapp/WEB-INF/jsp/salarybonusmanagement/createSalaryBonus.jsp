@@ -22,11 +22,11 @@
 								  	<div class="form-group ${status.error ? 'has-error' : ''}">
 										<label class="col-sm-2 control-label">Employee Name*</label>
 										<div class="col-sm-5">
-						                    <form:select path="employeeId" class="form-control" id="employeeId">
+						                    <form:select path="employeeVO.employeeId" class="form-control" id="employeeId">
 												<form:option value="" label="--- Select ---"/>
 						   						<form:options items="${employeeList}" />
 											</form:select>            
-											<form:errors path="employeeId" class="text-danger" />
+											<form:errors path="employeeVO.employeeId" class="text-danger" />
 										</div>
 								  	</div>
 								</div>

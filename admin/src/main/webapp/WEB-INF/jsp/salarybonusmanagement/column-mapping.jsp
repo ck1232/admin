@@ -7,7 +7,7 @@
     "defaultContent": '<div name="statusDiv" style="text-align:center;"><div style="text-align:center;"><input type="checkbox" name="checkboxId" onchange="checkboxClicked(this);"/></div></div>'
 },
 {"data": "dateString"},
-{"data": "name"},
+{"data": "employeeVO.name"},
 {"data": "type"},
 {"data": "grossAmtString"},
 {"data": "takehomeAmtString"},

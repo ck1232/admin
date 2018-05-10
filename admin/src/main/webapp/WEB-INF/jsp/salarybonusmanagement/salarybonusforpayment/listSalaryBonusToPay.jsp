@@ -24,9 +24,9 @@
 						<div class="row">
 					  		<div class="form-group">
 							    <div class="col-sm-2">${salary.dateString}</div>
-							    <div class="col-sm-2">${salary.name}</div>
+							    <div class="col-sm-2">${salary.employeeVO.name}</div>
 							    
-							    <div class="col-sm-2"><c:choose><c:when test="${salary.takehomeAmt != null}">${salary.takehomeAmtString}</c:when><c:otherwise>${salary.bonusAmtString}</c:otherwise></c:choose></div>
+							    <div class="col-sm-2"><c:choose><c:when test="${salary.bonusAmt != null}">${salary.bonusAmtString}</c:when><c:otherwise>${salary.takehomeAmtString}</c:otherwise></c:choose></div>
 							    <div class="col-sm-2">${salary.status}</div>
 							</div>
 						</div>

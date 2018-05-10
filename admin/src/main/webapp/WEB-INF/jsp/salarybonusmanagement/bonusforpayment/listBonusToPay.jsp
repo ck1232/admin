@@ -24,7 +24,7 @@
 						<div class="row">
 					  		<div class="form-group">
 							    <div class="col-sm-2">${bonus.dateString}</div>
-							    <div class="col-sm-2">${bonus.name}</div>
+							    <div class="col-sm-2">${bonus.employeeVO.name}</div>
 							    <div class="col-sm-2">${bonus.takehomeAmtString}</div>
 							    <div class="col-sm-2">${bonus.status}</div>
 							</div>

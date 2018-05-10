@@ -155,8 +155,8 @@
 						     	<form:errors path="paymentmodePayToDirector" class="text-danger" />
 							</div>
 						</div>
-						<label id="directorAmountLabel" class="col-sm-2 control-label" style="display:none">Amount</label>
-						<div id="directorAmountInput" class="col-sm-4" style="display:none">
+						<label id="payToDirectorAmountLabel" class="col-sm-2 control-label" style="display:none">Amount</label>
+						<div id="payToDirectorAmountInput" class="col-sm-4" style="display:none">
 		                    <form:input path="paytodirectoramount" type="text" class="form-control" 
 	                  			  id="paytodirectoramount" placeholder=""/>
 	                  		<form:errors path="paytodirectoramount" class="text-danger" />
@@ -273,12 +273,12 @@
      
   	function loadPaymentPayToDirector(){
 		if($("#paymentmodePayToDirector").prop('checked') != true) {
-	      	$("#directorAmountLabel").css("display","none");
-	      	$("#directorAmountInput").css("display","none");
+	      	$("#payToDirectorAmountLabel").css("display","none");
+	      	$("#payToDirectorAmountInput").css("display","none");
 	      	$("#paytodirectoramount").val("");
 		}else{
-		   	$("#directorAmountLabel").css("display","");
-		   	$("#directorAmountInput").css("display","");
+		   	$("#payToDirectorAmountLabel").css("display","");
+		   	$("#payToDirectorAmountInput").css("display","");
 		}
   	 }
 

@@ -86,7 +86,7 @@ public class PaymentFormValidator implements Validator {
 				}
 			}
 			
-			if("expense".equals(paymentVo.getType()) && paymentVo.getPaymentmodedirector()){
+			if(!"invoice".equals(paymentVo.getType()) && paymentVo.getPaymentmodedirector()){
 				if(paymentVo.getDirectoramount() == null){
 					errors.rejectValue("directoramount", "error.notempty.paymentform.directoramount");
 				}else if(paymentVo.getDirectoramount().compareTo(BigDecimal.ZERO) <= 0){

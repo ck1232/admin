@@ -12,23 +12,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.admin.cheque.vo.ChequeVO;
 import com.admin.cheque.vo.service.ChequeService;
+import com.admin.dao.BonusPaymentRsDAO;
 import com.admin.dao.ChequeDAO;
 import com.admin.dao.ExpensePaymentRsDAO;
 import com.admin.dao.GrantPaymentRsDAO;
 import com.admin.dao.InvoicePaymentRsDAO;
 import com.admin.dao.PaymentDetailDAO;
+import com.admin.dao.SalaryPaymentRsDAO;
 import com.admin.helper.GeneralUtils;
 import com.admin.payment.controller.PaymentController;
 import com.admin.payment.lookup.controller.PaymentModeLookup;
 import com.admin.payment.vo.PaymentDetailVO;
 import com.admin.payment.vo.PaymentRsVO;
 import com.admin.payment.vo.PaymentVO;
+import com.admin.to.BonusPaymentRsTO;
 import com.admin.to.ChequeTO;
 import com.admin.to.ExpensePaymentRsTO;
 import com.admin.to.GrantPaymentRsTO;
 import com.admin.to.InvoicePaymentRsTO;
 import com.admin.to.PaymentDetailTO;
 import com.admin.to.PaymentRsTO;
+import com.admin.to.SalaryPaymentRsTO;
 
 @Service
 @Scope("prototype")
@@ -39,6 +43,8 @@ public class PaymentService {
 	private InvoicePaymentRsDAO invoicePaymentRsDAO;
 	private GrantPaymentRsDAO grantPaymentRsDAO;
 	private ExpensePaymentRsDAO expensePaymentRsDAO;
+	private SalaryPaymentRsDAO salaryPaymentRsDAO;
+	private BonusPaymentRsDAO bonusPaymentRsDAO;
 	private PaymentDetailDAO paymentDetailDAO;
 	private ChequeDAO chequeDAO;
 	private ChequeService chequeService;
@@ -48,6 +54,8 @@ public class PaymentService {
 			InvoicePaymentRsDAO invoicePaymentRsDAO,
 			GrantPaymentRsDAO grantPaymentRsDAO,
 			ExpensePaymentRsDAO expensePaymentRsDAO,
+			SalaryPaymentRsDAO salaryPaymentRsDAO,
+			BonusPaymentRsDAO bonusPaymentRsDAO,
 			PaymentDetailDAO paymentDetailDAO,
 			ChequeDAO chequeDAO,
 			ChequeService chequeService) {
@@ -55,6 +63,8 @@ public class PaymentService {
 		this.invoicePaymentRsDAO = invoicePaymentRsDAO;
 		this.grantPaymentRsDAO = grantPaymentRsDAO;
 		this.expensePaymentRsDAO = expensePaymentRsDAO;
+		this.salaryPaymentRsDAO = salaryPaymentRsDAO;
+		this.bonusPaymentRsDAO = bonusPaymentRsDAO;
 		this.paymentDetailDAO = paymentDetailDAO;
 		this.chequeDAO = chequeDAO;
 		this.chequeService = chequeService;
@@ -71,6 +81,12 @@ public class PaymentService {
 		}else if(type.equals(GeneralUtils.MODULE_EXPENSE)) {
 			List<ExpensePaymentRsTO> expensePaymentRsTOList = expensePaymentRsDAO.findByPaymentRsIdIn(paymentRsIdList);
 			paymentRsVOList = convertToPaymentRsVOList(expensePaymentRsTOList);
+		}else if(type.equals(GeneralUtils.MODULE_SALARY)) {
+			List<SalaryPaymentRsTO> salaryPaymentRsTOList = salaryPaymentRsDAO.findByPaymentRsIdIn(paymentRsIdList);
+			paymentRsVOList = convertToPaymentRsVOList(salaryPaymentRsTOList);
+		}else if(type.equals(GeneralUtils.MODULE_BONUS)) {
+			List<BonusPaymentRsTO> bonusPaymentRsTOList = bonusPaymentRsDAO.findByPaymentRsIdIn(paymentRsIdList);
+			paymentRsVOList = convertToPaymentRsVOList(bonusPaymentRsTOList);
 		}
 		return paymentRsVOList; 
 	}
@@ -145,6 +161,14 @@ public class PaymentService {
 					ExpensePaymentRsTO expensePaymentRsTO = (ExpensePaymentRsTO)to;
 					vo.setReferenceType(GeneralUtils.MODULE_EXPENSE);
 					vo.setReferenceId(expensePaymentRsTO.getExpenseTO().getExpenseId());
+				}else if(to instanceof SalaryPaymentRsTO) {
+					SalaryPaymentRsTO salaryPaymentRsTO = (SalaryPaymentRsTO)to;
+					vo.setReferenceType(GeneralUtils.MODULE_SALARY);
+					vo.setReferenceId(salaryPaymentRsTO.getSalaryTO().getSalaryId());
+				}else if(to instanceof BonusPaymentRsTO) {
+					BonusPaymentRsTO bonusPaymentRsTO = (BonusPaymentRsTO)to;
+					vo.setReferenceType(GeneralUtils.MODULE_BONUS);
+					vo.setReferenceId(bonusPaymentRsTO.getBonusTO().getBonusId());
 				}
 				List<PaymentDetailVO> paymentDetailVOList = convertToPaymentDetailVOList(Arrays.asList(to.getPaymentDetailTO()));
 				if(!paymentDetailVOList.isEmpty())

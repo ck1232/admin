@@ -15,14 +15,14 @@
                     <form:form id="updateSalaryBonusToDbForm" method="post" modelAttribute="salaryBonusForm" action="${post_url}">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <form:input type="hidden" path="id" id="id"/>
-                    <form:input type="hidden" path="employeeId" id="employeeId"/>
-                    <form:input type="hidden" path="name" id="name"/>
+                    <form:input type="hidden" path="employeeVO.employeeId" id="employeeId"/>
+                    <form:input type="hidden" path="employeeVO.name" id="name"/>
                     <form:input type="hidden" path="type" id="type"/>
 		              <div class="box-body">
 		              <div class="row">
 						  <div class="form-group ${status.error ? 'has-error' : ''}">
 							<label class="col-sm-2 control-label">Employee Name</label>
-							<div class="col-sm-5">${salaryBonusForm.name}</div>
+							<div class="col-sm-5">${salaryBonusForm.employeeVO.name}</div>
 						  </div>
 					</div>
 					<div class="row">

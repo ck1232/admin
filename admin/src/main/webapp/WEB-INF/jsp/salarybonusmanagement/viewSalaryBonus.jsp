@@ -19,7 +19,7 @@
 							<div class="row">
 						  		<div class="form-group">
 									<div class="col-sm-2">Employee Name</div>
-									<div class="col-sm-5">${salarybonus.name}</div>
+									<div class="col-sm-5">${salarybonus.employeeVO.name}</div>
 								</div>
 							</div>
 							<div class="row">
@@ -150,7 +150,7 @@
 				                	</tr>
 				                	<c:forEach items="${otherList}" var="other">
 										<tr>
-											<td style="width: 14%">${other.name}</td>
+											<td style="width: 14%">${other.employeeVO.name}</td>
 						          			<td style="width: 14%">${other.dateString}</td>
 						          			<td style="width: 14%">${other.type}</td>
 						          			<td style="width: 14%">${other.grossAmt}</td>

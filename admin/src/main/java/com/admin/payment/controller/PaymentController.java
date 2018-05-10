@@ -1,10 +1,16 @@
 package com.admin.payment.controller;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,9 @@ import com.admin.invoice.lookup.controller.ExpenseTypeLookup;
 import com.admin.invoice.service.InvoiceService;
 import com.admin.invoice.vo.InvoiceVO;
 import com.admin.payment.vo.PaymentVO;
+import com.admin.salarybonus.service.SalaryBonusService;
+import com.admin.salarybonus.vo.SalaryBonusVO;
+import com.admin.salarybonus.vo.TypeEnum;
 import com.admin.validator.PaymentFormValidator;
 
 
@@ -43,6 +52,7 @@ public class PaymentController {
 	private InvoiceService invoiceService;
 	private GrantService grantService;
 	private ExpenseService expenseService;
+	private SalaryBonusService salaryBonusService;
 	private ExpenseTypeLookup expenseTypeLookup;
 	private PaymentFormValidator paymentFormValidator;
 	
@@ -57,11 +67,13 @@ public class PaymentController {
 	public PaymentController(InvoiceService invoiceService,
 			GrantService grantService,
 			ExpenseService expenseService,
+			SalaryBonusService salaryBonusService,
 			ExpenseTypeLookup expenseTypeLookup,
 			PaymentFormValidator paymentFormValidator){
 		this.invoiceService = invoiceService;
 		this.grantService = grantService;
 		this.expenseService = expenseService;
+		this.salaryBonusService = salaryBonusService;
 		this.expenseTypeLookup = expenseTypeLookup;
 		this.paymentFormValidator = paymentFormValidator;
 	}
@@ -71,6 +83,7 @@ public class PaymentController {
 		binder.setValidator(paymentFormValidator);
 	}
 	
+	/* Invoice Payment Start */
 	@RequestMapping(value = "/createPayInvoice", method = RequestMethod.POST) //open payment page
 	public String createPayInvoice(@RequestParam(value = "checkboxId", required=false) List<String> ids,
 			final RedirectAttributes redirectAttributes, Model model) {
@@ -232,7 +245,9 @@ public class PaymentController {
 		model.addAttribute("posturl", "/admin/payment/createGrantPayment");
 		return "createPayInvoice";
     }  
+	/* Invoice Payment End */
 	
+	/* Expense Payment Start */
 	@RequestMapping(value = "/createPayExpense", method = RequestMethod.POST)
 	public String createPayExpense(@RequestParam(value = "checkboxId", required=false) List<String> ids,
 			final RedirectAttributes redirectAttributes, Model model) {
@@ -318,6 +333,367 @@ public class PaymentController {
 		model.addAttribute("posturl", "/admin/payment/createExpensePayment");
 		return "createPayExpense";
     }  
+	/* Expense Payment End */
+	
+	/* Salary Payment Start */
+	@RequestMapping(value = "/createPaySalary", method = RequestMethod.POST)
+	public String createPaySalary(@RequestParam(value = "checkboxId", required=false) List<String> ids,
+			final RedirectAttributes redirectAttributes, Model model) {
+		if(ids == null || ids.size() < 1){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}
+		
+		List<Long> idList = new ArrayList<Long>();
+		for(String id : ids){
+			idList.add(Long.valueOf(id));
+		}
+		List<SalaryBonusVO> salaryBonusVoList = salaryBonusService.findSalaryByIdList(idList);
+		BigDecimal totalamount = BigDecimal.ZERO;
+		for(SalaryBonusVO salaryBonusVo : salaryBonusVoList) {
+			salaryBonusVo.setDateString(GeneralUtils.convertDateToString(salaryBonusVo.getDate(), GeneralUtils.SALARY_DATE_FORMAT));
+			totalamount = totalamount.add(salaryBonusVo.getTakehomeAmt());
+		}
+		
+		PaymentVO paymentvo = new PaymentVO();
+		paymentvo.setType(GeneralUtils.MODULE_SALARY);
+		model.addAttribute("paymentForm", paymentvo);
+		model.addAttribute("salaryList", salaryBonusVoList);
+		model.addAttribute("idList", idList);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", salaryBonusVoList.get(salaryBonusVoList.size()-1).getDateString());
+		model.addAttribute("posturl", "/admin/payment/createSalaryPayment");
+		return "createPaySalary";
+	}
+	
+	@RequestMapping(value = "/createSalaryPayment", method = RequestMethod.POST)
+    public String saveSalaryPayment(
+    		@RequestParam(value = "referenceIds", required=false) List<Integer> salaryIdList,
+    		@RequestParam(value = "totalamount", required=false) BigDecimal totalamount,
+    		@RequestParam(value = "lastdate", required=false) String lastdate,
+    		@ModelAttribute("paymentForm") @Validated PaymentVO paymentVo, 
+    		BindingResult result, Model model, final RedirectAttributes redirectAttributes) {
+		logger.debug("saveSalaryPayment() : " + paymentVo.toString());
+		GeneralUtils.validate(paymentVo, "paymentForm", result);
+		List<Long> idLongList = new ArrayList<Long>();
+		for(Integer salaryId : salaryIdList) {
+			idLongList.add(salaryId.longValue());
+		}
+		List<SalaryBonusVO> salaryBonusVoList = salaryBonusService.findSalaryByIdList(idLongList);
+		for(SalaryBonusVO salaryBonusVo : salaryBonusVoList) {
+			salaryBonusVo.setDateString(GeneralUtils.convertDateToString(salaryBonusVo.getDate(), GeneralUtils.SALARY_DATE_FORMAT));
+		}
+		if (!result.hasErrors()) {
+			boolean hasErrors = false;
+			if(!validateInputAmount(totalamount, paymentVo)){
+				hasErrors = true;
+				result.rejectValue("cashamount", "error.notequal.paymentform.salarytotalamount");
+				result.rejectValue("chequeamount", "error.notequal.paymentform.salarytotalamount");
+			}
+			if(!validateInputDate(lastdate, GeneralUtils.SALARY_DATE_FORMAT, paymentVo.getPaymentdateString())){
+				hasErrors = true;
+				result.rejectValue("paymentdateString", "error.paymentform.paymentdate.before.salarylastdate");
+			}
+			
+			if(paymentVo.getPaymentmodecheque() && !validateInputDate(lastdate, GeneralUtils.SALARY_DATE_FORMAT, paymentVo.getChequedateString())){
+				hasErrors = true;
+				result.rejectValue("chequedateString", "error.paymentform.chequedate.before.salarylastdate");
+			}
+			
+			if(!hasErrors){
+				paymentVo.setReferenceType(GeneralUtils.MODULE_SALARY);
+				try{ 
+					paymentVo.setPaymentDate(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(paymentVo.getPaymentdateString()));
+					if(paymentVo.getPaymentmodecheque())
+						paymentVo.setChequedate(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(paymentVo.getChequedateString()));
+				}catch(Exception e) {
+					logger.info("Error parsing date string");
+				}
+				salaryBonusService.saveSalaryPayment(paymentVo, idLongList);
+				redirectAttributes.addFlashAttribute("css", "success");
+				redirectAttributes.addFlashAttribute("msg", "Payment saved successfully!");
+		        return "redirect:/salarybonus/listSalaryBonus";  
+			}
+		}
+		model.addAttribute("paymentForm", paymentVo);
+		model.addAttribute("salaryList", salaryBonusVoList);
+		model.addAttribute("idList", salaryIdList);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", salaryBonusVoList.get(salaryBonusVoList.size()-1).getDateString());
+		model.addAttribute("posturl", "/admin/payment/createSalaryPayment");
+		return "createPaySalary";
+    }
+	/* Salary Payment End */
+	
+	/* Bonus Payment Start */
+	@RequestMapping(value = "/createPayBonus", method = RequestMethod.POST)
+	public String createPayBonus(@RequestParam(value = "checkboxId", required=false) List<String> ids,
+			final RedirectAttributes redirectAttributes, Model model) {
+		if(ids == null || ids.size() < 1){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}
+		
+		List<Long> idList = new ArrayList<Long>();
+		for(String id : ids){
+			idList.add(Long.valueOf(id));
+		}
+		List<SalaryBonusVO> salaryBonusVoList = salaryBonusService.findBonusByIdList(idList);
+		BigDecimal totalamount = BigDecimal.ZERO;
+		for(SalaryBonusVO salaryBonusVo : salaryBonusVoList) {
+			salaryBonusVo.setDateString(GeneralUtils.convertDateToString(salaryBonusVo.getDate(), GeneralUtils.BONUS_DATE_FORMAT));
+			totalamount = totalamount.add(salaryBonusVo.getTakehomeAmt());
+		}
+		
+		PaymentVO paymentvo = new PaymentVO();
+		paymentvo.setType(GeneralUtils.MODULE_BONUS);
+		model.addAttribute("paymentForm", paymentvo);
+		model.addAttribute("bonusList", salaryBonusVoList);
+		model.addAttribute("idList", idList);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", salaryBonusVoList.get(salaryBonusVoList.size()-1).getDateString());
+		model.addAttribute("posturl", "/admin/payment/createBonusPayment");
+		return "createPayBonus";
+	}
+	
+	@RequestMapping(value = "/createBonusPayment", method = RequestMethod.POST)
+    public String saveBonusPayment(
+    		@RequestParam(value = "referenceIds", required=false) List<Integer> bonusIdList,
+    		@RequestParam(value = "totalamount", required=false) BigDecimal totalamount,
+    		@RequestParam(value = "lastdate", required=false) String lastdate,
+    		@ModelAttribute("paymentForm") @Validated PaymentVO paymentVo, 
+    		BindingResult result, Model model, final RedirectAttributes redirectAttributes) {
+		logger.debug("saveBonusPayment() : " + paymentVo.toString());
+		GeneralUtils.validate(paymentVo, "paymentForm", result);
+		List<Long> idLongList = new ArrayList<Long>();
+		for(Integer bonusId : bonusIdList) {
+			idLongList.add(bonusId.longValue());
+		}
+		List<SalaryBonusVO> salaryBonusVoList = salaryBonusService.findBonusByIdList(idLongList);
+		for(SalaryBonusVO salaryBonusVo : salaryBonusVoList) {
+			salaryBonusVo.setDateString(GeneralUtils.convertDateToString(salaryBonusVo.getDate(), GeneralUtils.BONUS_DATE_FORMAT));
+		}
+		if (!result.hasErrors()) {
+			boolean hasErrors = false;
+			if(!validateInputAmount(totalamount, paymentVo)){
+				hasErrors = true;
+				result.rejectValue("cashamount", "error.notequal.paymentform.bonustotalamount");
+				result.rejectValue("chequeamount", "error.notequal.paymentform.bonustotalamount");
+			}
+			if(!validateInputDate(lastdate, GeneralUtils.BONUS_DATE_FORMAT, paymentVo.getPaymentdateString())){
+				hasErrors = true;
+				result.rejectValue("paymentdateString", "error.paymentform.paymentdate.before.bonuslastdate");
+			}
+			
+			if(paymentVo.getPaymentmodecheque() && !validateInputDate(lastdate, GeneralUtils.BONUS_DATE_FORMAT, paymentVo.getChequedateString())){
+				hasErrors = true;
+				result.rejectValue("chequedateString", "error.paymentform.chequedate.before.bonuslastdate");
+			}
+			
+			if(!hasErrors){
+				paymentVo.setReferenceType(GeneralUtils.MODULE_BONUS);
+				try{ 
+					paymentVo.setPaymentDate(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(paymentVo.getPaymentdateString()));
+					if(paymentVo.getPaymentmodecheque())
+						paymentVo.setChequedate(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(paymentVo.getChequedateString()));
+				}catch(Exception e) {
+					logger.info("Error parsing date string");
+				}
+				salaryBonusService.saveBonusPayment(paymentVo, idLongList);
+				redirectAttributes.addFlashAttribute("css", "success");
+				redirectAttributes.addFlashAttribute("msg", "Payment saved successfully!");
+		        return "redirect:/salarybonus/listSalaryBonus";  
+			}
+		}
+		model.addAttribute("paymentForm", paymentVo);
+		model.addAttribute("bonusList", salaryBonusVoList);
+		model.addAttribute("idList", bonusIdList);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", salaryBonusVoList.get(salaryBonusVoList.size()-1).getDateString());
+		model.addAttribute("posturl", "/admin/payment/createBonusPayment");
+		return "createPayBonus";
+    }  
+	/* Bonus Payment End */
+	
+	/* Salary Bonus Payment Start */
+	@RequestMapping(value = "/createPaySalaryBonus", method = RequestMethod.POST)
+	public String createMultiplePaySalary(@RequestParam(value = "checkboxId", required=false) List<String> ids,
+			final RedirectAttributes redirectAttributes, Model model) {
+		List<Long> salaryIdList = new ArrayList<Long>();
+		List<Long> bonusIdList = new ArrayList<Long>();
+		if(ids == null || ids.size() < 1){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}else{
+			for(String id : ids){
+				String[] idArray = id.split("-");
+				if(idArray.length != 2 || !GeneralUtils.isInteger(idArray[0])){
+					redirectAttributes.addFlashAttribute("css", "danger");
+					redirectAttributes.addFlashAttribute("msg", "Invalid Selection, Please try again.");
+					return "redirect:/salarybonus/listSalaryBonus";
+				}else{
+					Long salaryBonusId = Long.parseLong(idArray[0]);
+					if(idArray[1].equals(TypeEnum.SALARY.getType())) {
+						salaryIdList.add(salaryBonusId);
+					}else if(idArray[1].equals(TypeEnum.BONUS.getType())) {
+						bonusIdList.add(salaryBonusId);
+					}
+				}
+			}
+		}
+		List<SalaryBonusVO> salaryBonusVoList = new ArrayList<SalaryBonusVO>();
+		if(!salaryIdList.isEmpty()){
+			salaryBonusVoList.addAll(salaryBonusService.findSalaryByIdList(salaryIdList));
+		}
+		
+		if(!bonusIdList.isEmpty()){
+			salaryBonusVoList.addAll(salaryBonusService.findBonusByIdList(bonusIdList));
+		}
+		
+		if(salaryBonusVoList.isEmpty()){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Invalid Selection, Please try again.");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}
+		
+		//check if all the record is for the same employee
+		Set<Long> employeeIdSet = new HashSet<Long>();
+		for(SalaryBonusVO vo : salaryBonusVoList){
+			employeeIdSet.add(vo.getEmployeeVO().getEmployeeId());
+		}
+		if(employeeIdSet.size() > 1){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please select records for one employee only!");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}
+		
+		BigDecimal totalamount = BigDecimal.ZERO;
+		for(SalaryBonusVO salaryBonusVo : salaryBonusVoList) {
+			if(salaryBonusVo.getBonusAmt() != null && salaryBonusVo.getBonusAmt().compareTo(BigDecimal.ZERO) > 0){
+				totalamount = totalamount.add(salaryBonusVo.getBonusAmt());
+			}else{
+				totalamount = totalamount.add(salaryBonusVo.getTakehomeAmt());
+			}
+		}
+		
+		Collections.sort(salaryBonusVoList, new SalaryBonusComparator());
+		
+		PaymentVO paymentvo = new PaymentVO();
+		paymentvo.setType(GeneralUtils.MODULE_SALARY_BONUS);
+		model.addAttribute("paymentForm", paymentvo);
+		model.addAttribute("salaryList", salaryBonusVoList);
+		model.addAttribute("idList", ids);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", salaryBonusVoList.get(0).getDateString());
+		model.addAttribute("posturl", "/admin/payment/createSalaryBonusPayment");
+		return "createPaySalaryBonus";
+	}
+	
+	@RequestMapping(value = "/createSalaryBonusPayment", method = RequestMethod.POST)
+    public String saveSalaryBonusPayment(
+    		@RequestParam(value = "referenceIds", required=false) List<String> ids,
+    		@RequestParam(value = "totalamount", required=false) BigDecimal totalamount,
+    		@RequestParam(value = "lastdate", required=false) String lastdate,
+    		@ModelAttribute("paymentForm") @Validated PaymentVO paymentVo, 
+    		BindingResult result, Model model, final RedirectAttributes redirectAttributes) {
+		logger.debug("saveSalaryBonusPayment() : " + paymentVo.toString());
+		GeneralUtils.validate(paymentVo, "paymentForm", result);
+		List<Long> salaryIdList = new ArrayList<Long>();
+		List<Long> bonusIdList = new ArrayList<Long>();
+		if(ids == null || ids.size() < 1){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Please select at least one record!");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}else{
+			for(String id : ids){
+				String[] idArray = id.split("-");
+				if(idArray.length != 2 || !GeneralUtils.isInteger(idArray[0])){
+					redirectAttributes.addFlashAttribute("css", "danger");
+					redirectAttributes.addFlashAttribute("msg", "Invalid Selection, Please try again.");
+					return "redirect:/salarybonus/listSalaryBonus";
+				}else{
+					Long salaryBonusId = Long.parseLong(idArray[0]);
+					if(idArray[1].equals(TypeEnum.SALARY.getType())) {
+						salaryIdList.add(salaryBonusId);
+					}else if(idArray[1].equals(TypeEnum.BONUS.getType())) {
+						bonusIdList.add(salaryBonusId);
+					}
+				}
+			}
+		}
+		List<SalaryBonusVO> salaryBonusVoList = new ArrayList<SalaryBonusVO>();
+		if(!salaryIdList.isEmpty()){
+			salaryBonusVoList.addAll(salaryBonusService.findSalaryByIdList(salaryIdList));
+		}
+		
+		if(!bonusIdList.isEmpty()){
+			salaryBonusVoList.addAll(salaryBonusService.findBonusByIdList(bonusIdList));
+		}
+		
+		if(salaryBonusVoList.isEmpty()){
+			redirectAttributes.addFlashAttribute("css", "danger");
+			redirectAttributes.addFlashAttribute("msg", "Invalid Selection, Please try again.");
+			return "redirect:/salarybonus/listSalaryBonus";
+		}
+		
+		for(SalaryBonusVO salaryBonusVo : salaryBonusVoList) {
+			if(salaryBonusVo.getType().equals(GeneralUtils.TYPE_BONUS)){
+				salaryBonusVo.setDateString(GeneralUtils.convertDateToString(salaryBonusVo.getDate(), GeneralUtils.BONUS_DATE_FORMAT));
+			}else if(salaryBonusVo.getType().equals(GeneralUtils.TYPE_SALARY)){
+				salaryBonusVo.setDateString(GeneralUtils.convertDateToString(salaryBonusVo.getDate(), GeneralUtils.SALARY_DATE_FORMAT));
+			}
+		}
+		if (!result.hasErrors()) {
+			boolean hasErrors = false;
+			if(!validateInputAmount(totalamount, paymentVo)){
+				hasErrors = true;
+				result.rejectValue("cashamount", "error.notequal.paymentform.totalamount");
+				result.rejectValue("chequeamount", "error.notequal.paymentform.totalamount");
+				result.rejectValue("directoramount", "error.notequal.paymentform.totalamount");
+			}
+			
+			if(!hasErrors){
+				paymentVo.setPaymentDate(GeneralUtils.convertStringToDate(paymentVo.getPaymentdateString(), GeneralUtils.STANDARD_DATE_FORMAT));
+				if(paymentVo.getPaymentmodecheque()){
+					paymentVo.setChequedate(GeneralUtils.convertStringToDate(paymentVo.getChequedateString(), GeneralUtils.STANDARD_DATE_FORMAT));
+				}
+				
+				salaryBonusService.saveSalaryBonusPayment(paymentVo, salaryIdList, bonusIdList);
+				
+				
+				redirectAttributes.addFlashAttribute("css", "success");
+				redirectAttributes.addFlashAttribute("msg", "Payment saved successfully!");
+		        return "redirect:/salarybonus/listSalaryBonus";  
+			}
+		}
+		Collections.sort(salaryBonusVoList, new SalaryBonusComparator());
+		
+		model.addAttribute("paymentForm", paymentVo);
+		model.addAttribute("salaryList", salaryBonusVoList);
+		model.addAttribute("idList", ids);
+		model.addAttribute("totalamount", totalamount);
+		model.addAttribute("lastdate", salaryBonusVoList.get(0).getDateString());
+		model.addAttribute("posturl", "/admin/payment/createSalaryBonusPayment");
+		return "createPaySalaryBonus";
+    }  
+	/* Salary Bonus Payment End */
+	
+	private boolean validateInputDate(String lastdateString, String lastdateformat, String dateString) {
+		try {
+			Date lastdate = new SimpleDateFormat(lastdateformat).parse(lastdateString);
+			Date date = new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).parse(dateString);
+			
+			if(date.compareTo(lastdate) >= 0) {
+				return true;
+			}
+		} catch (ParseException e) {
+			logger.info("Error parsing date.");
+		}
+		return false;
+	}
 	
 	private boolean validateInputAmount(BigDecimal totalamount, PaymentVO paymentVo) {
 		BigDecimal inputAmount = BigDecimal.ZERO;
@@ -342,5 +718,18 @@ public class PaymentController {
 		return false;
 	}
 	
+	class SalaryBonusComparator implements Comparator<SalaryBonusVO> {
+		@Override
+		public int compare(SalaryBonusVO o1, SalaryBonusVO o2) {
+			if(o1.getDate() == null && o2.getDate() == null){
+				return 0;
+			}else if(o1.getDate() == null && o2.getDate() != null){
+				return -1;
+			}else if(o1.getDate() != null && o2.getDate() == null){
+				return 1;
+			}
+			return o1.getDate().compareTo(o2.getDate()) * -1;
+		}
+	}
 	
 }
