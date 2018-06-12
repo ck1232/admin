@@ -41,7 +41,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	  	.and()
 	  	.authorizeRequests()
 	  	.accessDecisionManager(accessDecisionManager())
-	  	.antMatchers("/404", "/error").permitAll()
 	  	.antMatchers("/invoice/saveExcelInvoice").anonymous()
 	  	.antMatchers("/").authenticated()
 	  	.antMatchers("/dashboard").fullyAuthenticated()
@@ -49,9 +48,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/query", "/q").hasAnyRole("ROLE_ADMIN","ADMIN")
 		.antMatchers("/product/**", "/batchintake/**", "/inventory**/**", "/promotion/**").hasAnyRole("PRODUCT_MGR", "ADMIN")
 		.antMatchers("/invoice/**", "/expense/**", "/salarybonus/**", "/employee/**", "/cheque/**").hasAnyRole("DATA_ENTRY_USER", "ADMIN")
-		
+		.antMatchers("/404", "/error").permitAll()
 		.and().formLogin().loginPage("/login").permitAll()
 		.usernameParameter("username").passwordParameter("password")
+		.defaultSuccessUrl("/dashboard")
 		.and().exceptionHandling().accessDeniedPage("/Access_Denied").accessDeniedHandler(accessDeniedHandler)
 		.and().logout().invalidateHttpSession(true).logoutUrl("/logout").deleteCookies("JSESSIONID").permitAll()
 		.and().sessionManagement().maximumSessions(1).expiredUrl("/login").and().invalidSessionUrl("/login");
@@ -63,7 +63,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return encoder;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Bean
 	public AccessDecisionManager accessDecisionManager() {
 	    List<AccessDecisionVoter<? extends Object>> decisionVoters 

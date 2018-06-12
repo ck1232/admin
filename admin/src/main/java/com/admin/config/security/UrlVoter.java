@@ -3,6 +3,7 @@ package com.admin.config.security;
 import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -23,9 +24,14 @@ public class UrlVoter implements AccessDecisionVoter<FilterInvocation>{
     @Override
     public int vote(Authentication authentication, FilterInvocation fi, Collection<ConfigAttribute> collection) {
     	String url = fi.getRequestUrl();
-    	String method = fi.getHttpRequest().getMethod();
+    	HttpServletRequest request = fi.getHttpRequest();
+    	String method = request.getMethod();
+    	String ipaddress = request.getRemoteAddr();
+    	int port = request.getRemotePort();
+    	String userAgent = request.getHeader("User-Agent");
     	String username = "GUEST";
     	Object userObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	logger.debug("ipaddress:"+ ipaddress + ":" + port + ", userAgent:"+userAgent);
 		if(userObj instanceof LoginUserVO){
 			LoginUserVO user = (LoginUserVO)userObj ;
 			username = user.getUsername();

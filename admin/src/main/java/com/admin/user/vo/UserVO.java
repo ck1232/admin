@@ -2,10 +2,8 @@ package com.admin.user.vo;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import com.admin.helper.vo.BaseVO;
-import com.admin.role.vo.RoleVO;
 
 public class UserVO extends BaseVO implements Serializable {
     private Long userId;
