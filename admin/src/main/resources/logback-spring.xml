@@ -2,7 +2,7 @@
 <Configuration>
 	<springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active"/>
 	<timestamp key="logTimestamp" datePattern="yyyy-MM-dd"/>
-	<property name="prdConfigFile" value="C:\\Inetpub\\vhosts\\ziumlight.com\\Configuration\\application-${ACTIVE_PROFILE}.properties" />
+	<property name="prdConfigFile" value="/var/www/vhosts/ziumlight.com/config/application-admin-prd.properties" />
 	<define name="INCLUDED_FILE_EXISTS" class="ch.qos.logback.core.property.FileExistsPropertyDefiner">
     	<path>${prdConfigFile}</path>
    	</define>
@@ -25,7 +25,7 @@
 	</appender>
 	
 	<appender name="FILE-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>D:/logs/debug-${logTimestamp}.log</file>
+		<file>${log.path}/debug-${logTimestamp}.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
 				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M:%L - %msg%n
@@ -34,12 +34,12 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->
-			<fileNamePattern>${log.path}debug-%d{yyyy-MM-dd HH:mm:ss}.log</fileNamePattern>
+			<fileNamePattern>${log.path}/debug-%d{yyyy-MM-dd}_log.log</fileNamePattern>
 		</rollingPolicy>
 	</appender>
 	
 	<appender name="FILE-ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>D:/logs/access-${logTimestamp}.log</file>
+		<file>${log.path}/access-${logTimestamp}.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
 				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%M:%L - %msg%n
@@ -48,12 +48,12 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->
-			<fileNamePattern>D:/logs/access-%d{yyyy-MM-dd HH:mm:ss}.log</fileNamePattern>
+			<fileNamePattern>${log.path}/access-%d{yyyy-MM-dd}_log.log</fileNamePattern>
 		</rollingPolicy>
 	</appender>
 	
 	<appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>D:/logs/error-${logTimestamp}.log</file>
+		<file>${log.path}/error-${logTimestamp}.log</file>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
@@ -67,7 +67,7 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->
-			<fileNamePattern>D:/logs/error-%d{yyyy-MM-dd HH:mm:ss}.log</fileNamePattern>
+			<fileNamePattern>${log.path}/error-%d{yyyy-MM-dd}_log.log</fileNamePattern>
 		</rollingPolicy>
 	</appender>
 	
