@@ -42,7 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	  	.authorizeRequests()
 	  	.accessDecisionManager(accessDecisionManager())
 	  	.antMatchers("/invoice/saveExcelInvoice").anonymous()
-	  	.antMatchers("/").authenticated()
+	  	.antMatchers("/", "/index.html").authenticated()
 	  	.antMatchers("/dashboard").fullyAuthenticated()
 		.antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN","ADMIN")
 		.antMatchers("/query", "/q").hasAnyRole("ROLE_ADMIN","ADMIN")
