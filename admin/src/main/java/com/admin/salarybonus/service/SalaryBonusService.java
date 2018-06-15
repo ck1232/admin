@@ -188,10 +188,14 @@ public class SalaryBonusService {
 		}
 	}	
 	
-	public void saveSalaryPayment(PaymentVO paymentVo, List<Long> salaryidList) {
-		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
+	public void saveSalaryPaymentBySalaryId(PaymentVO paymentVo, List<Long> salaryidList) {
+		List<SalaryTO> salaryList = salaryDAO.findBySalaryIdIn(salaryidList);
+		saveSalaryPaymentBySalary(paymentVo, salaryList);
 		
-		List<SalaryTO> salaryList = salaryDAO.findBySalaryIdIn(salaryidList);;
+	}
+	
+	public void saveSalaryPaymentBySalary(PaymentVO paymentVo, List<SalaryTO> salaryList) {
+		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
 		if(!salaryList.isEmpty() && !paymentDetailTOList.isEmpty()) {
 			for(SalaryTO salaryTO : salaryList) {
 				for(PaymentDetailTO paymentDetailTO : paymentDetailTOList) {
@@ -204,16 +208,19 @@ public class SalaryBonusService {
 					salaryTO.getSalaryPaymentRsTOSet().add(paymentRsTO);
 				}
 				salaryTO.setStatus(ExpenseStatusEnum.PAID.toString());
-				
 			}
 		}
 		salaryDAO.save(salaryList);
 	}
 	
-	public void saveBonusPayment(PaymentVO paymentVo, List<Long> bonusidList) {
-		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
-		
+	public void saveBonusPaymentByBonusId(PaymentVO paymentVo, List<Long> bonusidList) {
 		List<BonusTO> bonusList = bonusDAO.findByBonusIdIn(bonusidList);
+		saveBonusPaymentByBonus(paymentVo, bonusList);
+		
+	}
+	
+	public void saveBonusPaymentByBonus(PaymentVO paymentVo, List<BonusTO> bonusList) {
+		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
 		if(!bonusList.isEmpty() && !paymentDetailTOList.isEmpty()) {
 			for(BonusTO bonusTO : bonusList) {
 				for(PaymentDetailTO paymentDetailTO : paymentDetailTOList) {
@@ -272,7 +279,7 @@ public class SalaryBonusService {
 		bonusDAO.save(bonusList);
 	}
 	
-	private List<SalaryBonusVO> convertSalaryToSalaryBonusVOList(List<SalaryTO> toList) {
+	public List<SalaryBonusVO> convertSalaryToSalaryBonusVOList(List<SalaryTO> toList) {
 		List<SalaryBonusVO> voList = new ArrayList<SalaryBonusVO>();
 		if(toList != null && !toList.isEmpty()){
 			for(SalaryTO to : toList){

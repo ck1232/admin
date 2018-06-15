@@ -103,10 +103,14 @@ public class ExpenseService {
 		}
 	}
 	
-	public void saveExpensePayment(PaymentVO paymentVo, List<Long> expenseidList) {
+	public void saveExpensePaymentByExpenseId(PaymentVO paymentVo, List<Long> expenseidList) {
+		List<ExpenseTO> expenseList = expenseDAO.findByExpenseIdIn(expenseidList);;
+		saveExpensePaymentByExpense(paymentVo, expenseList);
+	}
+	
+	public void saveExpensePaymentByExpense(PaymentVO paymentVo, List<ExpenseTO> expenseList) {
 		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
 		
-		List<ExpenseTO> expenseList = expenseDAO.findByExpenseIdIn(expenseidList);;
 		if(!expenseList.isEmpty() && !paymentDetailTOList.isEmpty()) {
 			for(ExpenseTO expenseTO : expenseList) {
 				for(PaymentDetailTO paymentDetailTO : paymentDetailTOList) {
@@ -119,13 +123,12 @@ public class ExpenseService {
 					expenseTO.getExpensePaymentRsTOSet().add(paymentRsTO);
 				}
 				expenseTO.setStatus(ExpenseStatusEnum.PAID.toString());
-				
 			}
 		}
 		expenseDAO.save(expenseList);
 	}
 
-	private List<ExpenseVO> convertToExpenseVOList(List<ExpenseTO> toList) {
+	public List<ExpenseVO> convertToExpenseVOList(List<ExpenseTO> toList) {
 		List<ExpenseVO> expenseVOList = new ArrayList<ExpenseVO>();
 		if(toList != null && !toList.isEmpty()) {
 			for(ExpenseTO to : toList) {

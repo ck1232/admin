@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.admin.cheque.vo.ChequeVO;
-import com.admin.cheque.vo.service.ChequeService;
+import com.admin.cheque.vo.service.ChequeConverter;
 import com.admin.dao.BonusPaymentRsDAO;
 import com.admin.dao.ChequeDAO;
 import com.admin.dao.ExpensePaymentRsDAO;
@@ -46,8 +46,8 @@ public class PaymentService {
 	private SalaryPaymentRsDAO salaryPaymentRsDAO;
 	private BonusPaymentRsDAO bonusPaymentRsDAO;
 	private PaymentDetailDAO paymentDetailDAO;
+	private ChequeConverter chequeConverter;
 	private ChequeDAO chequeDAO;
-	private ChequeService chequeService;
 	
 	@Autowired
 	public PaymentService(PaymentModeLookup paymentModeLookup,
@@ -58,7 +58,7 @@ public class PaymentService {
 			BonusPaymentRsDAO bonusPaymentRsDAO,
 			PaymentDetailDAO paymentDetailDAO,
 			ChequeDAO chequeDAO,
-			ChequeService chequeService) {
+			ChequeConverter chequeConverter) {
 		this.paymentModeLookup = paymentModeLookup;
 		this.invoicePaymentRsDAO = invoicePaymentRsDAO;
 		this.grantPaymentRsDAO = grantPaymentRsDAO;
@@ -67,7 +67,7 @@ public class PaymentService {
 		this.bonusPaymentRsDAO = bonusPaymentRsDAO;
 		this.paymentDetailDAO = paymentDetailDAO;
 		this.chequeDAO = chequeDAO;
-		this.chequeService = chequeService;
+		this.chequeConverter = chequeConverter;
 	}
 	
 	public List<PaymentRsVO> findByPaymentRsIdList(List<Long> paymentRsIdList, String type) {
@@ -119,7 +119,7 @@ public class PaymentService {
 			ChequeTO chequeTO = convertPaymentToChequeTOList(Arrays.asList(paymentVo)).get(0);
 			chequeTO = chequeDAO.save(chequeTO);
 			PaymentDetailVO paymentDetailVO = this.convertPaymentToPaymentDetailVOList(Arrays.asList(paymentVo), GeneralUtils.PAYMENT_MODE_CHEQUE).get(0);
-			paymentDetailVO.setChequeVO(chequeService.convertToChequeVOList(Arrays.asList(chequeTO)).get(0));
+			paymentDetailVO.setChequeVO(chequeConverter.convertToChequeVOList(Arrays.asList(chequeTO)).get(0));
 			paymentDetailList.add(paymentDetailVO);
 		}
 		if(PaymentController.outMoneyModuleList.contains(paymentVo.getType()) && paymentVo.getPaymentmodedirector()){
@@ -213,7 +213,7 @@ public class PaymentService {
 				vo.setPaymentAmt(to.getPaymentAmt());
 				vo.setPaymentAmtString("$"+ to.getPaymentAmt());
 				if(to.getChequeTO() != null) {
-					List<ChequeVO> chequeVOList = chequeService.convertToChequeVOList(Arrays.asList(to.getChequeTO()));
+					List<ChequeVO> chequeVOList = chequeConverter.convertToChequeVOList(Arrays.asList(to.getChequeTO()));
 					if(!chequeVOList.isEmpty())
 						vo.setChequeVO(chequeVOList.get(0));
 				}
@@ -281,7 +281,7 @@ public class PaymentService {
 				to.setPaymentMode(vo.getPaymentMode());
 				to.setPaymentAmt(vo.getPaymentAmt());
 				if(vo.getChequeVO() != null) {
-					List<ChequeTO> chequeTOList = chequeService.convertToChequeTOList(Arrays.asList(vo.getChequeVO()));
+					List<ChequeTO> chequeTOList = chequeConverter.convertToChequeTOList(Arrays.asList(vo.getChequeVO()));
 					if(!chequeTOList.isEmpty())
 						to.setChequeTO(chequeTOList.get(0));
 				}

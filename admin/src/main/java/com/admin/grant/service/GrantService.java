@@ -84,10 +84,13 @@ public class GrantService {
 		}
 	}
 	
-	public void saveGrantPayment(PaymentVO paymentVo, List<Long> grantidList) {
-		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
-		
+	public void saveGrantPaymentByGrantId(PaymentVO paymentVo, List<Long> grantidList) {
 		List<GrantTO> grantList = grantDAO.findByGrantIdIn(grantidList);
+		saveGrantPaymentByGrant(paymentVo, grantList);
+	}
+	
+	public void saveGrantPaymentByGrant(PaymentVO paymentVo, List<GrantTO> grantList) {
+		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
 		if(!grantList.isEmpty() && !paymentDetailTOList.isEmpty()) {
 			for(GrantTO grantTO : grantList) {
 				for(PaymentDetailTO paymentDetailTO : paymentDetailTOList) {

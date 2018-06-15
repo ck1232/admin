@@ -203,10 +203,14 @@ public class InvoiceService {
 		return fileUploadCount;
 	}
 	
-	public void saveInvoicePayment(PaymentVO paymentVo, List<Long> invoiceidList) {
+	public void saveInvoicePaymentByInvoiceId(PaymentVO paymentVo, List<Long> invoiceidList) {
+		List<InvoiceTO> invoiceList = invoiceDAO.findByInvoiceIdIn(invoiceidList);;
+		saveInvoicePaymentByInvoice(paymentVo, invoiceList);
+	}
+	
+	public void saveInvoicePaymentByInvoice(PaymentVO paymentVo, List<InvoiceTO> invoiceList) {
 		List<PaymentDetailTO> paymentDetailTOList = paymentService.genPaymentDetail(paymentVo);
 		
-		List<InvoiceTO> invoiceList = invoiceDAO.findByInvoiceIdIn(invoiceidList);;
 		if(!invoiceList.isEmpty() && !paymentDetailTOList.isEmpty()) {
 			for(InvoiceTO invoiceTO : invoiceList) {
 				for(PaymentDetailTO paymentDetailTO : paymentDetailTOList) {
@@ -219,13 +223,12 @@ public class InvoiceService {
 					invoiceTO.getInvoicePaymentRsTOSet().add(paymentRsTO);
 				}
 				invoiceTO.setStatus(InvoiceStatusEnum.PAID.toString());
-				
 			}
 		}
 		invoiceDAO.save(invoiceList);
 	}
 
-	private List<InvoiceVO> convertToInvoiceVOList(List<InvoiceTO> toList) {
+	public List<InvoiceVO> convertToInvoiceVOList(List<InvoiceTO> toList) {
 		List<InvoiceVO> voList = new ArrayList<InvoiceVO>();
 		if(toList != null && !toList.isEmpty()) {
 			for(InvoiceTO to : toList) {

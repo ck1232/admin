@@ -115,7 +115,7 @@
 	                	<c:forEach items="${salaryList}" var="salary">
 							<tr>
 								<td>${salary.dateString}</td>
-							    <td>${salary.name}</td>
+							    <td>${salary.employeeVO.name}</td>
 							    <td>${salary.takehomeAmtString}</td>
 							    <td>${salary.status}</td>
 							</tr>
@@ -140,7 +140,7 @@
 	                	<c:forEach items="${bonusList}" var="bonus">
 							<tr>
 								<td>${bonus.dateString}</td>
-							    <td>${bonus.name}</td>
+							    <td>${bonus.employeeVO.name}</td>
 							    <td>${bonus.bonusAmtString}</td>
 							    <td>${bonus.status}</td>
 							</tr>
