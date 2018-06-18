@@ -105,7 +105,7 @@ public class CommonController {
         return "login";  
     }
 	
-	@RequestMapping(value={"/","/dashboard"})  
+	@RequestMapping(value={"/","/dashboard", "/index.html"})  
     public String loadDashboard(HttpSession session) {  
     	logger.debug("dashboard is executed!");
     	Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
