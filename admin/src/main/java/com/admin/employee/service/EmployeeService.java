@@ -44,9 +44,44 @@ public class EmployeeService {
 		return convertToEmployeeVOList(employeeTOList);
 	}
 	
+	public List<EmployeeVO> getAllEmployee() {
+		List<EmployeeTO> employeeTOList = employeeDAO.findByDeleteInd(GeneralUtils.NOT_DELETED);
+		return convertToEmployeeVOList(employeeTOList);
+	}
+	
 	public List<EmployeeVO> getAllEmployeeInAscendingName() {
 		List<EmployeeTO> employeeTOList = employeeDAO.findByDeleteIndOrderByNameAsc(GeneralUtils.NOT_DELETED);
 		return convertToEmployeeVOList(employeeTOList);
+	}
+	
+	public void updateEmployee(EmployeeVO vo) {
+		if(vo != null && vo.getEmployeeId() != null) {
+			EmployeeTO to = employeeDAO.findByEmployeeId(vo.getEmployeeId());
+			to.setName(vo.getName());
+			to.setEmployeeType(vo.getEmployeeType());
+			to.setDob(GeneralUtils.convertStringToDate(vo.getDobString(), "dd/MM/yyyy"));
+			to.setNationality(vo.getNationality());
+			to.setBasicSalary(vo.getBasicSalary());
+			to.setEmploymentStartDate(GeneralUtils.convertStringToDate(vo.getEmploymentStartDateString(), "dd/MM/yyyy"));
+			to.setEmploymentEndDate(GeneralUtils.convertStringToDate(vo.getEmploymentEndDateString(), "dd/MM/yyyy"));
+			to.setCdacInd(vo.getCdacIndBoolean() == Boolean.TRUE ? "Y" : "N");
+			employeeDAO.save(to);
+		}
+	}
+	
+	public void saveEmployee(EmployeeVO vo) {
+		List<EmployeeTO> employeeTOList = convertToEmployeeTOList(Arrays.asList(vo));
+		employeeDAO.save(employeeTOList);
+	}
+	
+	public void deleteEmployee(List<Long> idList) {
+		List<EmployeeTO> employeeTOList = employeeDAO.findByEmployeeIdIn(idList);
+		if(employeeTOList != null && !employeeTOList.isEmpty()){
+			for(EmployeeTO employeeTO : employeeTOList){
+				employeeTO.setDeleteInd(GeneralUtils.DELETED);
+			}
+			employeeDAO.save(employeeTOList);
+		}
 	}
 
 	public List<EmployeeVO> convertToEmployeeVOList(List<EmployeeTO> toList) {

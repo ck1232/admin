@@ -91,6 +91,11 @@ public class SalaryBonusService {
 		return convertSalaryToSalaryBonusVOList(salaryTOList);
 	}
 	
+	public List<SalaryBonusVO> getAllSalaryByEmpId(Long employeeId) {
+		List<SalaryTO> salaryTOList = salaryDAO.findByEmployeeTO_employeeIdOrderBySalaryDateDesc(employeeId);
+		return convertSalaryToSalaryBonusVOList(salaryTOList);
+	}
+	
 	public SalaryBonusVO findBonusById(Long id) {
 		List<SalaryBonusVO> bonusTOList = findBonusByIdList(Arrays.asList(id));
 		if(bonusTOList != null && !bonusTOList.isEmpty()){
@@ -101,6 +106,11 @@ public class SalaryBonusService {
 	
 	public List<SalaryBonusVO> findBonusByIdList(List<Long> idList) {
 		List<BonusTO> bonusTOList = bonusDAO.findByBonusIdInOrderByBonusDateDesc(idList);
+		return convertBonusToSalaryBonusVOList(bonusTOList);
+	}
+	
+	public List<SalaryBonusVO> getAllBonusByEmpId(Long employeeId) {
+		List<BonusTO> bonusTOList = bonusDAO.findByEmployeeTO_employeeIdOrderByBonusDateDesc(employeeId);
 		return convertBonusToSalaryBonusVOList(bonusTOList);
 	}
 	

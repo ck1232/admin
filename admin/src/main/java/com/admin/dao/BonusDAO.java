@@ -10,4 +10,5 @@ public interface BonusDAO extends BaseDAO<BonusTO> {
 	BonusTO findByBonusId(Long bonusId);
 	List<BonusTO> findByBonusIdIn(List<Long> bonusIdList);
 	List<BonusTO> findByBonusIdInOrderByBonusDateDesc(List<Long> bonusIdList);
+	List<BonusTO> findByEmployeeTO_employeeIdOrderByBonusDateDesc(Long employeeId);
 }
