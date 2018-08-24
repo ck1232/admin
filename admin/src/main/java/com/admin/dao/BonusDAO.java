@@ -1,5 +1,6 @@
 package com.admin.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -11,4 +12,5 @@ public interface BonusDAO extends BaseDAO<BonusTO> {
 	List<BonusTO> findByBonusIdIn(List<Long> bonusIdList);
 	List<BonusTO> findByBonusIdInOrderByBonusDateDesc(List<Long> bonusIdList);
 	List<BonusTO> findByEmployeeTO_employeeIdOrderByBonusDateDesc(Long employeeId);
+	List<BonusTO> findByBonusDateBetweenAndDeleteIndOrderByBonusDate(Date dateFrom, Date dateTo, String deleteInd);
 }

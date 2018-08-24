@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "payment_rs")
@@ -33,6 +34,7 @@ public class PaymentRsTO extends BaseTO {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "payment_detail_id", nullable=false)
+	@Where(clause="delete_ind='N'")
 	@ForeignKey( name = "none" )
 	private PaymentDetailTO paymentDetailTO;
 

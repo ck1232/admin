@@ -86,7 +86,7 @@ public class SubModuleTO extends BaseTO {
 		this.url = url;
 	}
 
-		public Long getSubModuleId() {
+	public Long getSubModuleId() {
 		return subModuleId;
 	}
 

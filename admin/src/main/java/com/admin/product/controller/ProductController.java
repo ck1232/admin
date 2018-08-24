@@ -34,12 +34,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.admin.common.vo.JsonResponseVO;
 import com.admin.file.service.ImageService;
+import com.admin.file.service.ImageServiceImpl;
 import com.admin.file.utils.ImageSequenceCompare;
 import com.admin.file.vo.FileMetaVO;
 import com.admin.file.vo.ImageLinkVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.product.service.ProductService;
-import com.admin.product.service.ProductTagsService;
+import com.admin.product.service.ProductTagsServiceImpl;
 import com.admin.product.vo.ProductAttributeGroupVO;
 import com.admin.product.vo.ProductAttributeVO;
 import com.admin.product.vo.ProductOptionVO;
@@ -137,7 +138,7 @@ public class ProductController {
 	@RequestMapping(value = "/getPreUploadImage", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<FileMetaVO> getPreUploadImage(HttpSession session) {
 		newProduct = (ProductVO) session.getAttribute("product");
-		newProduct.setImages(ImageService.convertImageLinkVOToFileMetaVO(newProduct.getImagesLink()));
+		newProduct.setImages(ImageServiceImpl.convertImageLinkVOToFileMetaVO(newProduct.getImagesLink()));
 		if(newProduct == null || newProduct.getImages() == null ){
 			return new ArrayList<FileMetaVO>();
 		}else{
@@ -453,7 +454,7 @@ public class ProductController {
 		newProduct.setSubCategoryId(responseProduct.getSubCategoryId());
 		newProduct.setUnitAmt(responseProduct.getUnitAmt());
 		newProduct.setWeight(responseProduct.getWeight() == null ? 0 : responseProduct.getWeight());
-		newProduct.setTags(ProductTagsService.convertToProductTagsVOList(responseProduct.getTags()));
+		newProduct.setTags(ProductTagsServiceImpl.convertToProductTagsVOList(responseProduct.getTags()));
 		newProduct.setProductInfo(responseProduct.getProductInfo());
 		
 		//set product attribute vo display ind

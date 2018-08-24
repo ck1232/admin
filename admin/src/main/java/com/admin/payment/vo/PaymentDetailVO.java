@@ -101,6 +101,27 @@ public class PaymentDetailVO extends BaseVO implements Serializable {
 	public void setPaymentRsIdList(List<Long> paymentRsIdList) {
 		this.paymentRsIdList = paymentRsIdList;
 	}
+	
+	public String getBounceChequeInd() {
+		if(chequeVO != null) {
+			return chequeVO.getBounceChequeInd();
+		}
+		return null;
+	}
+	
+	public String getChequeNum() {
+		if(chequeVO != null) {
+			return chequeVO.getChequeNum();
+		}
+		return null;
+	}
+	
+	public Date getDebitDate() {
+		if(chequeVO != null) {
+			return chequeVO.getDebitDate();
+		}
+		return null;
+	}
 
 	@Override
     public String toString() {
@@ -120,4 +141,8 @@ public class PaymentDetailVO extends BaseVO implements Serializable {
         sb.append(super.toString());
         return sb.toString();
     }
+
+	
+
+	
 }

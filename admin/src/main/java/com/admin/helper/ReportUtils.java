@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
 
 import com.admin.helper.vo.ExcelColumn;
 import com.admin.helper.vo.ReportMapping;
@@ -17,6 +18,7 @@ import com.admin.helper.vo.ExcelColumn.ColumnType;
 public class ReportUtils {
 	public static <T>void writeData(Sheet sheet, List<T> list, ReportMapping reportMapping, String name){
 		int rowNum = sheet.getPhysicalNumberOfRows();
+		int startRow = rowNum+2;
 		Row row = sheet.createRow(rowNum++);
 		ExcelUtils excelUtils = new ExcelUtils(sheet.getWorkbook());
 		writeHeader(row, reportMapping, excelUtils);
@@ -34,7 +36,7 @@ public class ReportUtils {
 					}
 				}
 				row = sheet.createRow(rowNum++);
-				writeRow(row, obj, reportMapping, isTotal, excelUtils, sheet.getWorkbook());
+				writeRow(row, obj, reportMapping, isTotal, excelUtils, sheet.getWorkbook(), list.size(), startRow);
 			}
 		}
 		setAutoSizeColumn(sheet, reportMapping);
@@ -88,7 +90,7 @@ public class ReportUtils {
 		}
 	}
 	
-	private static void writeRow(Row row, Object object, ReportMapping reportMapping, boolean isTotal, ExcelUtils excelUtils, Workbook workbook){
+	private static void writeRow(Row row, Object object, ReportMapping reportMapping, boolean isTotal, ExcelUtils excelUtils, Workbook workbook, int numOfRecords, int startRowNum){
 		int cellNum = 0;
 		for(String header : reportMapping.getMapping().keySet()){
 			ExcelColumn column = reportMapping.getMapping().get(header);
@@ -128,8 +130,17 @@ public class ReportUtils {
 					case China_Money:
 					case Money:
 						{
-							Number num = (Number)value;
-							cell.setCellValue(num.doubleValue());
+							if(isTotal) {
+								int colInt = cell.getColumnIndex();
+								String colName = CellReference.convertNumToColString(colInt);
+								int rowFrom = startRowNum;
+								int rowTo = rowFrom + numOfRecords - 1;
+								cell.setCellType(Cell.CELL_TYPE_FORMULA);
+								cell.setCellFormula("SUM(" + colName + rowFrom +":" + colName + rowTo +")");
+							}else {
+								Number num = (Number)value;
+								cell.setCellValue(num.doubleValue());
+							}
 						}
 						break;
 					default:cell.setCellValue(value.toString());break;

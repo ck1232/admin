@@ -112,7 +112,7 @@ public class ExcelUtils {
 	}
 
 	private CellStyle getChinaCurrencyDataFormat(CellStyle cs) {
-		cs.setDataFormat(decimalDataFormat.getFormat("�#,##0.00"));
+		cs.setDataFormat(decimalDataFormat.getFormat("¥#,##0.00"));
 		return cs;
 	}
 

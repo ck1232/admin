@@ -19,7 +19,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Where;
 
 @Entity
