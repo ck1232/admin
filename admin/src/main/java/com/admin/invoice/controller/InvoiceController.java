@@ -524,7 +524,7 @@ public class InvoiceController {
 			invoiceVO.setTotalAmt(totalAmt);
 			
 			InvoiceVO savedInvoice = invoiceService.findById(invoiceVO.getInvoiceId());
-			if(invoiceVO.getInvoiceId() != null && savedInvoice == null) {
+			if(invoiceVO.getInvoiceId() != null && savedInvoice.getInvoiceId() == null) {
 				invoiceVO.setStatus(GeneralUtils.STATUS_PENDING);
 				invoiceService.saveInvoice(invoiceVO);
 			}else if(invoiceVO.getInvoiceId() != null && savedInvoice != null){
