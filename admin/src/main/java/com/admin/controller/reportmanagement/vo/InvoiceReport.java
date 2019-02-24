@@ -25,6 +25,7 @@ import com.admin.payment.lookup.controller.PaymentModeLookup;
 import com.admin.payment.lookup.vo.PaymentModeVO;
 import com.admin.payment.service.PaymentService;
 import com.admin.payment.vo.PaymentDetailVO;
+import com.admin.payment.vo.PaymentRsVO;
 @Component
 public class InvoiceReport implements ReportInterface {
 
@@ -46,6 +47,17 @@ public class InvoiceReport implements ReportInterface {
 		this.grantService = grantService;
 		this.paymentService = paymentService;
 		this.paymentModeLookup = paymentModeLookup;
+	}
+	
+	private List<PaymentDetailVO> getPaymentDetailVOList(InvoiceVO vo){
+		List<PaymentDetailVO> list = new ArrayList<PaymentDetailVO>();
+		List<PaymentRsVO> paymentRsVoList = vo.getPaymentRsVOList();
+		if(paymentRsVoList != null && !paymentRsVoList.isEmpty()) {
+			for(PaymentRsVO paymentVo : paymentRsVoList) {
+				list.add(paymentVo.getPaymentDetailVO());
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -70,8 +82,9 @@ public class InvoiceReport implements ReportInterface {
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			PaymentModeVO chequeModeVo = paymentModeLookup.getPaymentModeByValueMap().get("Cheque");
 			for(InvoiceVO vo : dbVoList) {
-				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId(vo.getType(), 
-						vo.getType().equals("invoice") ? vo.getInvoiceId() : vo.getGrantId());
+				List<PaymentDetailVO> paymentDetailList = getPaymentDetailVOList(vo);
+//						paymentService.getAllPaymentByRefTypeAndRefId(vo.getType(), 
+//						vo.getType().equals("invoice") ? vo.getInvoiceId() : vo.getGrantId());
 				InvoiceReportVO invoiceReportVo = new InvoiceReportVO();
 				invoiceReportVo.setInvoice(vo);
 				invoiceReportVo.setPaymentDetailList(new ArrayList<PaymentDetailVO>());
