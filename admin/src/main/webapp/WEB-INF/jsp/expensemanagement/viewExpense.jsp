@@ -29,7 +29,7 @@
 							<div class="row">
 						  		<div class="form-group">
 								    <div class="col-sm-2">Expense Type</div>
-								    <div class="col-sm-5">${expense.expensetype}</div>
+								    <div class="col-sm-5">${expense.expenseType}</div>
 								</div>
 							</div>			
 							<div class="row">
@@ -90,7 +90,7 @@
 				                	<c:forEach items="${otherList}" var="other">
 										<tr>
 											<td style="width: 16%">${other.expensedateString}</td>
-						          			<td style="width: 16%">${other.expensetype}</td>
+						          			<td style="width: 16%">${other.expenseType}</td>
 						          			<td style="width: 16%">${other.description}</td>
 						          			<td style="width: 16%">${other.totalAmt}</td>
 						          			<td style="width: 16%">${other.supplier}</td>

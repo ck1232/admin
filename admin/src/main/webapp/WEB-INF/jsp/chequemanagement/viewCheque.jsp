@@ -88,7 +88,7 @@
 	                	<c:forEach items="${expenseList}" var="expense">
 							<tr>
 								<td>${expense.expensedateString}</td>
-							    <td>${expense.expensetype}</td>
+							    <td>${expense.expenseType}</td>
 							    <td>${expense.description}</td>
 							    <td>${expense.totalAmtString}</td>
 							    <td>${expense.supplier}</td>

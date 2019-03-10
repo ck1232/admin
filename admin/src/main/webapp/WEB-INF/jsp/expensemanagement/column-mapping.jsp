@@ -12,7 +12,7 @@
                  return (moment(data).format("D MMMM YYYY"));
              }
 },
-{"data": "expensetype"},
+{"data": "expenseType"},
 {"data": "description"},
 {"data": "totalAmtString"},
 {"data": "supplier"},

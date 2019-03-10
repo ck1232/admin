@@ -140,7 +140,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 			for(ExpenseTO to : toList) {
 				ExpenseVO vo = new ExpenseVO();
 				vo.setExpenseId(to.getExpenseId());
-				vo.setExpensetype(expenseTypeLookup.getExpenseTypeById(to.getExpenseTypeId()));
+				vo.setExpenseType(expenseTypeLookup.getExpenseTypeById(to.getExpenseTypeId()));
 				vo.setExpenseTypeId(to.getExpenseTypeId());
 				vo.setInvoiceNo(to.getInvoiceNo());
 				vo.setDescription(to.getDescription());
@@ -149,11 +149,12 @@ public class ExpenseServiceImpl implements ExpenseService{
 				vo.setSupplier(to.getSupplier());
 				vo.setTotalAmt(to.getTotalAmt());
 				String currency = "$";
-				if(vo.getExpensetype().equals("Stock(China)"))
+				if(vo.getExpenseType().equals("Stock(China)"))
 					currency = "¥";
 				vo.setTotalAmtString(currency+vo.getTotalAmt());
 				vo.setRemarks(to.getRemarks());
 				vo.setStatus(to.getStatus());
+				vo.setDeleteInd(to.getDeleteInd());
 				if(to.getExpensePaymentRsTOSet() != null)
 					vo.setPaymentRsVOList(paymentService.convertToPaymentRsVOList(new ArrayList<ExpensePaymentRsTO>(to.getExpensePaymentRsTOSet())));
 				expenseVOList.add(vo);
@@ -207,7 +208,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 				vo.setExpenseTypeId(999L);
 				vo.setExpenseId(0L);
 				vo.setTotalAmt(dbObj.getTotalAmt());
-				vo.setExpensetype(GeneralUtils.STATUS_BAD_DEBT);
+				vo.setExpenseType(GeneralUtils.STATUS_BAD_DEBT);
 				vo.setExpenseDate(dbObj.getInvoiceDate());
 				expenseList.add(vo);
 			}

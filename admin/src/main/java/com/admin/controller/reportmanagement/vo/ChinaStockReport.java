@@ -49,7 +49,7 @@ public class ChinaStockReport implements ReportInterface {
 		List<ExpenseReportVO> expenseReportList = new ArrayList<ExpenseReportVO>();
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			for(ExpenseVO vo : dbVoList) {
-				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId("expense", vo.getExpenseId());
+				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId(vo);
 				ExpenseReportVO expenseReportVo;
 				if(paymentDetailList != null && !paymentDetailList.isEmpty()) {
 					for(PaymentDetailVO paymentVO : paymentDetailList) {

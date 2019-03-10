@@ -50,9 +50,9 @@ $(function () {
         	 $(row).find('button[name="payBtn"]').prop('value', data.expenseId);
           }
 
-          if(data.expensetype == "China Stock Payment"){
+          if(data.expenseType == "China Stock Payment"){
         	  $(row).find('div[name="statusDiv"]').css("display","none");
-          }else if(data.expensetype == "Stock(China)"){
+          }else if(data.expenseType == "Stock(China)"){
         	  $(row).find('span[id="payBtnDiv"]').css("display","none");
           }
        }

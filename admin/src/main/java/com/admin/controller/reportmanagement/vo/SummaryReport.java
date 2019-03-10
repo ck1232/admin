@@ -120,13 +120,13 @@ public class SummaryReport implements ReportInterface {
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			for(ExpenseVO vo : dbVoList) {
 				String expMonth = GeneralUtils.convertDateToString(vo.getExpenseDate(), monthFormat);
-				if(!vo.getExpensetype().equals("Stock(China)") && !vo.getExpensetype().equals("Commission")){ // if not china stock expense
+				if(!vo.getExpenseType().equals("Stock(China)") && !vo.getExpenseType().equals("Commission")){ // if not china stock expense
 					if(!expenseSummaryHashMap.containsKey(expMonth)){
 						expenseSummaryHashMap.put(expMonth, new ExpenseSummaryReportVO(expMonth));
 					}
 					addCurrentExpenseVO(expenseSummaryHashMap.get(expMonth),vo);
 					addCurrentExpenseVO(expenseSummaryHashMap.get(Total),vo);
-					List<PaymentDetailVO> paymentVOList = paymentService.getAllPaymentByRefTypeAndRefId("expense", vo.getExpenseId());
+					List<PaymentDetailVO> paymentVOList = paymentService.getAllPaymentByRefTypeAndRefId(vo);
 					if(paymentVOList != null && !paymentVOList.isEmpty()){ //if paid
 						for(PaymentDetailVO payment : paymentVOList){
 							if(payment.getPaymentDate().before(dateAsOf) || payment.getPaymentDate().after(endDate)){
@@ -143,7 +143,7 @@ public class SummaryReport implements ReportInterface {
 					}else{ //if unpaid
 						PaymentDetailVO payment = new PaymentDetailVO();
 						payment.setPaymentAmt(vo.getTotalAmt());
-						if(vo.getExpensetype() !=  null && vo.getExpensetype().compareTo(GeneralUtils.STATUS_BAD_DEBT) == 0){
+						if(vo.getExpenseType() !=  null && vo.getExpenseType().compareTo(GeneralUtils.STATUS_BAD_DEBT) == 0){
 							payment.setPaymentModeString(GeneralUtils.STATUS_BAD_DEBT);
 						}else{
 							payment.setPaymentModeString(""); //0 = unpaid
@@ -156,7 +156,7 @@ public class SummaryReport implements ReportInterface {
 						addPaymentForCurrentExpenseVO(paymentSummaryHashMap.get(Total), payment);
 					}
 					
-				}else if (vo.getExpensetype().equals("Stock(China)") || vo.getExpensetype().equals("Commission")){ // if china stock expense
+				}else if (vo.getExpenseType().equals("Stock(China)") || vo.getExpenseType().equals("Commission")){ // if china stock expense
 					if(!chinaExpenseSummaryHashMap.containsKey(expMonth)){
 						chinaExpenseSummaryHashMap.put(expMonth, new ExpenseSummaryReportVO(expMonth));
 					}
@@ -176,7 +176,7 @@ public class SummaryReport implements ReportInterface {
 		List<ExpenseVO> chinaPaymentdbVoList = expenseService.getAllExpenseOfParamType(typeList);
 		if(chinaPaymentdbVoList != null && !chinaPaymentdbVoList.isEmpty()) {
 			for(ExpenseVO vo : chinaPaymentdbVoList) {
-				List<PaymentDetailVO> paymentVOList = paymentService.getAllPaymentByRefTypeAndRefId("expense", vo.getExpenseId(), dateAsOf, endDate);
+				List<PaymentDetailVO> paymentVOList = paymentService.getAllPaymentByRefTypeAndRefId(vo, dateAsOf, endDate);
 				if(paymentVOList != null && !paymentVOList.isEmpty()) {
 					for(PaymentDetailVO payment : paymentVOList){
 						addPaymentForCurrentExpenseVO(chinaPaymentSummaryHashMap.get(RMBPayment), payment);
@@ -242,12 +242,12 @@ public class SummaryReport implements ReportInterface {
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			for(ExpenseVO vo : dbVoList) {
 				String expMonth = GeneralUtils.convertDateToString(vo.getExpenseDate(), monthFormat);
-				List<PaymentDetailVO> paymentVOList = paymentService.getAllPaymentByRefTypeAndRefId("expense", vo.getExpenseId(), dateAsOf, endDate);
+				List<PaymentDetailVO> paymentVOList = paymentService.getAllPaymentByRefTypeAndRefId(vo, dateAsOf, endDate);
 				if(paymentVOList.isEmpty()){ //if unpaid
 					if(!paymentSummaryHashMap.containsKey(expMonth)){
 						paymentSummaryHashMap.put(expMonth, new PaymentSummaryReportVO(expMonth));
 					}
-					logger.info("Id:"+vo.getExpenseId()+", Type = " + vo.getExpensetype() + ", Amount = " + vo.getTotalAmt());
+					logger.info("Id:"+vo.getExpenseId()+", Type = " + vo.getExpenseType() + ", Amount = " + vo.getTotalAmt());
 					PaymentDetailVO payment = new PaymentDetailVO();
 					payment.setPaymentAmt(vo.getTotalAmt());
 					payment.setPaymentModeString("");
@@ -357,7 +357,7 @@ public class SummaryReport implements ReportInterface {
 
 	private void addCurrentExpenseVO(ExpenseSummaryReportVO expenseSummary, ExpenseVO vo) {
 		expenseSummary.setTotalAmt(expenseSummary.getTotalAmt().add(vo.getTotalAmt()));
-		switch (vo.getExpensetype()) {
+		switch (vo.getExpenseType()) {
 		case "Stock": //Stock
 			expenseSummary.setStockAmt(expenseSummary.getStockAmt().add(vo.getTotalAmt()));
 			return;

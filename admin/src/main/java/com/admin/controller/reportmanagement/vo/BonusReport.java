@@ -51,7 +51,7 @@ public class BonusReport implements ReportInterface {
 		List<SalaryBonusVO> dbVoList = bonusService.getAllBonusVo();
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			for(SalaryBonusVO vo : dbVoList) {
-				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId("bonus", vo.getId(), dateAsOf, endDate);
+				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId(vo, dateAsOf, endDate);
 				
 				if(paymentDetailList != null && !paymentDetailList.isEmpty()) {
 					for(PaymentDetailVO paymentVO : paymentDetailList) {

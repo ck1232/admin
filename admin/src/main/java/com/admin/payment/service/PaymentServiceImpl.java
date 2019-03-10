@@ -16,21 +16,21 @@ import com.admin.cheque.vo.service.ChequeConverter;
 import com.admin.dao.BonusPaymentRsDAO;
 import com.admin.dao.ChequeDAO;
 import com.admin.dao.ExpensePaymentRsDAO;
-import com.admin.dao.GenericPaymentRsDAO;
 import com.admin.dao.GrantPaymentRsDAO;
 import com.admin.dao.InvoicePaymentRsDAO;
 import com.admin.dao.PaymentDetailDAO;
 import com.admin.dao.SalaryPaymentRsDAO;
+import com.admin.expense.vo.ExpenseVO;
 import com.admin.helper.GeneralUtils;
 import com.admin.payment.controller.PaymentController;
 import com.admin.payment.lookup.controller.PaymentModeLookup;
 import com.admin.payment.vo.PaymentDetailVO;
 import com.admin.payment.vo.PaymentRsVO;
 import com.admin.payment.vo.PaymentVO;
+import com.admin.salarybonus.vo.SalaryBonusVO;
 import com.admin.to.BonusPaymentRsTO;
 import com.admin.to.ChequeTO;
 import com.admin.to.ExpensePaymentRsTO;
-import com.admin.to.GenericPaymentRsTO;
 import com.admin.to.GrantPaymentRsTO;
 import com.admin.to.InvoicePaymentRsTO;
 import com.admin.to.PaymentDetailTO;
@@ -51,7 +51,6 @@ public class PaymentServiceImpl implements PaymentService{
 	private PaymentDetailDAO paymentDetailDAO;
 	private ChequeConverter chequeConverter;
 	private ChequeDAO chequeDAO;
-	private GenericPaymentRsDAO genericPaymentRsDAO;
 	
 	@Autowired
 	public PaymentServiceImpl(PaymentModeLookup paymentModeLookup,
@@ -61,7 +60,6 @@ public class PaymentServiceImpl implements PaymentService{
 			SalaryPaymentRsDAO salaryPaymentRsDAO,
 			BonusPaymentRsDAO bonusPaymentRsDAO,
 			PaymentDetailDAO paymentDetailDAO,
-			GenericPaymentRsDAO genericPaymentRsDAO,
 			ChequeDAO chequeDAO,
 			ChequeConverter chequeConverter) {
 		this.paymentModeLookup = paymentModeLookup;
@@ -73,7 +71,6 @@ public class PaymentServiceImpl implements PaymentService{
 		this.paymentDetailDAO = paymentDetailDAO;
 		this.chequeDAO = chequeDAO;
 		this.chequeConverter = chequeConverter;
-		this.genericPaymentRsDAO = genericPaymentRsDAO;
 	}
 	
 	public List<PaymentRsVO> findByPaymentRsIdList(List<Long> paymentRsIdList, String type) {
@@ -154,6 +151,7 @@ public class PaymentServiceImpl implements PaymentService{
 		if(toList != null && !toList.isEmpty()) {
 			for(PaymentRsTO to : toList) {
 				PaymentRsVO vo = new PaymentRsVO();
+				vo.setDeleteInd(to.getDeleteInd());
 				vo.setPaymentRsId(to.getPaymentRsId());
 				if(to instanceof InvoicePaymentRsTO) {
 					InvoicePaymentRsTO invoicePaymentRsTO = (InvoicePaymentRsTO)to;
@@ -211,6 +209,7 @@ public class PaymentServiceImpl implements PaymentService{
 		if(toList != null && !toList.isEmpty()) {
 			for(PaymentDetailTO to : toList) {
 				PaymentDetailVO vo = new PaymentDetailVO();
+				vo.setDeleteInd(to.getDeleteInd());
 				vo.setPaymentDetailId(to.getPaymentDetailId());
 				vo.setPaymentDate(to.getPaymentDate());
 				vo.setPaymentDateString(GeneralUtils.convertDateToString(to.getPaymentDate(), GeneralUtils.STANDARD_DATE_FORMAT));
@@ -297,7 +296,7 @@ public class PaymentServiceImpl implements PaymentService{
 		return toList;
 	}
 
-	@Override
+/*	@Override
 	public List<PaymentDetailVO> getAllPaymentByRefTypeAndRefId(String type, Long id, Date dateAsOf, Date endDate) {
 		List<PaymentDetailTO> list = new ArrayList<PaymentDetailTO>();
 		List<GenericPaymentRsTO> paymentRsList = genericPaymentRsDAO.findByReferenceTypeAndReferenceIdAndPaymentDetailTO_PaymentDateBetweenAndDeleteInd(type, id, dateAsOf, endDate, GeneralUtils.NOT_DELETED);
@@ -310,9 +309,9 @@ public class PaymentServiceImpl implements PaymentService{
 			}
 		}
 		return convertToPaymentDetailVOList(list);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<PaymentDetailVO> getAllPaymentByRefTypeAndRefId(String type, Long id) {
 		List<PaymentDetailTO> list = new ArrayList<PaymentDetailTO>();
 		List<GenericPaymentRsTO> paymentRsList = genericPaymentRsDAO.findByReferenceTypeAndReferenceIdAndDeleteInd(type, id, GeneralUtils.NOT_DELETED);
@@ -325,7 +324,79 @@ public class PaymentServiceImpl implements PaymentService{
 			}
 		}
 		return convertToPaymentDetailVOList(list);
+	}*/
+
+	@Override
+	public List<PaymentDetailVO> getAllPaymentByRefTypeAndRefId(ExpenseVO vo, Date dateAsOf, Date endDate) {
+		List<PaymentDetailVO> list = new ArrayList<PaymentDetailVO>();
+		List<PaymentRsVO> paymentRsVoList = vo.getPaymentRsVOList();
+		if(paymentRsVoList != null && !paymentRsVoList.isEmpty()) {
+			for(PaymentRsVO rsVO : paymentRsVoList) {
+				PaymentDetailVO detail = rsVO.getPaymentDetailVO();
+				if(detail != null && detail.getPaymentDate() != null
+						&& detail.getDeleteInd() != null
+						&& (detail.getPaymentDate().after(dateAsOf) || detail.getPaymentDate().compareTo(dateAsOf) == 0) 
+						&& (detail.getPaymentDate().before(endDate) || detail.getPaymentDate().compareTo(endDate) == 0) 
+						&& GeneralUtils.NOT_DELETED.compareTo(detail.getDeleteInd())== 0) {
+					list.add(detail);
+				}
+			}
+		}
+		return list;
 	}
 
+	@Override
+	public List<PaymentDetailVO> getAllPaymentByRefTypeAndRefId(SalaryBonusVO vo, Date dateAsOf, Date endDate) {
+		List<PaymentDetailVO> list = new ArrayList<PaymentDetailVO>();
+		List<PaymentRsVO> paymentRsVoList = vo.getPaymentRsVOList();
+		if(paymentRsVoList != null && !paymentRsVoList.isEmpty()) {
+			for(PaymentRsVO rsVO : paymentRsVoList) {
+				PaymentDetailVO detail = rsVO.getPaymentDetailVO();
+				if(detail != null && detail.getPaymentDate() != null
+						&& detail.getDeleteInd() != null
+						&& (detail.getPaymentDate().after(dateAsOf) || detail.getPaymentDate().compareTo(dateAsOf) == 0) 
+						&& (detail.getPaymentDate().before(endDate) || detail.getPaymentDate().compareTo(endDate) == 0) 
+//						&& detail.getPaymentDate().after(dateAsOf) && detail.getPaymentDate().before(endDate) 
+						&& GeneralUtils.NOT_DELETED.compareTo(detail.getDeleteInd())== 0) {
+					list.add(detail);
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<PaymentDetailVO> getAllPaymentByRefTypeAndRefId(ExpenseVO vo) {
+		List<PaymentDetailVO> list = new ArrayList<PaymentDetailVO>();
+		List<PaymentRsVO> paymentRsVoList = vo.getPaymentRsVOList();
+		if(paymentRsVoList != null && !paymentRsVoList.isEmpty()) {
+			for(PaymentRsVO rsVO : paymentRsVoList) {
+				PaymentDetailVO detail = rsVO.getPaymentDetailVO();
+				if(detail != null && detail.getPaymentDate() != null
+						&& detail.getDeleteInd() != null
+						&& GeneralUtils.NOT_DELETED.compareTo(detail.getDeleteInd())== 0) {
+					list.add(detail);
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<PaymentDetailVO> getAllPaymentByRefTypeAndRefId(SalaryBonusVO vo) {
+		List<PaymentDetailVO> list = new ArrayList<PaymentDetailVO>();
+		List<PaymentRsVO> paymentRsVoList = vo.getPaymentRsVOList();
+		if(paymentRsVoList != null && !paymentRsVoList.isEmpty()) {
+			for(PaymentRsVO rsVO : paymentRsVoList) {
+				PaymentDetailVO detail = rsVO.getPaymentDetailVO();
+				if(detail != null && detail.getPaymentDate() != null
+						&& detail.getDeleteInd() != null
+						&& GeneralUtils.NOT_DELETED.compareTo(detail.getDeleteInd())== 0) {
+					list.add(detail);
+				}
+			}
+		}
+		return list;
+	}
 	
 }

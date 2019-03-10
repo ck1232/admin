@@ -276,7 +276,7 @@ public class PaymentController {
 		List<ExpenseVO> expenseList = expenseService.findByIdList(idList);
 		BigDecimal totalamount = BigDecimal.ZERO;
 		for(ExpenseVO expense : expenseList) {
-			if(expense.getExpensetype().equals(GeneralUtils.EXPENSE_TYPE_STOCK_CHINA)) {
+			if(expense.getExpenseType().equals(GeneralUtils.EXPENSE_TYPE_STOCK_CHINA)) {
 				redirectAttributes.addFlashAttribute("css", "danger");
 				redirectAttributes.addFlashAttribute("msg", "Payment is not allowed for Stock(China)!");
 				return "redirect:/expense/listExpense";
@@ -335,7 +335,7 @@ public class PaymentController {
 		List<ExpenseVO> expenseList = expenseService.findByIdList(idLongList);
 		for(ExpenseVO expense : expenseList) {
 			expense.setExpensedateString(new SimpleDateFormat(GeneralUtils.STANDARD_DATE_FORMAT).format(expense.getExpenseDate()));
-			expense.setExpensetype(expenseTypeLookup.getExpenseTypeById(expense.getExpenseTypeId()));
+			expense.setExpenseType(expenseTypeLookup.getExpenseTypeById(expense.getExpenseTypeId()));
 		}
 		model.addAttribute("paymentForm", paymentVo);
 		model.addAttribute("expenseList", expenseList);

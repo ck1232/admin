@@ -57,7 +57,7 @@ public class SalaryReport implements ReportInterface {
 		
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			for(SalaryBonusVO vo : dbVoList) {
-				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId("salary", vo.getId());
+				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId(vo);
 				SalaryBonusReportVO salaryReportVo;
 				if(paymentDetailList != null && !paymentDetailList.isEmpty()) {
 					for(PaymentDetailVO paymentVO : paymentDetailList) {
@@ -79,10 +79,10 @@ public class SalaryReport implements ReportInterface {
 		
 		ReportMapping reportMapping = new ReportMapping();
 		reportMapping.addDateMonthYearMapping("Month", "salarybonus.date");
-		reportMapping.addTextMapping("Name", "salarybonus.name");
-		reportMapping.addTextMapping("Type", "salarybonus.employeeTypeString");
-		reportMapping.addDateMapping("DOB", "salarybonus.dob");
-		reportMapping.addTextMapping("Nationality", "salarybonus.nationality");
+		reportMapping.addTextMapping("Name", "salarybonus.employeeVO.name");
+		reportMapping.addTextMapping("Type", "salarybonus.employeeVO.employeeTypeString");
+		reportMapping.addDateMapping("DOB", "salarybonus.employeeVO.dob");
+		reportMapping.addTextMapping("Nationality", "salarybonus.employeeVO.nationality");
 		reportMapping.addMoneyMapping("Amount", "salarybonus.grossAmt");
 		reportMapping.addMoneyMapping("Overtime", "salarybonus.overTimeAmt");
 		reportMapping.addMoneyMapping("Allowance", "salarybonus.allowance");

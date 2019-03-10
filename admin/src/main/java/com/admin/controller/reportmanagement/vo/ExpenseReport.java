@@ -21,28 +21,34 @@ import com.admin.invoice.lookup.controller.ExpenseTypeLookup;
 import com.admin.invoice.lookup.vo.ExpenseTypeVO;
 import com.admin.payment.lookup.controller.PaymentModeLookup;
 import com.admin.payment.lookup.vo.PaymentModeVO;
-import com.admin.payment.service.PaymentService;
 import com.admin.payment.vo.PaymentDetailVO;
+import com.admin.payment.vo.PaymentRsVO;
 @Component
 public class ExpenseReport implements ReportInterface {
 	
 	private ExpenseService expenseService;
-	private PaymentService paymentService;
 	private ExpenseTypeLookup expenseTypeLookup;
 	private PaymentModeLookup paymentModeLookup;
 	
 	@Autowired
 	public ExpenseReport(ExpenseService expenseService,
-			PaymentService paymentService,
 			ExpenseTypeLookup expenseTypeLookup,
 			PaymentModeLookup paymentModeLookup) {
 		this.expenseService = expenseService;
-		this.paymentService = paymentService;
 		this.expenseTypeLookup = expenseTypeLookup;
 		this.paymentModeLookup = paymentModeLookup;
 	}
 
-
+	private List<PaymentDetailVO> getPaymentDetailVOList(ExpenseVO vo){
+		List<PaymentDetailVO> list = new ArrayList<PaymentDetailVO>();
+		List<PaymentRsVO> paymentRsVoList = vo.getPaymentRsVOList();
+		if(paymentRsVoList != null && !paymentRsVoList.isEmpty()) {
+			for(PaymentRsVO paymentVo : paymentRsVoList) {
+				list.add(paymentVo.getPaymentDetailVO());
+			}
+		}
+		return list;
+	}
 
 	@Override
 	public Workbook exportReport(Workbook workbook, Date dateAsOf, Date endDate,
@@ -57,7 +63,7 @@ public class ExpenseReport implements ReportInterface {
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			List<ExpenseReportVO> expenseReportList = new ArrayList<ExpenseReportVO>();
 			for(ExpenseVO vo : dbVoList) {
-				List<PaymentDetailVO> paymentDetailList = paymentService.getAllPaymentByRefTypeAndRefId("expense", vo.getExpenseId());
+				List<PaymentDetailVO> paymentDetailList = getPaymentDetailVOList(vo);
 				ExpenseReportVO expenseReportVo;
 				if(paymentDetailList != null && !paymentDetailList.isEmpty()) {
 					for(PaymentDetailVO paymentVO : paymentDetailList) {
@@ -107,7 +113,7 @@ public class ExpenseReport implements ReportInterface {
 		reportMapping.addTextMapping("Invoice No", "expense.invoiceNo");
 		reportMapping.addTextMapping("Description", "expense.description");
 		reportMapping.addTextMapping("Mode of Payment", "paymentDetail.paymentModeString");
-		reportMapping.addMoneyMapping("Amount", "paymentDetail.paymentAmt");
+		reportMapping.addMoneyMapping("Amount", "expense.totalAmt");
 		reportMapping.addTextMapping("Supplier", "expense.supplier");
 		reportMapping.addDateMapping("Date Paid", "paymentDetail.paymentDate");
 		reportMapping.addTextMapping("Cheque No", "paymentDetail.chequeNum");

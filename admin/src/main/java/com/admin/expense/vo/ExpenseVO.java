@@ -20,8 +20,8 @@ import com.admin.validator.annotation.ValidDate;
 public class ExpenseVO extends BaseVO implements Serializable {
     private Long expenseId;
     
-    @NotNull(message="error.notempty.expenseform.expensetype")
-    @Min(value=1L, message="error.notempty.expenseform.expensetype")
+    @NotNull(message="error.notempty.expenseform.expenseType")
+    @Min(value=1L, message="error.notempty.expenseform.expenseType")
     private Long expenseTypeId;
 
     private String invoiceNo;
@@ -41,7 +41,7 @@ public class ExpenseVO extends BaseVO implements Serializable {
     private String status;
     
     //non db fields
-    private String expensetype;
+    private String expenseType;
     
     @NotEmpty(message="error.notempty.expenseform.expensedate")
     @ValidDate(dateFormat="dd/MM/yyyy", message="error.notvalid.expenseform.expensedate")
@@ -127,12 +127,12 @@ public class ExpenseVO extends BaseVO implements Serializable {
         this.status = status == null ? null : status.trim();
     }
     
-    public String getExpensetype() {
-		return expensetype;
+    public String getExpenseType() {
+		return expenseType;
 	}
 
-	public void setExpensetype(String expensetype) {
-		this.expensetype = expensetype;
+	public void setExpenseType(String expenseType) {
+		this.expenseType = expenseType;
 	}
 
 	public String getExpensedateString() {
@@ -183,7 +183,7 @@ public class ExpenseVO extends BaseVO implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", expenseId=").append(expenseId);
-        sb.append(", expensetype=").append(expensetype);
+        sb.append(", expenseType=").append(expenseType);
         sb.append(", expenseTypeId=").append(expenseTypeId);
         sb.append(", invoiceNo=").append(invoiceNo);
         sb.append(", description=").append(description);

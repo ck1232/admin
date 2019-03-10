@@ -23,7 +23,6 @@ import com.admin.invoice.service.InvoiceService;
 import com.admin.invoice.vo.InvoiceVO;
 import com.admin.payment.lookup.controller.PaymentModeLookup;
 import com.admin.payment.lookup.vo.PaymentModeVO;
-import com.admin.payment.service.PaymentService;
 import com.admin.payment.vo.PaymentDetailVO;
 import com.admin.payment.vo.PaymentRsVO;
 @Component
@@ -31,7 +30,6 @@ public class InvoiceReport implements ReportInterface {
 
 	private InvoiceService invoiceService;
 	private GrantService grantService;
-	private PaymentService paymentService;
 	private PaymentModeLookup paymentModeLookup;
 	
 	List<TotalIncomeSummaryVO> summaryList;
@@ -41,11 +39,9 @@ public class InvoiceReport implements ReportInterface {
 	@Autowired
 	public InvoiceReport(InvoiceService invoiceService,
 			GrantService grantService,
-			PaymentService paymentService,
 			PaymentModeLookup paymentModeLookup) {
 		this.invoiceService = invoiceService;
 		this.grantService = grantService;
-		this.paymentService = paymentService;
 		this.paymentModeLookup = paymentModeLookup;
 	}
 	
