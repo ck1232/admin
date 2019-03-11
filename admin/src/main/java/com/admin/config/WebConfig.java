@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @PropertySources({
 	@PropertySource(value = "classpath:admin-dev-config.properties", ignoreResourceNotFound = false),
-	@PropertySource(value = "file:/var/www/vhosts/ziumlight.com/config/application-${spring.profiles.active}.properties", ignoreResourceNotFound=true)
+	@PropertySource(value = "file:D:/HSY/config/application-${spring.profiles.active}.properties", ignoreResourceNotFound=true)
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
 	

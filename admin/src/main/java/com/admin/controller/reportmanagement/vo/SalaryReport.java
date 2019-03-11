@@ -83,7 +83,7 @@ public class SalaryReport implements ReportInterface {
 		reportMapping.addTextMapping("Type", "salarybonus.employeeVO.employeeTypeString");
 		reportMapping.addDateMapping("DOB", "salarybonus.employeeVO.dob");
 		reportMapping.addTextMapping("Nationality", "salarybonus.employeeVO.nationality");
-		reportMapping.addMoneyMapping("Amount", "salarybonus.grossAmt");
+		reportMapping.addMoneyMapping("Basic Amount", "salarybonus.basicSalaryAmt");
 		reportMapping.addMoneyMapping("Overtime", "salarybonus.overTimeAmt");
 		reportMapping.addMoneyMapping("Allowance", "salarybonus.allowance");
 		reportMapping.addMoneyMapping("Medical", "salarybonus.medical");

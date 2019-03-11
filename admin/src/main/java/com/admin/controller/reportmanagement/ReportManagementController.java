@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.admin.controller.reportmanagement.vo.BonusReport;
+import com.admin.controller.reportmanagement.vo.ChinaStockPaymentReport;
 import com.admin.controller.reportmanagement.vo.ChinaStockReport;
 import com.admin.controller.reportmanagement.vo.ExpenseReport;
 import com.admin.controller.reportmanagement.vo.InvoiceReport;
@@ -43,19 +44,22 @@ public class ReportManagementController {
 	private BonusReport bonusReport;
 	private InvoiceReport invoiceReport;
 	private ChinaStockReport chinaStockReport;
+	private ChinaStockPaymentReport chinaPaymentReport;
 	private SummaryReport summaryReport;
 	
 	@Autowired
 	public ReportManagementController( 
 			ExpenseReport expenseReport, SalaryReport salaryReport, 
 			BonusReport bonusReport, InvoiceReport invoiceReport,
-			ChinaStockReport chinaStockReport, SummaryReport summaryReport) {
+			ChinaStockReport chinaStockReport, SummaryReport summaryReport,
+			ChinaStockPaymentReport chinaPaymentReport) {
 		this.expenseReport = expenseReport;
 		this.salaryReport = salaryReport;
 		this.bonusReport = bonusReport;
 		this.invoiceReport = invoiceReport;
 		this.chinaStockReport = chinaStockReport;
 		this.summaryReport = summaryReport;
+		this.chinaPaymentReport = chinaPaymentReport;
 	}
 	
 	@RequestMapping(value = "/viewReportGen", method = RequestMethod.GET)
@@ -150,6 +154,7 @@ public class ReportManagementController {
 					break;
 				case CHINA_STOCK:
 					list.add(chinaStockReport);
+					list.add(chinaPaymentReport);
 					break;
 				case GRANT:
 					break;

@@ -25,7 +25,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 @EnableJpaRepositories("com.admin.dao")
 @PropertySources({
 	@PropertySource(value = "classpath:admin-dev-config.properties", ignoreResourceNotFound = false),
-	@PropertySource(value = "file:/var/www/vhosts/ziumlight.com/config/application-${spring.profiles.active}.properties", ignoreResourceNotFound=true)
+	@PropertySource(value = "file:D:/HSY/config/application-${spring.profiles.active}.properties", ignoreResourceNotFound=true)
 })
 public class SpringBootWebApplication extends SpringBootServletInitializer{
 	
@@ -68,7 +68,7 @@ public class SpringBootWebApplication extends SpringBootServletInitializer{
         prop.put("hibernate.format_sql", "true");
         prop.put("hibernate.show_sql", "true");
         prop.put("hibernate.dialect", 
-            "org.hibernate.dialect.MySQL5Dialect");
+            "org.hibernate.dialect.MySQLDialect");
         prop.put("hibernate.ddl-auto", "validate");
         prop.put("hibernate.enable_lazy_load_no_trans", "true");
         /*prop.put("connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider");*/

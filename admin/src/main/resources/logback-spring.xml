@@ -2,7 +2,7 @@
 <Configuration>
 	<springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active"/>
 	<timestamp key="logTimestamp" datePattern="yyyy-MM-dd"/>
-	<property name="prdConfigFile" value="/var/www/vhosts/ziumlight.com/config/application-admin-prd.properties" />
+	<property name="prdConfigFile" value="D:/HSY/config/application-admin-prd.properties" />
 	<define name="INCLUDED_FILE_EXISTS" class="ch.qos.logback.core.property.FileExistsPropertyDefiner">
     	<path>${prdConfigFile}</path>
    	</define>

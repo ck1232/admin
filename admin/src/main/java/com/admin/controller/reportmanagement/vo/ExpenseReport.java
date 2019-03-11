@@ -56,9 +56,11 @@ public class ExpenseReport implements ReportInterface {
 		ReportMapping reportMapping = initReportMapping();
 		LinkedHashMap<String, List<ExpenseReportVO>> expenseReportMap = new LinkedHashMap<String, List<ExpenseReportVO>>();
 		ExpenseTypeVO expenseTypeVO = expenseTypeLookup.getExpenseTypeByValueMap().get("China Stock Payment");
+		ExpenseTypeVO expenseChinaStockTypeVO = expenseTypeLookup.getExpenseTypeByValueMap().get("Stock(China)");
 		PaymentModeVO chequeModeVo = paymentModeLookup.getPaymentModeByValueMap().get("Cheque");
 		List<Long> typeList = new ArrayList<Long>();
 		typeList.add(expenseTypeVO.getExpenseTypeId());
+		typeList.add(expenseChinaStockTypeVO.getExpenseTypeId());
 		List<ExpenseVO> dbVoList = expenseService.getAllExpenseExcludeParamType(dateAsOf, endDate, typeList);
 		if(dbVoList != null && !dbVoList.isEmpty()) {
 			List<ExpenseReportVO> expenseReportList = new ArrayList<ExpenseReportVO>();

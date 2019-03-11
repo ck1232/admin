@@ -207,6 +207,25 @@ public class SummaryReport implements ReportInterface {
 		ReportUtils.writeData(sheet, paymentSummaryList, initPaymentReportMapping(), "month");
 	}
 	
+	private void calcSalaryTotalRemuneration(SalarySummaryReportVO salarySummaryReportVO) {
+		BigDecimal total = BigDecimal.ZERO;
+		total = total.add(salarySummaryReportVO.getGrossSalaryAmt());
+		total = total.add(salarySummaryReportVO.getOvertimeAmt());
+		total = total.add(salarySummaryReportVO.getAllowanceAmt());
+		total = total.add(salarySummaryReportVO.getMedicalAmt());
+		total = total.add(salarySummaryReportVO.getEmployerCPFAmt());
+		total = total.add(salarySummaryReportVO.getSdlAmt());
+		total = total.add(salarySummaryReportVO.getCdacAmt());
+		total = total.add(salarySummaryReportVO.getFwlAmt());
+		salarySummaryReportVO.setTotalRemuneration(total);
+	}
+	
+	private void calcBonusTotalRemuneration(SalarySummaryReportVO salarySummaryReportVO) {
+		BigDecimal total = BigDecimal.ZERO;
+		total = total.add(salarySummaryReportVO.getBonusAmt());
+		total = total.add(salarySummaryReportVO.getEmployerCPFAmt());
+		salarySummaryReportVO.setTotalRemuneration(total);
+	}
 	private void generateSalaryBonusReport(Date dateAsOf, Date endDate) {
 		List<SalaryBonusVO> salaryDbVoList = salaryService.getAllSalaryVo(dateAsOf, endDate);
 		if(salaryDbVoList != null && !salaryDbVoList.isEmpty()) {
@@ -214,6 +233,7 @@ public class SummaryReport implements ReportInterface {
 				addCurrentSalary(salarySummaryHashMap.get(Salary), vo);
 				addCurrentSalary(salarySummaryHashMap.get(Total), vo);
 			}
+			calcSalaryTotalRemuneration(salarySummaryHashMap.get(Salary));
 		}
 		List<SalaryBonusVO> bonusDbVoList = salaryService.getAllBonusVo(dateAsOf, endDate);
 		if(bonusDbVoList != null && !bonusDbVoList.isEmpty()) {
@@ -221,6 +241,7 @@ public class SummaryReport implements ReportInterface {
 				addCurrentBonus(salarySummaryHashMap.get(Bonus), vo);
 				addCurrentBonus(salarySummaryHashMap.get(Total), vo);
 			}
+			calcBonusTotalRemuneration(salarySummaryHashMap.get(Bonus));
 		}
 		salarybonusSummaryList.addAll(salarySummaryHashMap.values());	
 		salarybonusSummaryList = GeneralUtils.sortAccordingToSortList(salarybonusSummaryList, accPayableSummaryHeaders, "month");
@@ -332,7 +353,7 @@ public class SummaryReport implements ReportInterface {
 	private ReportMapping initSalaryBonusReportMapping() {
 		ReportMapping reportMapping = new ReportMapping();
 		reportMapping.addTextMapping("", "month");
-		reportMapping.addMoneyMapping("Gross Salary", "grossSalaryAmt");
+		reportMapping.addMoneyMapping("Basic Salary", "grossSalaryAmt");
 		reportMapping.addMoneyMapping("Overtime", "overtimeAmt");
 		reportMapping.addMoneyMapping("Bonus", "bonusAmt");
 		reportMapping.addMoneyMapping("Allowance", "allowanceAmt");
@@ -462,7 +483,7 @@ public class SummaryReport implements ReportInterface {
 	private void addCurrentSalary(SalarySummaryReportVO reportVO, SalaryBonusVO vo) {
 		BigDecimal total = BigDecimal.ZERO;
 		if(vo.getGrossAmt() != null) {
-			reportVO.setGrossSalaryAmt(reportVO.getGrossSalaryAmt().add(vo.getGrossAmt()));
+			reportVO.setGrossSalaryAmt(reportVO.getGrossSalaryAmt().add(vo.getBasicSalaryAmt()));
 			total = total.add(vo.getGrossAmt());
 		}
 		
@@ -516,7 +537,7 @@ public class SummaryReport implements ReportInterface {
 			reportVO.setEmployeeCPFAmt(reportVO.getEmployeeCPFAmt().add(vo.getEmployeeCpf()));
 		}
 		if(vo.getTakehomeAmt() != null) {
-			reportVO.setTotalRemuneration(reportVO.getTotalRemuneration().add(total));
+			reportVO.setSalaryPaidAmt(reportVO.getSalaryPaidAmt().add(vo.getTakehomeAmt()));
 		}
 		if(vo.getEmployerCpf() != null) {
 			reportVO.setEmployerCPFAmt(reportVO.getEmployerCPFAmt().add(vo.getEmployerCpf()));

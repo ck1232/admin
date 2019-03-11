@@ -38,7 +38,7 @@ import com.admin.to.ProductImageLinkRsTO;
 import com.admin.to.ProductTO;
 @PropertySources({
 	@PropertySource(value = "classpath:admin-dev-config.properties", ignoreResourceNotFound = false),
-	@PropertySource(value = "file:/var/www/vhosts/ziumlight.com/config/application-${spring.profiles.active}.properties", ignoreResourceNotFound=true)
+	@PropertySource(value = "file:D:/HSY/config/application-${spring.profiles.active}.properties", ignoreResourceNotFound=true)
 })
 @Service
 @Scope("prototype")
